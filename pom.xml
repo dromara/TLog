@@ -167,9 +167,8 @@
     </build>
 
     <modules>
-        <module>tlog-core</module>
+        <module>tlog-common</module>
         <module>tlog-dubbo</module>
-        <module>tlog-dubbo-spring-boot-starter</module>
     </modules>
 
     <distributionManagement>
