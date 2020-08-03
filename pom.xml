@@ -50,6 +50,7 @@
         <slf4j.version>1.7.25</slf4j.version>
         <dubbo.version>[2.6.0,2.7.7)</dubbo.version>
         <aspect-log.version>1.2</aspect-log.version>
+        <hutool-core.version>5.3.10</hutool-core.version>
     </properties>
 
     <dependencyManagement>
@@ -84,6 +85,11 @@
                 <groupId>com.yomahub</groupId>
                 <artifactId>aspect-log-core</artifactId>
                 <version>${aspect-log.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-core</artifactId>
+                <version>${hutool-core.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>

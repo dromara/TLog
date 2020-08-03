@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tlog-core</artifactId>
+    <artifactId>tlog-common</artifactId>
 
     <dependencies>
         <dependency>
@@ -32,5 +32,10 @@
             <groupId>com.yomahub</groupId>
             <artifactId>aspect-log-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-core</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
