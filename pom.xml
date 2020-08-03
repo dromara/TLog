@@ -42,11 +42,49 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
+        <commons.lang3.version>3.4</commons.lang3.version>
+        <commons-collections.version>4.1</commons-collections.version>
         <spring-boot.version>2.0.5.RELEASE</spring-boot.version>
+        <fastjson.version>1.2.7</fastjson.version>
+        <guava.version>19.0</guava.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <dubbo.version>[2.6.0,2.7.7)</dubbo.version>
+        <aspect-log.version>1.2</aspect-log.version>
     </properties>
 
     <dependencyManagement>
+
         <dependencies>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.yomahub</groupId>
+                <artifactId>aspect-log-core</artifactId>
+                <version>${aspect-log.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -130,7 +168,8 @@
 
     <modules>
         <module>tlog-core</module>
-        <module>tlog-spring-boot-starter</module>
+        <module>tlog-dubbo</module>
+        <module>tlog-dubbo-spring-boot-starter</module>
     </modules>
 
     <distributionManagement>
