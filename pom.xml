@@ -238,7 +238,7 @@
     <modules>
         <module>tlog-common</module>
         <module>tlog-dubbo</module>
-        <module>tlog-web</module>
+        <module>tlog-webroot</module>
         <module>tlog-dubbox</module>
         <module>tlog-core</module>
     </modules>
