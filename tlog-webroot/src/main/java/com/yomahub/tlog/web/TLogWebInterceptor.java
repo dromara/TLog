@@ -30,7 +30,7 @@ public class TLogWebInterceptor implements HandlerInterceptor {
         }
 
         if(StringUtils.isBlank(traceId)){
-            traceId = UniqueIdGenerator.generateHexId();
+            traceId = UniqueIdGenerator.generateStringId();
             log.warn("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
         }
         TLogContext.putTraceId(traceId);

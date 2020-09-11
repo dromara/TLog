@@ -127,8 +127,8 @@ public class UniqueIdGenerator {
         return ((time - EPOCH) << TIMESTAMP_LEFT_SHIFT_BITS) | (workerId << WORKER_ID_LEFT_SHIFT_BITS) | sequence;
     }
 
-    public static String generateHexId(){
-        return HexUtil.toHex(generateId());
+    public static String generateStringId() {
+        return generateId().toString();
     }
 
     private static long waitUntilNextTime(final long lastTime) {
@@ -138,8 +138,4 @@ public class UniqueIdGenerator {
         }
         return time;
     }
-
-    public static void main(String[] args) throws InterruptedException {
-        System.out.println(generateHexId());
-	}
 }

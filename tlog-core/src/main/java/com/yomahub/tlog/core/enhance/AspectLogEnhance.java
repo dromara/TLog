@@ -13,7 +13,7 @@ public class AspectLogEnhance {
     public static void enhance(){
         try{
             ClassPool pool = ClassPool.getDefault();
-            pool.importPackage("com.yomahub.aspectlog.context");
+            pool.importPackage("com.yomahub.tlog.core.context");
 
             //logback的增强
             CtClass cc = null;
@@ -44,12 +44,5 @@ public class AspectLogEnhance {
         }catch (Throwable t){
             t.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) throws Throwable{
-        ClassPool pool = ClassPool.getDefault();
-        CtClass cc = pool.get("org.apache.log4j.spi.LoggingEvent");
-        CtMethod ctMethod = cc.getDeclaredMethod("getRenderedMessage");
-        System.out.println(ctMethod);
     }
 }

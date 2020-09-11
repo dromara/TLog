@@ -25,7 +25,7 @@ public class TLogDubboxFilter implements Filter {
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         String side = invoker.getUrl().getParameter(Constants.SIDE_KEY);
 
-        if(side.equals(Constants.CONSUMER)){
+        if(side.equals(Constants.PROVIDER_SIDE)){
             String preIvkApp = invocation.getAttachment(TLogConstants.PRE_IVK_APP_KEY);
             String traceId = invocation.getAttachment(TLogConstants.TLOG_TRACE_KEY);
 
@@ -35,7 +35,7 @@ public class TLogDubboxFilter implements Filter {
 
             //如果从隐式传参里没有获取到，则重新生成一个traceId
             if(StringUtils.isBlank(traceId)){
-                traceId = UniqueIdGenerator.generateHexId();
+                traceId = UniqueIdGenerator.generateStringId();
                 log.warn("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
             }
 
@@ -45,7 +45,7 @@ public class TLogDubboxFilter implements Filter {
             //往TLog上下文里放一个当前的traceId
             TLogContext.putTraceId(traceId);
 
-        }else if(side.equals(Constants.PROVIDER)){
+        }else if(side.equals(Constants.CONSUMER_SIDE)){
             String traceId = TLogContext.getTraceId();
 
             if(StringUtils.isNotBlank(traceId)){
