@@ -31,7 +31,7 @@ public class TLogWebInterceptor implements HandlerInterceptor {
 
         if(StringUtils.isBlank(traceId)){
             traceId = UniqueIdGenerator.generateStringId();
-            log.warn("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
+            log.warn("[TLOG]重新生成traceId[{}]",traceId);
         }
         TLogContext.putTraceId(traceId);
         AspectLogContext.putLogValue("<" + traceId + ">");
