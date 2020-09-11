@@ -45,6 +45,7 @@
         <commons.lang3.version>3.4</commons.lang3.version>
         <commons-collections.version>4.1</commons-collections.version>
         <spring-boot.version>2.0.5.RELEASE</spring-boot.version>
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <fastjson.version>1.2.7</fastjson.version>
         <guava.version>19.0</guava.version>
         <dubbox.version>2.8.4</dubbox.version>
@@ -92,13 +93,6 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
                 <version>${hutool-core.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>dom4j</groupId>
@@ -161,6 +155,20 @@
                 <version>${log4j2.version}</version>
                 <optional>true</optional>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -184,6 +192,7 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
@@ -241,6 +250,7 @@
         <module>tlog-webroot</module>
         <module>tlog-dubbox</module>
         <module>tlog-core</module>
+        <module>tlog-feign</module>
     </modules>
 
     <distributionManagement>

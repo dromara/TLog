@@ -1,6 +1,6 @@
 package com.yomahub.tlog.core.enhance.log4j;
 
-import com.yomahub.aspectlog.context.AspectLogContext;
+import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.helpers.PatternConverter;
 import org.apache.log4j.spi.LoggingEvent;
