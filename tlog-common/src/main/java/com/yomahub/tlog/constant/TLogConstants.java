@@ -2,7 +2,7 @@ package com.yomahub.tlog.constant;
 /**
  * 静态变量类
  * @author Bryan.Zhang
- * @date 2020/9/11
+ * @since 2020/9/11
  */
 public class TLogConstants {
 

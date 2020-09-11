@@ -3,7 +3,7 @@ package com.yomahub.tlog.id;
 /**
  * 雪花id生成器
  * @author Bryan.Zhang
- * @date 2020/9/11
+ * @since 2020/9/11
  */
 public abstract class AbstractClock {
 
