@@ -244,6 +244,7 @@
         <module>tlog-dubbox</module>
         <module>tlog-core</module>
         <module>tlog-feign</module>
+        <module>tlog-all</module>
     </modules>
 
     <distributionManagement>
