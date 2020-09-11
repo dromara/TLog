@@ -1,6 +1,7 @@
 package com.yomahub.tlog.feign.springboot;
 
 import com.yomahub.tlog.feign.filter.TLogFeignFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date 2020/9/11
  */
 @Configuration
+@ConditionalOnClass(name = {"feign.RequestInterceptor"})
 public class TLogFeignAutoConfiguration {
 
     @Bean

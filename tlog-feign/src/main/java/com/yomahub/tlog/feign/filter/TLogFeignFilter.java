@@ -8,6 +8,7 @@ import feign.RequestTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * feign的拦截器
@@ -18,12 +19,16 @@ public class TLogFeignFilter implements RequestInterceptor {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${spring.application.name}")
+    private String appName;
+
     @Override
     public void apply(RequestTemplate requestTemplate) {
         String traceId = TLogContext.getTraceId();
 
         if(StringUtils.isNotBlank(traceId)){
-            requestTemplate.header(TLogConstants.TLOG_TRACE_KEY,traceId);
+            requestTemplate.header(TLogConstants.TLOG_TRACE_KEY, traceId);
+            requestTemplate.header(TLogConstants.PRE_IVK_APP_KEY, appName);
         }else{
             log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }
