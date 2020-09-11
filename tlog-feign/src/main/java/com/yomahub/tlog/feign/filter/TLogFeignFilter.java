@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 /**
  * feign的拦截器
  * @author Bryan.Zhang
- * @Date 2020/9/11
+ * @date 2020/9/11
  */
 public class TLogFeignFilter implements RequestInterceptor {
 

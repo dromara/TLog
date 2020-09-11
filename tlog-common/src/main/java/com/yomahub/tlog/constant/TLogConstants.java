@@ -1,5 +1,9 @@
 package com.yomahub.tlog.constant;
-
+/**
+ * 静态变量类
+ * @author Bryan.Zhang
+ * @date 2020/9/11
+ */
 public class TLogConstants {
 
     public final static String TLOG_TRACE_KEY = "tlog_trace_id";

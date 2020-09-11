@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Bryan.Zhang
- * @Date 2020/9/11
+ * @date 2020/9/11
  */
 @Configuration
 @ConditionalOnClass(name = {"org.springframework.web.servlet.config.annotation.WebMvcConfigurer"})

@@ -1,5 +1,10 @@
 package com.yomahub.tlog.context;
 
+/**
+ * TLog上下文
+ * @author Bryan.Zhang
+ * @date 2020/9/11
+ */
 public class TLogContext {
 
     private static InheritableThreadLocal<String> traceIdTL = new InheritableThreadLocal<>();

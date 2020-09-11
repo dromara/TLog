@@ -5,7 +5,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author Bryan.Zhang
- * @Date 2020/9/11
+ * @date 2020/9/11
  */
 public class TLogWebConfig implements WebMvcConfigurer {
     @Override

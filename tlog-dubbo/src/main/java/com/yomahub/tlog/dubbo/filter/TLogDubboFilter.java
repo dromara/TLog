@@ -11,6 +11,11 @@ import org.apache.dubbo.rpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * dubbo的调用拦截器
+ * @author Bryan.Zhang
+ * @date 2020/9/11
+ */
 @Activate(group = {CommonConstants.PROVIDER, CommonConstants.CONSUMER},order = -10000)
 public class TLogDubboFilter implements Filter {
 
