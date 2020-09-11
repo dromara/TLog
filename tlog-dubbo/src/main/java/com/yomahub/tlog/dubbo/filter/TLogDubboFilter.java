@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 @Activate(group = {CommonConstants.PROVIDER, CommonConstants.CONSUMER},order = -10000)
 public class TLogDubboFilter implements Filter {
 
-    private Logger log = LoggerFactory.getLogger(TLogDubboFilter.class);
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
