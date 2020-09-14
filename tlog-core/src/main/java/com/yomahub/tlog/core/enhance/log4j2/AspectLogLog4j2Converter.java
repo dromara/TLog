@@ -17,6 +17,7 @@
 package com.yomahub.tlog.core.enhance.log4j2;
 
 import com.yomahub.tlog.core.context.AspectLogContext;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
@@ -35,7 +36,7 @@ import java.util.Locale;
  * @author Bryan.Zhang
  */
 @Plugin(name = "AspectLogLog4j2Converter", category = PatternConverter.CATEGORY)
-@ConverterKeys({ "m", "msg", "message" })
+@ConverterKeys({ "m", "msg", "message", "tm", "tmsg", "tmessage" })
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
 
@@ -111,7 +112,9 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
     @Override
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
         String prefix = AspectLogContext.getLogValue();
-        toAppendTo.append(prefix + " ");
+        if(StringUtils.isNotBlank(prefix)){
+            toAppendTo.append(prefix + " ");
+        }
         final Message msg = event.getMessage();
         if (msg instanceof StringBuilderFormattable) {
 
