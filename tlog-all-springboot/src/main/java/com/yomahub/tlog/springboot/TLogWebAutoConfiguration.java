@@ -1,4 +1,4 @@
-package com.yomahub.tlog.web.springboot;
+package com.yomahub.tlog.springboot;
 
 import com.yomahub.tlog.web.TLogWebConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

@@ -1,10 +1,12 @@
 package com.yomahub.tlog.dubbox.filter;
 
+import cn.hutool.core.net.NetUtil;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
+import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.id.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -27,10 +29,14 @@ public class TLogDubboxFilter implements Filter {
 
         if(side.equals(Constants.PROVIDER_SIDE)){
             String preIvkApp = invocation.getAttachment(TLogConstants.PRE_IVK_APP_KEY);
+            String preIp = invocation.getAttachment(TLogConstants.PRE_IP_KEY);
             String traceId = invocation.getAttachment(TLogConstants.TLOG_TRACE_KEY);
 
             if(StringUtils.isBlank(preIvkApp)){
                 preIvkApp = TLogConstants.UNKNOWN;
+            }
+            if(StringUtils.isBlank(preIp)){
+                preIp = TLogConstants.UNKNOWN;
             }
 
             //如果从隐式传参里没有获取到，则重新生成一个traceId
@@ -39,8 +45,11 @@ public class TLogDubboxFilter implements Filter {
                 log.warn("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
             }
 
+            //生成日志标签
+            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId);
+
             //往日志切面器里放一个日志前缀
-            AspectLogContext.putLogValue("<"+traceId+">");
+            AspectLogContext.putLogValue(tlogLabel);
 
             //往TLog上下文里放一个当前的traceId
             TLogContext.putTraceId(traceId);
@@ -50,9 +59,11 @@ public class TLogDubboxFilter implements Filter {
 
             if(StringUtils.isNotBlank(traceId)){
                 String appName = invoker.getUrl().getParameter(Constants.APPLICATION_KEY);
+                String ip = NetUtil.getLocalhostStr();
 
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY,traceId);
                 RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY,appName);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY,ip);
             }else{
                 log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
             }

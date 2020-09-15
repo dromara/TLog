@@ -1,4 +1,4 @@
-package com.yomahub.tlog.feign.springboot;
+package com.yomahub.tlog.springboot;
 
 import com.yomahub.tlog.feign.filter.TLogFeignFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;

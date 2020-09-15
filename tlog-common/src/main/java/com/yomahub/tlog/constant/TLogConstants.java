@@ -8,7 +8,9 @@ public class TLogConstants {
 
     public final static String TLOG_TRACE_KEY = "tlog_trace_id";
 
-    public final static String PRE_IVK_APP_KEY = "pre_ivk_app_key";
+    public final static String PRE_IVK_APP_KEY = "pre_ivk_app";
+
+    public final static String PRE_IP_KEY = "pre_ip";
 
     public final static String UNKNOWN = "unknown";
 

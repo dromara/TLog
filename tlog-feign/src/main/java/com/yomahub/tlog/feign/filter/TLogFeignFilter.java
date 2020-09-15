@@ -1,6 +1,7 @@
 package com.yomahub.tlog.feign.filter;
 
 
+import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import feign.RequestInterceptor;
@@ -29,6 +30,7 @@ public class TLogFeignFilter implements RequestInterceptor {
         if(StringUtils.isNotBlank(traceId)){
             requestTemplate.header(TLogConstants.TLOG_TRACE_KEY, traceId);
             requestTemplate.header(TLogConstants.PRE_IVK_APP_KEY, appName);
+            requestTemplate.header(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
         }else{
             log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }

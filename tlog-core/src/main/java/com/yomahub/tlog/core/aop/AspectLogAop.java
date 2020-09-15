@@ -28,7 +28,7 @@ public class AspectLogAop {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut("@annotation(com.yomahub.aspectlog.annotation.AspectLog)")
+    @Pointcut("@annotation(com.yomahub.tlog.core.annotation.AspectLog)")
     public void cut(){}
 
     @Around("cut()")
