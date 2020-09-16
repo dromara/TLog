@@ -1,4 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.yomahub.tlog.springboot.TLogPropertyConfiguration,\
   com.yomahub.tlog.springboot.TLogWebAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogFeignAutoConfiguration
 

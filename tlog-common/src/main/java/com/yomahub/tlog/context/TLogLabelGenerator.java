@@ -7,7 +7,7 @@ package com.yomahub.tlog.context;
  */
 public class TLogLabelGenerator {
 
-    public static String labelPattern = "<$preApp>-<$preIp>-<$traceId>";
+    public static String labelPattern = "<$traceId>";
 
     public static String generateTLogLabel(String preApp, String preIp, String traceId){
         return labelPattern.replace("$preApp",preApp).replace("$preIp",preIp).replace("$traceId",traceId);
