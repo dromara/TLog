@@ -1,7 +1,7 @@
 ## 概述
 TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接入，自动对日志打标签完成微服务的链路追踪。支持log4j，log4j2，logback三大日志框架，支持dubbo，dubbox，springcloud三大RPC框架
 
-## 详细文档请点击：[中文文档](https://gitee.com/bryan31/TLog)
+## 详细文档请点击：[中文文档](http://bryan31.gitee.io/tlog)
 ## 示例工程请点击：[示例工程](https://gitee.com/bryan31/tlog-example)
 
 ## 特性
