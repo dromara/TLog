@@ -116,13 +116,15 @@ Provider代码：
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration>
     <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
-		<layout class="AspectLog4jPatternLayout">
+      	<!--替换成AspectLog4jPatternLayout-->
+        <layout class="com.yomahub.tlog.core.enhance.log4j.AspectLog4jPatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %m  >> %c:%L%n"/>
         </layout>
     </appender>
     <appender name="fileout" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="./logs/test.log"/>
-        <layout class="org.apache.log4j.PatternLayout">
+      	<!--替换成AspectLog4jPatternLayout-->
+        <layout class="com.yomahub.tlog.core.enhance.log4j.AspectLog4jPatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %m  >> %c:%L%n"/>
         </layout>
     </appender>
@@ -149,7 +151,8 @@ Provider代码：
     <property name="APP_NAME" value="logtest"/>
     <property name="LOG_HOME" value="./logs" />
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-		<encoder class="AspectLogbackEncoder">
+    <!--替换成AspectLogbackEncoder-->
+		<encoder class="com.yomahub.tlog.core.enhance.logback.AspectLogbackEncoder">
 			  <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
 		</encoder>
     </appender>
@@ -160,7 +163,8 @@ Provider代码：
             <MaxHistory>30</MaxHistory>
             <maxFileSize>1000MB</maxFileSize>
         </rollingPolicy>
-        <encoder class="AspectLogbackEncoder">
+      	<!--替换成AspectLogbackEncoder-->
+        <encoder class="com.yomahub.tlog.core.enhance.logback.AspectLogbackEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>
