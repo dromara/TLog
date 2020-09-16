@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tlog-all-springboot</artifactId>
+    <artifactId>tlog-all-spring-boot-starter</artifactId>
 
     <dependencies>
         <dependency>
@@ -45,6 +45,4 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
-
-
 </project>

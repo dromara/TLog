@@ -245,7 +245,7 @@
         <module>tlog-core</module>
         <module>tlog-feign</module>
         <module>tlog-all</module>
-        <module>tlog-all-springboot</module>
+        <module>tlog-all-spring-boot-starter</module>
     </modules>
 
     <distributionManagement>
