@@ -56,7 +56,7 @@ public class Runner {
 
 ## 2.3 RPC框架的适配
 
-在Springboot环境下，TLog会自动探测你用的RPC框架，进行适配。
+在Springboot环境下，TLog会自动探测你用的RPC框架，自动进行适配。
 
 
 
@@ -103,7 +103,7 @@ Provider代码：
 
 ## 3.1 Log框架配置文件增强
 
-如果你的自动化日志探测失效或者你用的是外置容器，你需要针对各种日志框架配置进行修改，修改方法也很简单。
+如果你的自动化日志探测失效或者你用的是外置容器，你需要针对你项目中的日志框架配置进行修改，修改方法也很简单。
 
 ### 3.1.1 Log4J配置文件增强
 
@@ -209,6 +209,15 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 # 四.非Springboot项目接入
+需要引入maven依赖
+```xml
+<dependency>
+  <groupId>com.yomahub</groupId>
+  <artifactId>tlog-all</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+**目前jar包已上传中央仓库，可以直接依赖到**
 
 ## 4.1 dubbo & dubbox
 
