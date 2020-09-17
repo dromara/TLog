@@ -42,7 +42,7 @@ public class TLogDubboxFilter implements Filter {
             //如果从隐式传参里没有获取到，则重新生成一个traceId
             if(StringUtils.isBlank(traceId)){
                 traceId = UniqueIdGenerator.generateStringId();
-                log.warn("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
+                log.debug("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
             }
 
             //生成日志标签

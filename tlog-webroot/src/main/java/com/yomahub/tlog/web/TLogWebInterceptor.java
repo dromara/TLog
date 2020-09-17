@@ -36,7 +36,7 @@ public class TLogWebInterceptor implements HandlerInterceptor {
         if(StringUtils.isBlank(traceId)){
             traceId = UniqueIdGenerator.generateStringId();
 
-            log.warn("[TLOG]重新生成traceId[{}]",traceId);
+            log.debug("[TLOG]重新生成traceId[{}]",traceId);
         }
         TLogContext.putTraceId(traceId);
 

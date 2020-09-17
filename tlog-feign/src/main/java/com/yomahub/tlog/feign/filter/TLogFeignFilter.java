@@ -32,7 +32,7 @@ public class TLogFeignFilter implements RequestInterceptor {
             requestTemplate.header(TLogConstants.PRE_IVK_APP_KEY, appName);
             requestTemplate.header(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
         }else{
-            log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
+            log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }
     }
 }
