@@ -50,7 +50,7 @@ public class Runner {
 }
 ```
 
-!> 因为这里是用javassit实现，需要在jvm加载对应日志框架的类之前，进行字节码增强。所以这里用static块。并且Springboot/Spring的启动类中不能加入log定义，否则会不生效。或者如果你是用tomcat/jboss/jetty等外置容器启动的，则参照`3.1 Log框架配置文件增强`
+!> 因为这里是用javassist实现，需要在jvm加载对应日志框架的类之前，进行字节码增强。所以这里用static块。并且Springboot/Spring的启动类中不能加入log定义，否则会不生效。或者如果你是用tomcat/jboss/jetty等外置容器启动的，则参照`3.1 Log框架配置文件增强`
 
 
 
