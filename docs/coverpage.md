@@ -6,4 +6,4 @@
 
 [Gitee](https://gitee.com/bryan31/TLog)
 [GitHub](https://github.com/bryan31/TLog)
-[快速开始](#二快速开始)
+[快速开始](#三快速开始)
