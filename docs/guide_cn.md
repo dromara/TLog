@@ -14,6 +14,8 @@
 
 
 
+# 二.项目特性
+
 <font color="#21433d">**目前TLog的支持的特性如下：**</font>
 
 * <font color="#21433d">**通过对日志打标签完成轻量级微服务日志追踪**</font>
@@ -30,10 +32,10 @@
 
 
 
-# 二.快速开始
+# 三.快速开始
 
 TLog支持了springboot的自动装配，在springboot环境下，只需要以下两步就可以接入！
-## 2.1 依赖
+## 3.1 依赖
 
 ```xml
 <dependency>
@@ -46,7 +48,7 @@ TLog支持了springboot的自动装配，在springboot环境下，只需要以�
 
 
 
-## 2.2 日志框架适配
+## 3.2 日志框架适配
 
 只需要在你的启动类中加入一行代码，即可以自动进行探测你项目所使用的Log框架，并进行增强。
 
@@ -62,17 +64,17 @@ public class Runner {
 }
 ```
 
-!> 因为这里是用javassist实现，需要在jvm加载对应日志框架的类之前，进行字节码增强。所以这里用static块。并且Springboot/Spring的启动类中不能加入log定义，否则会不生效。或者如果你是用tomcat/jboss/jetty等外置容器启动的，则参照`3.1 Log框架配置文件增强`
+!> 因为这里是用javassist实现，需要在jvm加载对应日志框架的类之前，进行字节码增强。所以这里用static块。并且Springboot/Spring的启动类中不能加入log定义，否则会不生效。或者如果你是用tomcat/jboss/jetty等外置容器启动的，则参照`4.1 Log框架配置文件增强`
 
 
 
-## 2.3 RPC框架的适配
+## 3.3 RPC框架的适配
 
 在Springboot环境下，TLog会自动探测你用的RPC框架，自动进行适配。
 
 
 
-## 2.4 最终效果
+## 3.4 最终效果
 
 只需要以上这2步，就可以把springboot项目快速接入了
 
@@ -111,13 +113,13 @@ Provider代码：
 
 
 
-# 三.其他配置
+# 四.其他配置
 
-## 3.1 Log框架配置文件增强
+## 4.1 Log框架配置文件增强
 
 如果你的自动化日志探测失效或者你用的是外置容器，你需要针对你项目中的日志框架配置进行修改，修改方法也很简单。
 
-### 3.1.1 Log4J配置文件增强
+### 4.1.1 Log4J配置文件增强
 
 只需要把`layout`的实现类换掉就可以了
 
@@ -151,7 +153,7 @@ Provider代码：
 
 
 
-### 3.1.2 Logback的配置文件增强
+### 4.1.2 Logback的配置文件增强
 
 换掉`encoder`的实现类或者换掉`layout`的实现类就可以了
 
@@ -192,13 +194,13 @@ Provider代码：
 
 
 
-### 3.1.3 Log4J2的配置文件增强
+### 4.1.3 Log4J2的配置文件增强
 
 log4J2由于是通过插件形式实现的，log4J2有自动扫描插件的功能。所以无需对配置文件做任何更改就能生效。
 
 
 
-## 3.2 日志标签模板自定义
+## 4.2 日志标签模板自定义
 
 TLog默认只打出traceId，以<$traceId>这种模板打出，当然你能自定义其模板。还能加入其它的标签头
 
@@ -220,7 +222,8 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-# 四.非Springboot项目接入
+# 五.非Springboot项目接入
+
 需要引入maven依赖
 ```xml
 <dependency>
@@ -231,7 +234,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 ```
 **目前jar包已上传中央仓库，可以直接依赖到**
 
-## 4.1 dubbo & dubbox
+## 5.1 dubbo & dubbox
 
 如果你的RPC是dubbo或者dubbox，需要在spring xml里如下配置
 
@@ -241,7 +244,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-## 4.2 Spring Cloud
+## 5.2 Spring Cloud
 
 如果你的RPC是spring cloud，需要在spring xml里如下配置
 
@@ -251,7 +254,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-## 4.3 自定义模板
+## 5.3 自定义模板
 
 如果你要自定义模板，需要在spring xml如下配置
 
@@ -263,7 +266,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-# 五.联系作者
+# 六.联系作者
 
 关注公众号回复`liteflow`即可加入讨论群
 
