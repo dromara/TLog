@@ -8,6 +8,7 @@ import com.yomahub.tlog.id.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,28 +24,39 @@ public class TLogWebInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
-        String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
-        String preIp = request.getHeader(TLogConstants.PRE_IP_KEY);
-        if(StringUtils.isBlank(preIvkApp)){
-            preIvkApp = TLogConstants.UNKNOWN;
+        if(handler instanceof HandlerMethod){
+            String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
+            String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
+            String preIp = request.getHeader(TLogConstants.PRE_IP_KEY);
+            if(StringUtils.isBlank(preIvkApp)){
+                preIvkApp = TLogConstants.UNKNOWN;
+            }
+            if(StringUtils.isBlank(preIp)){
+                preIp = TLogConstants.UNKNOWN;
+            }
+
+            if(StringUtils.isBlank(traceId)){
+                traceId = UniqueIdGenerator.generateStringId();
+
+                log.debug("[TLOG]重新生成traceId[{}]",traceId);
+            }
+            TLogContext.putTraceId(traceId);
+
+            //生成日志标签
+            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId);
+
+            //往日志切面器里放一个日志前缀
+            AspectLogContext.putLogValue(tlogLabel);
         }
-        if(StringUtils.isBlank(preIp)){
-            preIp = TLogConstants.UNKNOWN;
-        }
-
-        if(StringUtils.isBlank(traceId)){
-            traceId = UniqueIdGenerator.generateStringId();
-
-            log.debug("[TLOG]重新生成traceId[{}]",traceId);
-        }
-        TLogContext.putTraceId(traceId);
-
-        //生成日志标签
-        String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId);
-
-        //往日志切面器里放一个日志前缀
-        AspectLogContext.putLogValue(tlogLabel);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        if(handler instanceof HandlerMethod){
+            //移除ThreadLocal里的数据
+            TLogContext.removeTraceId();
+            AspectLogContext.remove();
+        }
     }
 }
