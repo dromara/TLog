@@ -14,6 +14,18 @@
 
 
 
+<font color="#21433d">**目前TLog的支持的特性如下：**</font>
+
+* <font color="#21433d">**通过对日志打标签完成轻量级微服务日志追踪**</font>
+* <font color="#21433d">**对业务代码无侵入式设计，使用简单，10分钟即可接入**</font>
+* <font color="#21433d">**支持常见的log4j，log4j2，logback三大日志框架，并提供自动检测，完成适配**</font>
+* <font color="#21433d">**支持dubbo，dubbox，springcloud三大RPC框架**</font>
+* <font color="#21433d">**支持日志标签的自定义模板的配置，提供多个系统级埋点标签的选择**</font>
+* <font color="#21433d">**天然支持异步线程的追踪**</font>
+* <font color="#21433d">**几乎无性能损耗**</font>
+
+
+
 让我们开始吧！
 
 
