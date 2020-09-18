@@ -25,6 +25,7 @@ public class TLogDubboFilter implements Filter {
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
+        Result result;
         String side = invoker.getUrl().getParameter(CommonConstants.SIDE_KEY);
 
         if(side.equals(CommonConstants.PROVIDER_SIDE)){
@@ -54,6 +55,16 @@ public class TLogDubboFilter implements Filter {
             //往TLog上下文里放一个当前的traceId
             TLogContext.putTraceId(traceId);
 
+            try{
+                //调用dubbo
+                result = invoker.invoke(invocation);
+            }finally {
+                //移除ThreadLocal里的数据
+                TLogContext.removeTraceId();
+                AspectLogContext.remove();
+            }
+
+            return result;
         }else if(side.equals(CommonConstants.CONSUMER_SIDE)){
             String traceId = TLogContext.getTraceId();
 
@@ -67,7 +78,10 @@ public class TLogDubboFilter implements Filter {
             }else{
                 log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
             }
+            result = invoker.invoke(invocation);
+        }else{
+            result = null;
         }
-        return invoker.invoke(invocation);
+        return result;
     }
 }
