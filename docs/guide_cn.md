@@ -268,6 +268,6 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 # 六.联系作者
 
-关注公众号回复`liteflow`即可加入讨论群
+关注公众号回复`tlog`即可加入讨论群
 
 ![offIical-wx](http://yomahub.com/images/offIical-wx.jpg)
