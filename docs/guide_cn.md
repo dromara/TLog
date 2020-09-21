@@ -41,7 +41,7 @@ TLog支持了springboot的自动装配，在springboot环境下，只需要以�
 <dependency>
   <groupId>com.yomahub</groupId>
   <artifactId>tlog-all-spring-boot-starter</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 **目前jar包已上传中央仓库，可以直接依赖到**
@@ -250,7 +250,7 @@ executorService.submit(new TLogInheritableTask() {
 <dependency>
   <groupId>com.yomahub</groupId>
   <artifactId>tlog-all</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 **目前jar包已上传中央仓库，可以直接依赖到**
