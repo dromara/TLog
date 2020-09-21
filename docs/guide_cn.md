@@ -222,7 +222,28 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-# 五.非Springboot项目接入
+# 五.异步线程支持
+
+对于new Thread这种异步线程方式(无论单独声明类还是内部类)，不需要你做任何事，TLog天然支持在异步线程中打印标签。
+
+
+
+但是对于使用了线程池的场景，由于线程池中的线程不会被销毁，会被复用。需要你用`TLogInheritableTask`替换`Runnable`，否则标签数据会重复：
+
+```java
+executorService.submit(new TLogInheritableTask() {
+    @Override
+    public void runTask() {
+      log.info("我是异步线程日志");
+    }
+});
+```
+
+这样标签数据就能正确打印了。
+
+
+
+# 六.非Springboot项目接入
 
 需要引入maven依赖
 ```xml
@@ -234,7 +255,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 ```
 **目前jar包已上传中央仓库，可以直接依赖到**
 
-## 5.1 dubbo & dubbox
+## 6.1 dubbo & dubbox
 
 如果你的RPC是dubbo或者dubbox，需要在spring xml里如下配置
 
@@ -244,7 +265,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-## 5.2 Spring Cloud
+## 6.2 Spring Cloud
 
 如果你的RPC是spring cloud，需要在spring xml里如下配置
 
@@ -254,7 +275,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-## 5.3 自定义模板
+## 6.3 自定义模板
 
 如果你要自定义模板，需要在spring xml如下配置
 
@@ -266,7 +287,7 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-# 六.联系作者
+# 七.联系作者
 
 关注公众号回复`tlog`即可加入讨论群
 
