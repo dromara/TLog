@@ -3,6 +3,7 @@ package com.yomahub.tlog.feign.filter;
 
 import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
+import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -29,6 +30,7 @@ public class TLogFeignFilter implements RequestInterceptor {
 
         if(StringUtils.isNotBlank(traceId)){
             requestTemplate.header(TLogConstants.TLOG_TRACE_KEY, traceId);
+            requestTemplate.header(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             requestTemplate.header(TLogConstants.PRE_IVK_APP_KEY, appName);
             requestTemplate.header(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
         }else{

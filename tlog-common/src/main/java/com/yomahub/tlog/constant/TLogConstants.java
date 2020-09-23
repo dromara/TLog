@@ -8,6 +8,8 @@ public class TLogConstants {
 
     public final static String TLOG_TRACE_KEY = "tlog_trace_id";
 
+    public final static String TLOG_SPANID_KEY = "tlog_spanid";
+
     public final static String PRE_IVK_APP_KEY = "pre_ivk_app";
 
     public final static String PRE_IP_KEY = "pre_ip";

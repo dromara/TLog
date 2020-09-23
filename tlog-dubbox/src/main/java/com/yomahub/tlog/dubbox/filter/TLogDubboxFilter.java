@@ -5,6 +5,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.yomahub.tlog.constant.TLogConstants;
+import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
@@ -32,6 +33,7 @@ public class TLogDubboxFilter implements Filter {
             String preIvkApp = invocation.getAttachment(TLogConstants.PRE_IVK_APP_KEY);
             String preIp = invocation.getAttachment(TLogConstants.PRE_IP_KEY);
             String traceId = invocation.getAttachment(TLogConstants.TLOG_TRACE_KEY);
+            String spanId = invocation.getAttachment(TLogConstants.TLOG_SPANID_KEY);
 
             if(StringUtils.isBlank(preIvkApp)){
                 preIvkApp = TLogConstants.UNKNOWN;
@@ -46,14 +48,17 @@ public class TLogDubboxFilter implements Filter {
                 log.debug("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
             }
 
-            //生成日志标签
-            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId);
-
-            //往日志切面器里放一个日志前缀
-            AspectLogContext.putLogValue(tlogLabel);
+            //往TLog上下文里放当前获取到的spanId，如果spanId为空，会放入初始值
+            TLogContext.putSpanId(spanId);
 
             //往TLog上下文里放一个当前的traceId
             TLogContext.putTraceId(traceId);
+
+            //生成日志标签
+            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId,TLogContext.getSpanId());
+
+            //往日志切面器里放一个日志前缀
+            AspectLogContext.putLogValue(tlogLabel);
 
             try{
                 //调用dubbo
@@ -61,6 +66,7 @@ public class TLogDubboxFilter implements Filter {
             }finally {
                 //移除ThreadLocal里的数据
                 TLogContext.removeTraceId();
+                TLogContext.removeSpanId();
                 AspectLogContext.remove();
             }
 
@@ -75,6 +81,7 @@ public class TLogDubboxFilter implements Filter {
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY,traceId);
                 RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY,appName);
                 RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY,ip);
+                RpcContext.getContext().setAttachment(TLogConstants.TLOG_SPANID_KEY,SpanIdGenerator.generateNextSpanId());
             }else{
                 log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
             }

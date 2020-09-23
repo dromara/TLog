@@ -28,6 +28,7 @@ public class TLogWebInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if(handler instanceof HandlerMethod){
             String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
+            String spanId = request.getHeader(TLogConstants.TLOG_SPANID_KEY);
             String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
             String preIp = request.getHeader(TLogConstants.PRE_IP_KEY);
             if(StringUtils.isBlank(preIvkApp)){
@@ -39,13 +40,17 @@ public class TLogWebInterceptor implements HandlerInterceptor {
 
             if(StringUtils.isBlank(traceId)){
                 traceId = UniqueIdGenerator.generateStringId();
-
                 log.debug("[TLOG]重新生成traceId[{}]",traceId);
             }
+
+            //往TLog上下文里放当前获取到的spanId，如果spanId为空，会放入初始值
+            TLogContext.putSpanId(spanId);
+
+            //往TLog上下文里放一个当前的traceId
             TLogContext.putTraceId(traceId);
 
             //生成日志标签
-            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId);
+            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId,TLogContext.getSpanId());
 
             //往日志切面器里放一个日志前缀
             AspectLogContext.putLogValue(tlogLabel);
@@ -63,6 +68,7 @@ public class TLogWebInterceptor implements HandlerInterceptor {
         if(handler instanceof HandlerMethod){
             //移除ThreadLocal里的数据
             TLogContext.removeTraceId();
+            TLogContext.removeSpanId();
             AspectLogContext.remove();
         }
     }
