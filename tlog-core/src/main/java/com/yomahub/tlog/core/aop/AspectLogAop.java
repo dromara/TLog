@@ -1,7 +1,8 @@
 package com.yomahub.tlog.core.aop;
 
+import cn.hutool.core.date.DateUtil;
 import com.google.common.collect.Maps;
-import com.yomahub.tlog.core.annotation.AspectLog;
+import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.core.convert.AspectLogConvert;
 import org.apache.commons.lang3.StringUtils;
@@ -17,18 +18,19 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
  * @author Bryan.Zhang
- * 注解切面，用于拦截@AspectLogAop
+ * 自定义埋点注解切面，用于拦截@AspectLogAop
  */
 @Aspect
 public class AspectLogAop {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut("@annotation(com.yomahub.tlog.core.annotation.AspectLog)")
+    @Pointcut("@annotation(com.yomahub.tlog.core.annotation.TLogAspect)")
     public void cut(){}
 
     @Around("cut()")
@@ -42,11 +44,11 @@ public class AspectLogAop {
             paramNameValueMap.put(parameterNames[i],args[i]);
         }
 
-        AspectLog aspectLog = method.getAnnotation(AspectLog.class);
-        String[] aspectExpressions = aspectLog.value();
-        String aspLogValuePattern = aspectLog.pattern().replaceAll("\\{\\}","{0}");
-        String joint = aspectLog.joint();
-        Class<? extends AspectLogConvert> convertClazz = aspectLog.convert();
+        TLogAspect tlogAspect = method.getAnnotation(TLogAspect.class);
+        String[] aspectExpressions = tlogAspect.value();
+        String pattern = tlogAspect.pattern().replaceAll("\\{\\}","{0}");
+        String joint = tlogAspect.joint();
+        Class<? extends AspectLogConvert> convertClazz = tlogAspect.convert();
 
         StringBuilder sb = new StringBuilder();
         if(!convertClazz.equals(AspectLogConvert.class)){
@@ -70,8 +72,11 @@ public class AspectLogAop {
         if(StringUtils.isNotBlank(aspLogValue)){
             aspLogValue = aspLogValue.substring(0,aspLogValue.length()-1);
 
-            aspLogValue = MessageFormat.format(aspLogValuePattern,aspLogValue);
-            AspectLogContext.putLogValue(aspLogValue);
+            aspLogValue = MessageFormat.format(pattern,aspLogValue);
+
+            //拿到之前的标签
+            String currentLabel = AspectLogContext.getLogValue();
+            AspectLogContext.putLogValue(currentLabel + aspLogValue);
         }
 
         try{
@@ -92,8 +97,10 @@ public class AspectLogAop {
                 return ((Long) o).toString();
             }else if(Double.class.isAssignableFrom(o.getClass())){
                 return ((Double) o).toString();
-            }else if(BigDecimal.class.isAssignableFrom(o.getClass())){
+            }else if(BigDecimal.class.isAssignableFrom(o.getClass())) {
                 return ((BigDecimal) o).toPlainString();
+            }else if(Date.class.isAssignableFrom(o.getClass())){
+                return DateUtil.formatDateTime((Date) o);
             }else if(Map.class.isAssignableFrom(o.getClass())){
                 Object v = ((Map)o).get(item);
                 if(v == null){

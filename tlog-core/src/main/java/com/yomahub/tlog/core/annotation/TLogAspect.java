@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface AspectLog {
+public @interface TLogAspect {
 
     String[] value() default {};
 
