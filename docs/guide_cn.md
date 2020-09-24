@@ -23,6 +23,8 @@
 * <font color="#21433d">**支持常见的log4j，log4j2，logback三大日志框架，并提供自动检测，完成适配**</font>
 * <font color="#21433d">**支持dubbo，dubbox，springcloud三大RPC框架**</font>
 * <font color="#21433d">**支持日志标签的自定义模板的配置，提供多个系统级埋点标签的选择**</font>
+* <font color="#21433d">**提供spanId来表示本次调用在整个调用链路树中的位置**</font>
+* <font color="#21433d">**支持方法级别的标签自定义埋入**</font>
 * <font color="#21433d">**天然支持异步线程的追踪**</font>
 * <font color="#21433d">**几乎无性能损耗**</font>
 
@@ -41,7 +43,7 @@ TLog支持了springboot的自动装配，在springboot环境下，只需要以�
 <dependency>
   <groupId>com.yomahub</groupId>
   <artifactId>tlog-all-spring-boot-starter</artifactId>
-  <version>1.0.3</version>
+  <version>1.1.0.BETA</version>
 </dependency>
 ```
 **目前jar包已上传中央仓库，可以直接依赖到**
@@ -113,13 +115,11 @@ Provider代码：
 
 
 
-# 四.其他配置
-
-## 4.1 Log框架配置文件增强
+# 四.Log框架配置文件增强
 
 如果你的自动化日志探测失效或者你用的是外置容器，你需要针对你项目中的日志框架配置进行修改，修改方法也很简单。
 
-### 4.1.1 Log4J配置文件增强
+## 4.1 Log4J配置文件增强
 
 只需要把`layout`的实现类换掉就可以了
 
@@ -153,7 +153,7 @@ Provider代码：
 
 
 
-### 4.1.2 Logback的配置文件增强
+## 4.2 Logback的配置文件增强
 
 换掉`encoder`的实现类或者换掉`layout`的实现类就可以了
 
@@ -194,13 +194,13 @@ Provider代码：
 
 
 
-### 4.1.3 Log4J2的配置文件增强
+## 4.3 Log4J2的配置文件增强
 
 log4J2由于是通过插件形式实现的，log4J2有自动扫描插件的功能。所以无需对配置文件做任何更改就能生效。
 
 
 
-## 4.2 日志标签模板自定义
+# 五.日志标签模板自定义
 
 TLog默认只打出traceId，以<$traceId>这种模板打出，当然你能自定义其模板。还能加入其它的标签头
 
@@ -222,11 +222,148 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 
-# 五.异步线程支持
+# 六.SpanId的生成规则
 
-对于new Thread这种异步线程方式(无论单独声明类还是内部类)，不需要你做任何事，TLog天然支持在异步线程中打印标签。
+TLog 中的 SpanId 代表本次调用在整个调用链路树中的位置，假设一个 Web 系统 A 接收了一次用户请求，那么在这个系统的日志中，记录下的 SpanId 是 0，代表是整个调用的根节点，如果 A 系统处理这次请求，需要通过 RPC 依次调用 B，C，D 三个系统，那么在 A 系统的客户端日志中，SpanId 分别是 0.1，0.2 和 0.3，在 B，C，D 三个系统的服务端日志中，SpanId 也分别是 0.1，0.2 和 0.3；如果 C 系统在处理请求的时候又调用了 E，F 两个系统，那么 C 系统中对应的客户端日志是 0.2.1 和 0.2.2，E，F 两个系统对应的服务端日志也是 0.2.1 和 0.2.2。根据上面的描述，我们可以知道，如果把一次调用中所有的 SpanId 收集起来，可以组成一棵完整的链路树。
+
+我们假设一次分布式调用中产生的 TraceId 是 `0a1234`（实际不会这么短），那么根据上文 SpanId 的产生过程，有下图：
+
+![3](media/3.png)
 
 
+
+# 七.业务标签
+
+TLog有`traceId`,`spanId`等框架级标签，但是也支持自定义业务标签，支持方法级别。你可以在某一个方法的日志里，统一加入业务的指标签，用于更加细致的定位
+
+## 7.1简单例子
+
+在你的方法上加上`@TLogAspect`标注。简单的例子如下：
+
+```java
+@TLogAspect({"id"})
+public void demo1(String id,String name){
+  log.info("这是第一条日志");
+  log.info("这是第二条日志");
+  log.info("这是第三条日志");
+  new Thread(() -> log.info("这是异步日志")).start();
+}
+```
+
+假设id的值为'NO1234'，日志打出来的样子如下，其中前面为框架spanId+traceId
+
+```
+2020-02-08 20:22:33.945 [main] INFO  Demo - <0.2><7205781616706048>[NO1234] 这是第一条日志
+2020-02-08 20:22:33.945 [main] INFO  Demo - <0.2><7205781616706048>[NO1234] 这是第二条日志
+2020-02-08 20:22:33.945 [main] INFO  Demo - <0.2><7205781616706048>[NO1234] 这是第三条日志
+2020-02-08 20:22:33.948 [Thread-3] INFO  Demo - <0.2><7205781616706048>[NO1234] 这是异步日志
+```
+
+
+
+## 7.2 多个数值
+
+`@TLogAspect`标注支持多个参数:
+
+```java
+@TLogAspect({"id","name"})
+public void demo1(String id,String name){
+  log.info("这是第一条日志");
+  log.info("这是第二条日志");
+  log.info("这是第三条日志");
+  new Thread(() -> log.info("这是异步日志")).start();
+}
+```
+
+假设传入id的值为'NO1234'，name为'jenny'，日志打出来的样子如下，其中前面为框架spanId+traceId：
+
+```
+2020-02-08 22:09:40.101 [main] INFO  Demo - <0.2><7205781616706048>[NO1234-jenny] 这是第一条日志
+2020-02-08 22:09:40.101 [main] INFO  Demo - <0.2><7205781616706048>[NO1234-jenny] 这是第二条日志
+2020-02-08 22:09:40.102 [main] INFO  Demo - <0.2><7205781616706048>[NO1234-jenny] 这是第三条日志
+2020-02-08 22:09:40.103 [Thread-3] INFO  Demo - <0.2><7205781616706048>[NO1234-jenny] 这是异步日志
+```
+
+
+
+## 7.3 多数值连接符
+
+`@TLogAspect`支持自定pattern和多个参数的连接符：
+
+```java
+@TLogAspect(value = {"id","name"},pattern = "<-{}->",joint = "_")
+public void demo(String id,String name){
+  log.info("加了patter和joint的示例");
+}
+```
+
+日志打出来的样子如下，其中前面为框架spanId+traceId：
+
+```
+2020-02-08 22:09:40.103 [main] INFO  Demo - <0.2><7205781616706048><-NO1234_jenny-> 加了patter和joint的示例
+```
+
+
+
+## 7.4 点操作符
+
+`@TLogAspect`支持点操作符，适用于对象的取值，支持类型为业务对象和Map
+
+```java
+@TLogAspect({"person.id","person.age","person.company.department.dptId"})
+public void demo(Person person){
+  log.info("多参数加多层级示例");
+}
+```
+
+日志打出来的样子如下，其中前面为框架spanId+traceId：
+
+```
+2020-02-08 22:09:40.110 [main] INFO  Demo - <0.2><7205781616706048>[31-25-80013] 多参数加多层级示例
+```
+
+
+
+## 7.5 自定义Convert
+
+`@TLogAspect`支持自定义Convert，适用于更复杂的业务场景
+
+```java
+@TLogAspect(convert = CustomAspectLogConvert.class)
+public void demo(Person person){
+  log.info("自定义Convert示例");
+}
+```
+
+```java
+public class CustomAspectLogConvert implements AspectLogConvert {
+    @Override
+    public String convert(Object[] args) {
+        Person person = (Person)args[0];
+        return "PERSON(" + person.getId() + ")";
+    }
+}
+```
+
+日志打印出来的样子如下，其中前面为框架spanId+traceId：
+
+```
+2020-02-20 17:05:12.414 [main] INFO  Demo - <0.2><7205781616706048>[PERSON(31] 自定义Convert示例
+```
+
+
+
+
+
+# 八.异步线程支持
+
+## 8.1 一般异步线程
+
+对于一般异步线程（执行好之后线程会被销毁），不需要你做任何事，TLog天然支持在异步线程中打印标签。
+
+
+
+## 8.2 线程池
 
 但是对于使用了线程池的场景，由于线程池中的线程不会被销毁，会被复用。需要你用`TLogInheritableTask`替换`Runnable`，否则标签数据会重复：
 
@@ -243,39 +380,43 @@ executorService.submit(new TLogInheritableTask() {
 
 
 
-# 六.非Springboot项目接入
+
+
+# 九.非Springboot项目接入
 
 需要引入maven依赖
 ```xml
 <dependency>
   <groupId>com.yomahub</groupId>
   <artifactId>tlog-all</artifactId>
-  <version>1.0.3</version>
+  <version>1.1.0.BETA</version>
 </dependency>
 ```
 **目前jar包已上传中央仓库，可以直接依赖到**
 
-## 6.1 dubbo & dubbox
+## 9.1 dubbo & dubbox
 
 如果你的RPC是dubbo或者dubbox，需要在spring xml里如下配置
 
 ```xml
 <bean class="com.yomahub.tlog.web.TLogWebConfig"/>
+<bean class="com.yomahub.tlog.core.aop.AspectLogAop"/>
 ```
 
 
 
-## 6.2 Spring Cloud
+## 9.2 Spring Cloud
 
 如果你的RPC是spring cloud，需要在spring xml里如下配置
 
 ```xml
 <bean class="com.yomahub.tlog.feign.filter.TLogFeignFilter"/>
+<bean class="com.yomahub.tlog.core.aop.AspectLogAop"/>
 ```
 
 
 
-## 6.3 自定义模板
+## 9.3 自定义模板
 
 如果你要自定义模板，需要在spring xml如下配置
 
@@ -287,7 +428,7 @@ executorService.submit(new TLogInheritableTask() {
 
 
 
-# 七.联系作者
+# 十.联系作者
 
 关注公众号回复`tlog`即可加入讨论群
 
