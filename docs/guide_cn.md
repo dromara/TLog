@@ -432,4 +432,4 @@ executorService.submit(new TLogInheritableTask() {
 
 关注公众号回复`tlog`即可加入讨论群
 
-![offIical-wx](http://yomahub.com/images/offIical-wx.jpg)
+![offIical-wx](media/offIical-wx.jpg)
