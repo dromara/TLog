@@ -1,7 +1,7 @@
 
 
 <p align="center">
-    <img width="500" src="https://bryan31.gitee.io/tlog/media/logo.png" alt="logo">
+    <img width="500" src="https://bryan31.gitee.io/tlog/media/logo1.png" alt="logo">
 </p>
 
 > 轻量级的分布式日志标记追踪神器
