@@ -1,9 +1,7 @@
 > 轻量级的分布式日志标记追踪神器
 
-![logo](media/logo.png)
-
 <p align="center">
-    <img width="300" src="https://bryan31.gitee.io/tlog/media/logo.png" alt="logo">
+    <img width="150" src="https://bryan31.gitee.io/tlog/media/logo.png" alt="logo">
 </p>
 
 
