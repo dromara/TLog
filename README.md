@@ -1,6 +1,6 @@
 <p align="center">
 <a href="https://bryan31.gitee.io/tlog">
-    <img width="300" src="https://bryan31.gitee.io/tlog/media/logo2.png" alt="logo">
+    <img width="200" src="https://bryan31.gitee.io/tlog/media/logo2.png" alt="logo">
 </a>
 </p>
 
