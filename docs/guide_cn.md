@@ -88,9 +88,9 @@ public class Runner {
 
 ```
 2020-09-16 18:12:56,748 [WARN] [TLOG]重新生成traceId[7161457983341056]  >> com.yomahub.tlog.web.TLogWebInterceptor:39
-2020-09-16 18:12:56,763 [INFO] <7161457983341056> logback-dubbox-consumer:invoke method sayHello,name=jack  >> com.yomahub.tlog.example.dubbox.controller.DemoController:22
-2020-09-16 18:12:56,763 [INFO] <7161457983341056> 测试日志aaaa  >> com.yomahub.tlog.example.dubbox.controller.DemoController:23
-2020-09-16 18:12:56,763 [INFO] <7161457983341056> 测试日志bbbb  >> com.yomahub.tlog.example.dubbox.controller.DemoController:24
+2020-09-16 18:12:56,763 [INFO] <0><7161457983341056> logback-dubbox-consumer:invoke method sayHello,name=jack  >> com.yomahub.tlog.example.dubbox.controller.DemoController:22
+2020-09-16 18:12:56,763 [INFO] <0><7161457983341056> 测试日志aaaa  >> com.yomahub.tlog.example.dubbox.controller.DemoController:23
+2020-09-16 18:12:56,763 [INFO] <0><7161457983341056> 测试日志bbbb  >> com.yomahub.tlog.example.dubbox.controller.DemoController:24
 ```
 
 
@@ -104,14 +104,18 @@ Provider代码：
 日志打印：
 
 ```
-2020-09-16 18:12:56,854 [INFO] <7161457983341056> logback-dubbox-provider:invoke method sayHello,name=jack  >> com.yomahub.tlog.example.dubbo.service.impl.DemoServiceImpl:15
-2020-09-16 18:12:56,854 [INFO] <7161457983341056> 测试日志cccc  >> com.yomahub.tlog.example.dubbo.service.impl.DemoServiceImpl:16
-2020-09-16 18:12:56,854 [INFO] <7161457983341056> 测试日志dddd  >> com.yomahub.tlog.example.dubbo.service.impl.DemoServiceImpl:17
+2020-09-16 18:12:56,854 [INFO] <0.1><7161457983341056> logback-dubbox-provider:invoke method sayHello,name=jack  >> com.yomahub.tlog.example.dubbo.service.impl.DemoServiceImpl:15
+2020-09-16 18:12:56,854 [INFO] <0.1><7161457983341056> 测试日志cccc  >> com.yomahub.tlog.example.dubbo.service.impl.DemoServiceImpl:16
+2020-09-16 18:12:56,854 [INFO] <0.1><7161457983341056> 测试日志dddd  >> com.yomahub.tlog.example.dubbo.service.impl.DemoServiceImpl:17
 ```
 
 
 
 可以看到，经过简单接入后，各个微服务之间每个请求有一个全局唯一的traceId贯穿其中，对所有的日志输出都能生效，这下定位某个请求的日志链就变得轻松了。
+
+
+
+?> 其中traceId前面的0，0.1是spanId，关于spanId的说明请参阅`六.SpanId的生成规则`。
 
 
 
@@ -207,12 +211,14 @@ TLog默认只打出traceId，以<$traceId>这种模板打出，当然你能自�
 你只需要在springboot的application.properties里如下定义：
 
 ```properties
-tlog.pattern=[$preApp][$preIp][$traceId]
+tlog.pattern=[$preApp][$preIp][$spanId][$traceId]
 ```
 
 `$preApp` ：上游微服务节点名称
 
 `$preIp`：上游微服务的IP地址
+
+`$spanId`：链路spanId，具体规则可以参照`六.SpanId生成规则`
 
 `$traceId`：全局唯一跟踪ID
 
@@ -223,6 +229,8 @@ tlog.pattern=[$preApp][$preIp][$traceId]
 
 
 # 六.SpanId的生成规则
+
+TLog默认的标签打印模板是`<\$spanId><\$traceId>`
 
 TLog 中的 SpanId 代表本次调用在整个调用链路树中的位置，假设一个 Web 系统 A 接收了一次用户请求，那么在这个系统的日志中，记录下的 SpanId 是 0，代表是整个调用的根节点，如果 A 系统处理这次请求，需要通过 RPC 依次调用 B，C，D 三个系统，那么在 A 系统的客户端日志中，SpanId 分别是 0.1，0.2 和 0.3，在 B，C，D 三个系统的服务端日志中，SpanId 也分别是 0.1，0.2 和 0.3；如果 C 系统在处理请求的时候又调用了 E，F 两个系统，那么 C 系统中对应的客户端日志是 0.2.1 和 0.2.2，E，F 两个系统对应的服务端日志也是 0.2.1 和 0.2.2。根据上面的描述，我们可以知道，如果把一次调用中所有的 SpanId 收集起来，可以组成一棵完整的链路树。
 
