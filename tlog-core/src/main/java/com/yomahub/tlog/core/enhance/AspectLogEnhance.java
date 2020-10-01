@@ -14,6 +14,8 @@ public class AspectLogEnhance {
         try{
             ClassPool pool = ClassPool.getDefault();
             pool.importPackage("com.yomahub.tlog.core.context");
+            pool.importPackage("com.yomahub.tlog.core.enhance.LogbackEnhance");
+            pool.importPackage("com.yomahub.tlog.core.enhance.Log4jEnhance");
 
             //logback的增强
             CtClass cc = null;
@@ -22,7 +24,7 @@ public class AspectLogEnhance {
 
                 if(cc != null){
                     CtMethod ctMethod = cc.getDeclaredMethod("convert");
-                    ctMethod.setBody("{String logValue = AspectLogContext.getLogValue();if(logValue != null){return logValue + \" \" + $1.getFormattedMessage();}else{return $1.getFormattedMessage();}}");
+                    ctMethod.setBody("{return LogbackEnhance.enhance($1);}");
                     cc.toClass();
                 }
             }catch (Exception e){
@@ -36,7 +38,7 @@ public class AspectLogEnhance {
 
                 if(cc != null){
                     CtMethod ctMethod = cc.getDeclaredMethod("getRenderedMessage");
-                    ctMethod.setBody("{if(renderedMessage == null && message != null) {if(message instanceof String)renderedMessage = (String) message;else {LoggerRepository repository = logger.getLoggerRepository();if(repository instanceof RendererSupport) {RendererSupport rs = (RendererSupport) repository;renderedMessage= rs.getRendererMap().findAndRender(message);} else {renderedMessage = message.toString();}}}String logValue = AspectLogContext.getLogValue();if(logValue != null){renderedMessage = logValue + \" \" + renderedMessage;}return renderedMessage;}");
+                    ctMethod.setBody("{return Log4jEnhance.enhance(renderedMessage,message,logger);}");
                     cc.toClass();
                 }
             }catch (Exception e){
