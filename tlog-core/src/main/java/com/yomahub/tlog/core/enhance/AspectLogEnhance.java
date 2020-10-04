@@ -12,14 +12,12 @@ public class AspectLogEnhance {
 
     public static void enhance(){
         try{
-            ClassPool pool = ClassPool.getDefault();
-            pool.importPackage("com.yomahub.tlog.core.context");
-            pool.importPackage("com.yomahub.tlog.core.enhance.LogbackEnhance");
-            pool.importPackage("com.yomahub.tlog.core.enhance.Log4jEnhance");
-
             //logback的增强
             CtClass cc = null;
             try{
+                ClassPool pool = ClassPool.getDefault();
+                pool.importPackage("com.yomahub.tlog.core.enhance.LogbackSyncEnhance");
+
                 cc = pool.get("ch.qos.logback.classic.pattern.MessageConverter");
 
                 if(cc != null){
@@ -30,15 +28,31 @@ public class AspectLogEnhance {
             }catch (Exception e){
             }
 
-            //log4j的增强
+            //log4j的同步日志增强
             try{
-                pool.importPackage("org.apache.log4j.spi.LoggerRepository");
-                pool.importPackage("org.apache.log4j.spi.RendererSupport");
+                ClassPool pool = ClassPool.getDefault();
+                pool.importPackage("com.yomahub.tlog.core.enhance.Log4jSyncEnhance");
+
                 cc = pool.get("org.apache.log4j.spi.LoggingEvent");
 
                 if(cc != null){
                     CtMethod ctMethod = cc.getDeclaredMethod("getRenderedMessage");
                     ctMethod.setBody("{return Log4jEnhance.enhance(renderedMessage,message,logger);}");
+                    cc.toClass();
+                }
+            }catch (Exception e){
+            }
+
+            //log4j异步日志方式的增强
+            try{
+                ClassPool pool = ClassPool.getDefault();
+                pool.importPackage("com.yomahub.tlog.core.enhance.Log4jASyncEnhance");
+
+                cc = pool.get("org.apache.log4j.AppenderSkeleton");
+
+                if(cc != null){
+                    CtMethod ctMethod = cc.getDeclaredMethod("doAppend");
+                    ctMethod.setBody("{Log4jASyncEnhance.enhance($1,closed,name,this);}");
                     cc.toClass();
                 }
             }catch (Exception e){
