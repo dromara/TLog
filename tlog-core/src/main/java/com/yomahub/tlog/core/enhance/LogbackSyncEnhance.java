@@ -8,7 +8,7 @@ import com.yomahub.tlog.core.context.AspectLogContext;
  * @author Bryan.Zhang
  * @since 2020/9/29
  */
-public class LogbackEnhance {
+public class LogbackSyncEnhance {
 
     public static String enhance(ILoggingEvent event){
         String logValue = AspectLogContext.getLogValue();

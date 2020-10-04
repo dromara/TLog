@@ -10,7 +10,7 @@ import org.apache.log4j.spi.RendererSupport;
  * @author Bryan.Zhang
  * @since 2020/9/29
  */
-public class Log4jEnhance {
+public class Log4jSyncEnhance {
 
     public static String enhance(String renderedMessage, Object message, Category logger){
         if(renderedMessage == null && message != null) {
