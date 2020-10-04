@@ -30,11 +30,11 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
                 if(field == null){
                     field = ReflectUtil.getField(LoggingEvent.class,"formattedMessage");
                     field.setAccessible(true);
+                }
 
-                    try {
-                        field.set(loggingEvent,resultLog);
-                    } catch (IllegalAccessException e) {
-                    }
+                try {
+                    field.set(loggingEvent,resultLog);
+                } catch (IllegalAccessException e) {
                 }
             }
             eventObject = loggingEvent;
