@@ -1,4 +1,4 @@
-package com.yomahub.tlog.core.enhance;
+package com.yomahub.tlog.core.enhance.bytes.log4j;
 
 import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.log4j.Category;
@@ -10,7 +10,7 @@ import org.apache.log4j.spi.RendererSupport;
  * @author Bryan.Zhang
  * @since 2020/9/29
  */
-public class Log4jSyncEnhance {
+public class Log4jBytesSyncEnhance {
 
     public static String enhance(String renderedMessage, Object message, Category logger){
         if(renderedMessage == null && message != null) {

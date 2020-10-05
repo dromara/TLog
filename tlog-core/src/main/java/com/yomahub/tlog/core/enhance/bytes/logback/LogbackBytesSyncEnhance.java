@@ -1,4 +1,4 @@
-package com.yomahub.tlog.core.enhance;
+package com.yomahub.tlog.core.enhance.bytes.logback;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import com.yomahub.tlog.core.context.AspectLogContext;
@@ -8,7 +8,7 @@ import com.yomahub.tlog.core.context.AspectLogContext;
  * @author Bryan.Zhang
  * @since 2020/9/29
  */
-public class LogbackSyncEnhance {
+public class LogbackBytesSyncEnhance {
 
     public static String enhance(ILoggingEvent event){
         String logValue = AspectLogContext.getLogValue();

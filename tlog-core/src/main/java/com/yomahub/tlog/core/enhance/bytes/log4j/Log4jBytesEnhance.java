@@ -1,4 +1,4 @@
-package com.yomahub.tlog.core.enhance;
+package com.yomahub.tlog.core.enhance.bytes.log4j;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
@@ -22,7 +22,7 @@ import java.util.Map;
  * @author Bryan.Zhang
  * @since 2020/9/29
  */
-public class Log4jASyncEnhance {
+public class Log4jBytesEnhance {
 
     private static Field headFilterField;
 
