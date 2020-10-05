@@ -14,6 +14,6 @@ public class TLogConstants {
 
     public final static String PRE_IP_KEY = "pre_ip";
 
-    public final static String UNKNOWN = "unknown";
+    public final static String UNKNOWN = "NONE";
 
 }
