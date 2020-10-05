@@ -54,6 +54,12 @@ TLog支持了springboot的自动装配，在springboot环境下，只需要以�
 
 只需要在你的启动类中加入一行代码，即可以自动进行探测你项目所使用的Log框架，并进行增强。
 
+?> 以下方法适用于log4j，logback，原则上log4j2连这一行都不需要，因为log4j2会插件架构设计，会自动读取TLog项目中log4j2的适配插件
+
+?> 以下方法对3大日志框架的异步日志形式也支持，请放心使用
+
+
+
 ```java
 @SpringBootApplication
 public class Runner {
@@ -66,7 +72,15 @@ public class Runner {
 }
 ```
 
-!> 因为这里是用javassist实现，需要在jvm加载对应日志框架的类之前，进行字节码增强。所以这里用static块。并且Springboot/Spring的启动类中不能加入log定义，否则会不生效。或者如果你是用tomcat/jboss/jetty等外置容器启动的，则参照`4.1 Log框架配置文件增强`
+
+
+**因为这里是用javassist实现，需要在jvm加载对应日志框架的类之前，进行字节码增强。所以这里用static块。但是此方法要注意以下几点：**
+
+!> 对于Springboot应用而言，启动类中不能加入log定义，否则会不生效。
+
+!> 如果你是用tomcat/jboss/jetty等外置容器启动的(springboot的spring-boot-starter-web属于内置容器)，则此方法无法使用，只能手动修改log配置文件，替换几个类，也很方便，请参照`4.1 Log框架配置文件增强`
+
+!> 对于使用log4j2日志框架的应用来说，此方法如果出现不生效的情况，请把log4j2配置文件的`pattern`中的`m/msg/message`改成`tm/tmsg/tmessage`
 
 
 
@@ -121,13 +135,13 @@ Provider代码：
 
 # 四.Log框架配置文件增强
 
-如果你的自动化日志探测失效或者你用的是外置容器，你需要针对你项目中的日志框架配置进行修改，修改方法也很简单。
+如果字节码增强配置方式失败，或者你的项目比较复杂。TLog还提供了针对每一种日志框架适配的方式，需要你去修改日志的配置文件，替换相应的类 ，配置方式也很简单，下面给出了每一种场景的示例
 
 ## 4.1 Log4J配置文件增强
 
-只需要把`layout`的实现类换掉就可以了
+**同步日志**
 
-每个公司的Log4J的模板大同小异，这里只给出xml的例子
+只需要把`layout`的实现类换掉就可以了
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -135,14 +149,14 @@ Provider代码：
 <log4j:configuration>
     <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
         <!--替换成AspectLog4jPatternLayout-->
-        <layout class="AspectLog4jPatternLayout">
+        <layout class="com.yomahub.tlog.core.enhance.log4j.AspectLog4jPatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %m  >> %c:%L%n"/>
         </layout>
     </appender>
     <appender name="fileout" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="./logs/test.log"/>
         <!--替换成AspectLog4jPatternLayout-->
-        <layout class="AspectLog4jPatternLayout">
+        <layout class="com.yomahub.tlog.core.enhance.log4j.AspectLog4jPatternLayout">
             <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %m  >> %c:%L%n"/>
         </layout>
     </appender>
@@ -157,11 +171,44 @@ Provider代码：
 
 
 
+**异步日志**
+
+只要把`appender`的实现类替换掉就行了
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+    <appender name="stdout" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %m  >> %c:%L%n"/>
+        </layout>
+    </appender>
+    <appender name="fileout" class="org.apache.log4j.DailyRollingFileAppender">
+        <param name="File" value="./logs/log4j-dubbo-provider.log"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss,SSS} [%p] %m  >> %c:%L%n"/>
+        </layout>
+    </appender>
+
+  	<!--这里替换成AspectLog4jAsyncAppender-->
+    <appender name="asyncFileout" class="com.yomahub.tlog.core.enhance.log4j.async.AspectLog4jAsyncAppender">
+        <appender-ref ref="fileout"/>
+    </appender>
+
+    <root>
+        <priority value="info" />
+        <appender-ref ref="stdout"/>
+        <appender-ref ref="asyncFileout"/>
+    </root>
+</log4j:configuration>
+```
+
 ## 4.2 Logback的配置文件增强
 
-换掉`encoder`的实现类或者换掉`layout`的实现类就可以了
+**同步日志**
 
-以下给出xml示例：
+换掉`encoder`的实现类或者换掉`layout`的实现类就可以了
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -169,8 +216,8 @@ Provider代码：
     <property name="APP_NAME" value="logtest"/>
     <property name="LOG_HOME" value="./logs" />
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <!--替换成AspectLogbackEncoder-->
-		<encoder class="AspectLogbackEncoder">
+        <!--这里替换成AspectLogbackEncoder-->
+		<encoder class="com.yomahub.tlog.core.enhance.log4j.AspectLogbackEncoder">
 			  <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
 		</encoder>
     </appender>
@@ -181,16 +228,59 @@ Provider代码：
             <MaxHistory>30</MaxHistory>
             <maxFileSize>1000MB</maxFileSize>
         </rollingPolicy>
-        <!--替换成AspectLogbackEncoder-->
-        <encoder class="AspectLogbackEncoder">
+        <!--这里替换成AspectLogbackEncoder-->
+        <encoder class="com.yomahub.tlog.core.enhance.log4j.AspectLogbackEncoder">
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- 日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="FILE" />
+    </root>
+</configuration>
+
+```
+
+
+
+**异步日志**
+
+替换掉`appender`的实现类就可以了
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <property name="APP_NAME" value="logback-dubbo-provider"/>
+    <property name="LOG_HOME" value="./logs" />
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/${APP_NAME}.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>${LOG_HOME}/${APP_NAME}.log.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+            <maxFileSize>1000MB</maxFileSize>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+  	<!-- 这里替换成AspectLogbackAsyncAppender -->
+    <appender name="ASYNC_FILE" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
+        <discardingThreshold>0</discardingThreshold>
+        <queueSize>2048</queueSize>
+        <includeCallerData>true</includeCallerData>
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="ASYNC_FILE" />
     </root>
 </configuration>
 
@@ -206,7 +296,7 @@ log4J2由于是通过插件形式实现的，log4J2有自动扫描插件的功�
 
 # 五.日志标签模板自定义
 
-TLog默认只打出traceId，以<$traceId>这种模板打出，当然你能自定义其模板。还能加入其它的标签头
+TLog默认只打出spanId和traceId，以<$spanId><$traceId>这种模板打出，当然你能自定义其模板。还能加入其它的标签头
 
 你只需要在springboot的application.properties里如下定义：
 
@@ -430,7 +520,7 @@ executorService.submit(new TLogInheritableTask() {
 
 ```xml
 <bean class="com.yomahub.tlog.context.TLogLabelGenerator">
-    <property name="labelPattern" value="[$preApp][$preIp][$traceId]"/>
+    <property name="labelPattern" value="[$preApp][$preIp][$spanId][$traceId]"/>
 </bean>
 ```
 
