@@ -38,6 +38,9 @@ public class TLogWebInterceptor implements HandlerInterceptor {
                 preIp = TLogConstants.UNKNOWN;
             }
 
+            TLogContext.putPreIvkApp(preIvkApp);
+            TLogContext.putPreIp(preIp);
+
             if(StringUtils.isBlank(traceId)){
                 traceId = UniqueIdGenerator.generateStringId();
                 log.debug("[TLOG]重新生成traceId[{}]",traceId);
@@ -67,6 +70,8 @@ public class TLogWebInterceptor implements HandlerInterceptor {
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         if(handler instanceof HandlerMethod){
             //移除ThreadLocal里的数据
+            TLogContext.removePreIvkApp();
+            TLogContext.removePreIp();
             TLogContext.removeTraceId();
             TLogContext.removeSpanId();
             AspectLogContext.remove();

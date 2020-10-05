@@ -42,6 +42,9 @@ public class TLogDubboFilter implements Filter {
                 preIp = TLogConstants.UNKNOWN;
             }
 
+            TLogContext.putPreIvkApp(preIvkApp);
+            TLogContext.putPreIp(preIp);
+
             //如果从隐式传参里没有获取到，则重新生成一个traceId
             if(StringUtils.isBlank(traceId)){
                 traceId = UniqueIdGenerator.generateStringId();
@@ -65,6 +68,8 @@ public class TLogDubboFilter implements Filter {
                 result = invoker.invoke(invocation);
             }finally {
                 //移除ThreadLocal里的数据
+                TLogContext.removePreIvkApp();
+                TLogContext.removePreIp();
                 TLogContext.removeTraceId();
                 TLogContext.removeSpanId();
                 AspectLogContext.remove();
