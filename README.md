@@ -24,5 +24,5 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 
 关注公众号回复`tlog`即可加入TLog开源框架讨论交流群，我会用心回答每一个人的问题
 
-![offIical-wx](static/img/offIical-wx.jpg)
+![offIical-wx](static/img/offical-wx.jpg)
 
