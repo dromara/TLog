@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://bryan31.gitee.io/tlog">
+<a href="http://bryan31.gitee.io/tlog-website/">
     <img width="500" src="static/img/logo.png" alt="logo">
 </a>
 </p>
