@@ -1,5 +1,5 @@
 <p align="center">
-<a href="http://bryan31.gitee.io/tlog-website/">
+<a href="http://yomahub.com/tlog/">
     <img width="500" src="static/img/logo.png" alt="logo">
 </a>
 </p>
