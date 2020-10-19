@@ -18,11 +18,11 @@ public class AspectLogEnhance {
                 ClassPool pool = ClassPool.getDefault();
                 pool.importPackage("com.yomahub.tlog.core.enhance.bytes.logback.LogbackBytesSyncEnhance");
 
-                cc = pool.get("ch.qos.logback.classic.pattern.MessageConverter");
+                cc = pool.get("ch.qos.logback.core.UnsynchronizedAppenderBase");
 
                 if(cc != null){
-                    CtMethod ctMethod = cc.getDeclaredMethod("convert");
-                    ctMethod.setBody("{return LogbackBytesSyncEnhance.enhance($1);}");
+                    CtMethod ctMethod = cc.getDeclaredMethod("doAppend");
+                    ctMethod.setBody("{return LogbackBytesSyncEnhance.enhance($1,this);}");
                     cc.toClass();
                     System.out.println("locakback同步日志增强成功");
                 }
