@@ -24,8 +24,10 @@ public class AspectLogEnhance {
                     CtMethod ctMethod = cc.getDeclaredMethod("convert");
                     ctMethod.setBody("{return LogbackBytesSyncEnhance.enhance($1);}");
                     cc.toClass();
+                    System.out.println("locakback同步日志增强成功");
                 }
             }catch (Exception e){
+                System.out.println("locakback同步日志增强失败");
             }
 
             //logback异步日志的增强
@@ -39,8 +41,10 @@ public class AspectLogEnhance {
                     CtMethod ctMethod = cc.getDeclaredMethod("append");
                     ctMethod.setBody("{LogbackBytesAsyncEnhance.enhance($1,this);}");
                     cc.toClass();
+                    System.out.println("locakback异步日志增强成功");
                 }
             }catch (Exception e){
+                System.out.println("locakback异步日志增强失败");
             }
 
             //log4j日志增强(包括同步和异步日志)
@@ -54,8 +58,10 @@ public class AspectLogEnhance {
                     CtMethod ctMethod = cc.getDeclaredMethod("doAppend");
                     ctMethod.setBody("{Log4jBytesEnhance.enhance($1,closed,name,this);}");
                     cc.toClass();
+                    System.out.println("log4j日志增强成功");
                 }
             }catch (Exception e){
+                System.out.println("log4j日志增强失败");
             }
         }catch (Throwable t){
             t.printStackTrace();
