@@ -5,6 +5,7 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.spi.FilterReply;
 import ch.qos.logback.core.status.WarnStatus;
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.core.context.AspectLogContext;
@@ -37,6 +38,8 @@ public class LogbackBytesSyncEnhance {
     public static final int ALLOWED_REPEATS = 3;
 
     public static void enhance(Object event, UnsynchronizedAppenderBase thisObj){
+        LoggingEvent loggingEvent = (LoggingEvent)event;
+
         if (guardField == null){
             guardField = ReflectUtil.getField(thisObj.getClass(),"guard");
         }
@@ -66,9 +69,8 @@ public class LogbackBytesSyncEnhance {
         }
 
         if(StringUtils.isNotBlank(AspectLogContext.getLogValue())){
-            LoggingEvent loggingEvent = (LoggingEvent)event;
-            String resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(),loggingEvent.getMessage());
-            ReflectUtil.setFieldValue(event, messageField, resultLog);
+            String resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(),loggingEvent.getFormattedMessage());
+            ReflectUtil.setFieldValue(loggingEvent, messageField, resultLog);
         }
 
         ThreadLocal<Boolean> guard;
@@ -106,7 +108,7 @@ public class LogbackBytesSyncEnhance {
             }
 
             // ok, we now invoke derived class' implementation of append
-            ReflectUtil.invoke(thisObj,appendMethod,event);
+            ReflectUtil.invoke(thisObj,appendMethod,loggingEvent);
         } catch (Exception e) {
             if (exceptionCount++ < ALLOWED_REPEATS) {
                 thisObj.addError("Appender [" + name + "] failed to append.", e);

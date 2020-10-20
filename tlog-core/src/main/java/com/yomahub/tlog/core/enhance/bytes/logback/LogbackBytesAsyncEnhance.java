@@ -45,7 +45,7 @@ public class LogbackBytesAsyncEnhance {
             String resultLog;
 
             if(StringUtils.isNotBlank(AspectLogContext.getLogValue())){
-                resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(),loggingEvent.getMessage());
+                resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(),loggingEvent.getFormattedMessage());
                 if(field == null){
                     field = ReflectUtil.getField(LoggingEvent.class,"formattedMessage");
                     field.setAccessible(true);
