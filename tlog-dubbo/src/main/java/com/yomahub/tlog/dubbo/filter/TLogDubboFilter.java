@@ -83,10 +83,10 @@ public class TLogDubboFilter implements Filter {
                 String appName = invoker.getUrl().getParameter(CommonConstants.APPLICATION_KEY);
                 String ip = NetUtil.getLocalhostStr();
 
-                invocation.setAttachment(TLogConstants.TLOG_TRACE_KEY,traceId);
-                invocation.setAttachment(TLogConstants.PRE_IVK_APP_KEY,appName);
-                invocation.setAttachment(TLogConstants.PRE_IP_KEY,ip);
-                invocation.setAttachment(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
+                RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY,traceId);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY,appName);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY,ip);
+                RpcContext.getContext().setAttachment(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             }else{
                 log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
             }
