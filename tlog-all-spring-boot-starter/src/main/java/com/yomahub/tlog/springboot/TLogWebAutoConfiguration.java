@@ -1,6 +1,6 @@
 package com.yomahub.tlog.springboot;
 
-import com.yomahub.tlog.web.TLogWebConfig;
+import com.yomahub.tlog.web.spring.springboot.TLogWebConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
