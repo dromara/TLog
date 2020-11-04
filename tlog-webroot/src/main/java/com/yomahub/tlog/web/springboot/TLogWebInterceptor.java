@@ -1,4 +1,4 @@
-package com.yomahub.tlog.web.spring.springboot;
+package com.yomahub.tlog.web.springboot;
 
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
