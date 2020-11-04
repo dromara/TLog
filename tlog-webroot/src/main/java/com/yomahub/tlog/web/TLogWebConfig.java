@@ -1,4 +1,4 @@
-package com.yomahub.tlog.web.springboot;
+package com.yomahub.tlog.web;
 
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
