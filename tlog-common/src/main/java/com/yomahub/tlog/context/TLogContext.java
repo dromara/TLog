@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TLogContext {
 
+    private static boolean hasTLogMDC;
+
     private static InheritableThreadLocal<String> traceIdTL = new InheritableThreadLocal<>();
 
     private static InheritableThreadLocal<String> preIvkAppTL = new InheritableThreadLocal<>();
@@ -61,5 +63,13 @@ public class TLogContext {
 
     public static void removePreIp(){
         preIpTL.remove();
+    }
+
+    public static boolean hasTLogMDC() {
+        return hasTLogMDC;
+    }
+
+    public static void setHasTLogMDC(boolean hasTLogMDC) {
+        TLogContext.hasTLogMDC = hasTLogMDC;
     }
 }

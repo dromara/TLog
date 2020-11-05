@@ -4,6 +4,7 @@ import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
+import com.yomahub.tlog.core.enhance.logback.AspectLogbackMDCConverter;
 import com.yomahub.tlog.id.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -48,8 +49,13 @@ public class TLogWebCommon {
             //生成日志标签
             String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp, preIp, traceId, TLogContext.getSpanId());
 
-            //往日志切面器里放一个日志前缀
+            //往日志切面器里放一个日志标签
             AspectLogContext.putLogValue(tlogLabel);
+
+            //如果有MDC，则往MDC中放入日志标签
+            if(TLogContext.hasTLogMDC()){
+                MDC.put(TLogConstants.MDC_KEY, tlogLabel);
+            }
         }
     }
 
@@ -61,7 +67,9 @@ public class TLogWebCommon {
             TLogContext.removeTraceId();
             TLogContext.removeSpanId();
             AspectLogContext.remove();
-            MDC.clear();
+            if(TLogContext.hasTLogMDC()){
+                MDC.clear();
+            }
         }
     }
 }

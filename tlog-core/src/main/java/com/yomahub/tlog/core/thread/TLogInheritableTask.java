@@ -1,7 +1,10 @@
 package com.yomahub.tlog.core.thread;
 
+import org.slf4j.MDC;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * 线程池中使用TLog标签的增强支持类,用来解决用普通的Runnable接口可能traceId等标签无效的情况
@@ -14,6 +17,7 @@ public abstract class TLogInheritableTask implements Runnable{
     private static volatile Class threadLocalMapClazz;
     private static volatile Method createInheritedMapMethod;
     private static final Object accessLock = new Object();
+    private final Map<String, String> _cm = MDC.getCopyOfContextMap();
 
 
     public TLogInheritableTask(){
@@ -91,6 +95,7 @@ public abstract class TLogInheritableTask implements Runnable{
         boolean isSet = false;
         Thread currentThread = Thread.currentThread();
         Field field = getInheritableThreadLocalsField();
+        MDC.setContextMap(_cm);
         try {
             if (obj != null && field != null) {
                 field.set(currentThread, obj);
@@ -108,6 +113,7 @@ public abstract class TLogInheritableTask implements Runnable{
             }catch (Exception e){
                 throw new IllegalStateException(e);
             }
+            MDC.clear();
         }
     }
 }

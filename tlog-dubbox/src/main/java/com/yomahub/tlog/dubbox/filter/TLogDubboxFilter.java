@@ -9,8 +9,10 @@ import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
+import com.yomahub.tlog.core.enhance.logback.AspectLogbackMDCConverter;
 import com.yomahub.tlog.id.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
+import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -64,6 +66,11 @@ public class TLogDubboxFilter implements Filter {
             //往日志切面器里放一个日志前缀
             AspectLogContext.putLogValue(tlogLabel);
 
+            //如果有MDC，则往MDC中放入日志标签
+            if(TLogContext.hasTLogMDC()){
+                MDC.put(TLogConstants.MDC_KEY, tlogLabel);
+            }
+
             try{
                 //调用dubbo
                 result = invoker.invoke(invocation);
@@ -74,7 +81,9 @@ public class TLogDubboxFilter implements Filter {
                 TLogContext.removeTraceId();
                 TLogContext.removeSpanId();
                 AspectLogContext.remove();
-                MDC.clear();
+                if(TLogContext.hasTLogMDC()){
+                    MDC.clear();
+                }
             }
 
             return result;

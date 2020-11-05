@@ -74,7 +74,6 @@ public class TLogDubboFilter implements Filter {
                 TLogContext.removeTraceId();
                 TLogContext.removeSpanId();
                 AspectLogContext.remove();
-                MDC.clear();
             }
 
             return result;
