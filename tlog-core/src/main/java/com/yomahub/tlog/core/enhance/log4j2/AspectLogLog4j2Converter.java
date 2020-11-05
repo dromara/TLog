@@ -36,7 +36,7 @@ import java.util.Locale;
  * @author Bryan.Zhang
  */
 @Plugin(name = "AspectLogLog4j2Converter", category = PatternConverter.CATEGORY)
-@ConverterKeys({ "m", "msg", "message", "tm", "tmsg", "tmessage" })
+@ConverterKeys({ "m", "msg", "message", "tm", "tmsg", "tmessage", "tl" })
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
 

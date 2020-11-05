@@ -13,6 +13,7 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 /**
  * dubbo的调用拦截器
@@ -73,6 +74,7 @@ public class TLogDubboFilter implements Filter {
                 TLogContext.removeTraceId();
                 TLogContext.removeSpanId();
                 AspectLogContext.remove();
+                MDC.clear();
             }
 
             return result;

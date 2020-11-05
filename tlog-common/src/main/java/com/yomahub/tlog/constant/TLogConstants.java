@@ -16,4 +16,6 @@ public class TLogConstants {
 
     public final static String UNKNOWN = "NONE";
 
+    public final static String MDC_KEY = "tl";
+
 }

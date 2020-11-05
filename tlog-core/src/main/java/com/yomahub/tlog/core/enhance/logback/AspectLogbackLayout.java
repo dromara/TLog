@@ -10,5 +10,7 @@ public class AspectLogbackLayout extends PatternLayout {
         defaultConverterMap.put("m", AspectLogbackConverter.class.getName());
         defaultConverterMap.put("msg", AspectLogbackConverter.class.getName());
         defaultConverterMap.put("message", AspectLogbackConverter.class.getName());
+        defaultConverterMap.put("X", AspectLogbackMDCConverter.class.getName());
+        defaultConverterMap.put("mdc", AspectLogbackMDCConverter.class.getName());
     }
 }
