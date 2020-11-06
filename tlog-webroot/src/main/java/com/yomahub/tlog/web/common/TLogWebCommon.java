@@ -68,7 +68,7 @@ public class TLogWebCommon {
             TLogContext.removeSpanId();
             AspectLogContext.remove();
             if(TLogContext.hasTLogMDC()){
-                MDC.clear();
+                MDC.remove(TLogConstants.MDC_KEY);
             }
         }
     }

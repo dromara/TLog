@@ -64,6 +64,11 @@ public class TLogDubboFilter implements Filter {
             //往日志切面器里放一个日志前缀
             AspectLogContext.putLogValue(tlogLabel);
 
+            //如果有MDC，则往MDC中放入日志标签
+            if(TLogContext.hasTLogMDC()){
+                MDC.put(TLogConstants.MDC_KEY, tlogLabel);
+            }
+
             try{
                 //调用dubbo
                 result = invoker.invoke(invocation);
@@ -74,6 +79,9 @@ public class TLogDubboFilter implements Filter {
                 TLogContext.removeTraceId();
                 TLogContext.removeSpanId();
                 AspectLogContext.remove();
+                if(TLogContext.hasTLogMDC()){
+                    MDC.remove(TLogConstants.MDC_KEY);
+                }
             }
 
             return result;

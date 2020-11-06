@@ -11,6 +11,11 @@ import org.slf4j.MDC;
 
 import java.lang.reflect.Field;
 
+/**
+ * Logback的MDC转换器，这个类主要覆盖了start方向，目的是在pattern里如果配置了mdc的话，把全局mdc变量设为true
+ * @author bryan.zhang
+ * @since 1.1.5
+ */
 public class AspectLogbackMDCConverter extends MDCConverter {
 
     private Field keyField;

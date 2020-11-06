@@ -82,7 +82,7 @@ public class TLogDubboxFilter implements Filter {
                 TLogContext.removeSpanId();
                 AspectLogContext.remove();
                 if(TLogContext.hasTLogMDC()){
-                    MDC.clear();
+                    MDC.remove(TLogConstants.MDC_KEY);
                 }
             }
 
