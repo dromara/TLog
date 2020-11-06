@@ -116,4 +116,8 @@ public abstract class TLogInheritableTask implements Runnable{
             MDC.clear();
         }
     }
+
+    public void start(){
+        new Thread(this).start();
+    }
 }

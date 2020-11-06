@@ -16,6 +16,7 @@
  */
 package com.yomahub.tlog.core.enhance.log4j2;
 
+import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.LogEvent;
@@ -111,9 +112,11 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
      */
     @Override
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
-        String prefix = AspectLogContext.getLogValue();
-        if(StringUtils.isNotBlank(prefix)){
-            toAppendTo.append(prefix + " ");
+        if(!TLogContext.hasTLogMDC()){
+            String prefix = AspectLogContext.getLogValue();
+            if(StringUtils.isNotBlank(prefix)){
+                toAppendTo.append(prefix + " ");
+            }
         }
         final Message msg = event.getMessage();
         if (msg instanceof StringBuilderFormattable) {

@@ -1,5 +1,6 @@
 package com.yomahub.tlog.core.enhance.log4j2;
 
+import com.yomahub.tlog.context.TLogContext;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.pattern.ConverterKeys;
@@ -16,7 +17,7 @@ import org.apache.logging.log4j.util.TriConsumer;
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter {
 
-    private static final ThreadLocal<StringBuilder> threadLocal = new ThreadLocal<>();
+    private static final InheritableThreadLocal<StringBuilder> threadLocal = new InheritableThreadLocal<>();
     private static final int DEFAULT_STRING_BUILDER_SIZE = 64;
 
     /**
@@ -33,6 +34,7 @@ public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter 
      */
     private AspectLogLog4j2MDCConverter(final String[] options) {
         super(options != null && options.length > 0 ? "MDC{" + options[0] + '}' : "MDC", "mdc");
+        TLogContext.setHasTLogMDC(true);
         if (options != null && options.length > 0) {
             full = false;
             if (options[0].indexOf(',') > 0) {
