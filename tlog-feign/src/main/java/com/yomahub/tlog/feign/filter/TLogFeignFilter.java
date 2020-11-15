@@ -1,6 +1,5 @@
 package com.yomahub.tlog.feign.filter;
 
-
 import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
@@ -21,7 +20,7 @@ import utils.Times;
  */
 public class TLogFeignFilter implements RequestInterceptor {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TLogFeignFilter.class);
 
     @Value("${spring.application.name}")
     private String appName;

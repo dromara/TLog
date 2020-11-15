@@ -25,7 +25,7 @@ import utils.Times;
 @Activate(group = {Constants.PROVIDER, Constants.CONSUMER}, order = -10000)
 public class TLogDubboxFilter implements Filter {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TLogDubboxFilter.class);
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
