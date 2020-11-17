@@ -28,7 +28,7 @@ public class TLogWebInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        TLogWebCommon.preHandle(request, response, handler);
+        TLogWebCommon.loadInstace().preHandle(request, response, handler);
         return true;
     }
 
@@ -39,6 +39,6 @@ public class TLogWebInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        TLogWebCommon.afterCompletion(request, response, handler);
+        TLogWebCommon.loadInstace().afterCompletion(request, response, handler);
     }
 }

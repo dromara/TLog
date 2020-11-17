@@ -9,6 +9,8 @@ import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
+import com.yomahub.tlog.core.rpc.TLogLabelBean;
+import com.yomahub.tlog.core.rpc.TLogRPCHandler;
 import com.yomahub.tlog.id.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import org.slf4j.MDC;
  * @since 2020/9/11
  */
 @Activate(group = {Constants.PROVIDER, Constants.CONSUMER},order = -10000)
-public class TLogDubboxFilter implements Filter {
+public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(TLogDubboxFilter.class);
 
@@ -36,52 +38,15 @@ public class TLogDubboxFilter implements Filter {
             String traceId = invocation.getAttachment(TLogConstants.TLOG_TRACE_KEY);
             String spanId = invocation.getAttachment(TLogConstants.TLOG_SPANID_KEY);
 
-            if(StringUtils.isBlank(preIvkApp)){
-                preIvkApp = TLogConstants.UNKNOWN;
-            }
-            if(StringUtils.isBlank(preIp)){
-                preIp = TLogConstants.UNKNOWN;
-            }
+            TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIp, traceId, spanId);
 
-            TLogContext.putPreIvkApp(preIvkApp);
-            TLogContext.putPreIp(preIp);
-
-            //如果从隐式传参里没有获取到，则重新生成一个traceId
-            if(StringUtils.isBlank(traceId)){
-                traceId = UniqueIdGenerator.generateStringId();
-                log.debug("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]",preIvkApp,traceId);
-            }
-
-            //往TLog上下文里放当前获取到的spanId，如果spanId为空，会放入初始值
-            TLogContext.putSpanId(spanId);
-
-            //往TLog上下文里放一个当前的traceId
-            TLogContext.putTraceId(traceId);
-
-            //生成日志标签
-            String tlogLabel = TLogLabelGenerator.generateTLogLabel(preIvkApp,preIp,traceId,TLogContext.getSpanId());
-
-            //往日志切面器里放一个日志前缀
-            AspectLogContext.putLogValue(tlogLabel);
-
-            //如果有MDC，则往MDC中放入日志标签
-            if(TLogContext.hasTLogMDC()){
-                MDC.put(TLogConstants.MDC_KEY, tlogLabel);
-            }
+            processProviderSide(labelBean);
 
             try{
                 //调用dubbo
                 result = invoker.invoke(invocation);
             }finally {
-                //移除ThreadLocal里的数据
-                TLogContext.removePreIvkApp();
-                TLogContext.removePreIp();
-                TLogContext.removeTraceId();
-                TLogContext.removeSpanId();
-                AspectLogContext.remove();
-                if(TLogContext.hasTLogMDC()){
-                    MDC.remove(TLogConstants.MDC_KEY);
-                }
+                cleanThreadLocal();
             }
 
             return result;
