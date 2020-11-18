@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class TLogWebInvokeTimeInterceptor implements HandlerInterceptor {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TLogWebInvokeTimeInterceptor.class);
 
     private InheritableThreadLocal<StopWatch> invokeTimeTL = new InheritableThreadLocal<>();
 
@@ -28,7 +28,7 @@ public class TLogWebInvokeTimeInterceptor implements HandlerInterceptor {
 
             String url = request.getRequestURI();
             String parameters = JSON.toJSONString(request.getParameterMap());
-            log.info("[TLOG]开始请求URL[{}],参数为:{}",url,parameters);
+            log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
 
             StopWatch stopWatch = new StopWatch();
             invokeTimeTL.set(stopWatch);
@@ -50,7 +50,7 @@ public class TLogWebInvokeTimeInterceptor implements HandlerInterceptor {
         }
         StopWatch stopWatch = invokeTimeTL.get();
         stopWatch.stop();
-        log.info("[TLOG]结束URL[{}]的调用,耗时为:{}毫秒",request.getRequestURI(),stopWatch.getTime());
+        log.info("[TLOG]结束URL[{}]的调用,耗时为:{}毫秒", request.getRequestURI(), stopWatch.getTime());
         invokeTimeTL.remove();
     }
 }

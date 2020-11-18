@@ -25,7 +25,7 @@ import org.slf4j.MDC;
 @Activate(group = {CommonConstants.PROVIDER, CommonConstants.CONSUMER},order = -10000)
 public class TLogDubboFilter extends TLogRPCHandler implements Filter {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TLogDubboFilter.class);
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {

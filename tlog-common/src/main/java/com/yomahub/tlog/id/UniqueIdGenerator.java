@@ -35,7 +35,7 @@ import java.util.Set;
  */
 public class UniqueIdGenerator {
 
-	private static Logger log = LoggerFactory.getLogger(UniqueIdGenerator.class);
+	private static final Logger log = LoggerFactory.getLogger(UniqueIdGenerator.class);
 
     public static final long EPOCH;
 
