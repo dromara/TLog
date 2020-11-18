@@ -35,7 +35,7 @@ public class TLogRPCHandler {
         TLogContext.putSpanId(labelBean.getSpanId());
 
         //往TLog上下文里放一个当前的traceId
-        TLogContext.putTraceId(labelBean.getSpanId());
+        TLogContext.putTraceId(labelBean.getTraceId());
 
         //生成日志标签
         String tlogLabel = TLogLabelGenerator.generateTLogLabel(labelBean.getPreIvkApp(),

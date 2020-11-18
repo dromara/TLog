@@ -1,5 +1,7 @@
 package com.yomahub.tlog.web;
 
+import com.yomahub.tlog.web.interceptor.TLogWebInterceptor;
+import com.yomahub.tlog.web.interceptor.TLogWebInvokeTimeInterceptor;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.MessageCodesResolver;
@@ -19,6 +21,7 @@ public class TLogWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new TLogWebInterceptor());
+        registry.addInterceptor(new TLogWebInvokeTimeInterceptor());
     }
 
     @Override

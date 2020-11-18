@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TLogContext {
 
+    private static boolean enableInvokeTimePrint = false;
+
     private static boolean hasTLogMDC;
 
     private static InheritableThreadLocal<String> traceIdTL = new InheritableThreadLocal<>();
@@ -71,5 +73,13 @@ public class TLogContext {
 
     public static void setHasTLogMDC(boolean hasTLogMDC) {
         TLogContext.hasTLogMDC = hasTLogMDC;
+    }
+
+    public static boolean enableInvokeTimePrint() {
+        return enableInvokeTimePrint;
+    }
+
+    public static void setEnableInvokeTimePrint(boolean enableInvokeTimePrint) {
+        TLogContext.enableInvokeTimePrint = enableInvokeTimePrint;
     }
 }

@@ -16,11 +16,11 @@ public class TLogLabelGenerator {
                 .replace("$spanId",spanId);
     }
 
-    public String getLabelPattern() {
+    public static String getLabelPattern() {
         return labelPattern;
     }
 
-    public void setLabelPattern(String labelPattern) {
+    public static void setLabelPattern(String labelPattern) {
         TLogLabelGenerator.labelPattern = labelPattern;
     }
 }

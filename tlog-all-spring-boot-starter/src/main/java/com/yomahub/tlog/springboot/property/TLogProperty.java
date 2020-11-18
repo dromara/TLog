@@ -11,11 +11,25 @@ public class TLogProperty {
 
     private String pattern;
 
+    private boolean enableInvokeTimePrint;
+
     public String getPattern() {
         return pattern;
     }
 
     public void setPattern(String pattern) {
         this.pattern = pattern;
+    }
+
+    public boolean enableInvokeTimePrint() {
+        return enableInvokeTimePrint;
+    }
+
+    public boolean getEnableInvokeTimePrint() {
+        return enableInvokeTimePrint;
+    }
+
+    public void setEnableInvokeTimePrint(boolean enableInvokeTimePrint) {
+        this.enableInvokeTimePrint = enableInvokeTimePrint;
     }
 }
