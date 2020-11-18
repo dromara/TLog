@@ -28,7 +28,7 @@ import java.util.Map;
 @Aspect
 public class AspectLogAop {
 
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(AspectLogAop.class);
 
     @Pointcut("@annotation(com.yomahub.tlog.core.annotation.TLogAspect)")
     public void cut(){}

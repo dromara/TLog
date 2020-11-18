@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 @Activate(group = {Constants.PROVIDER},order = -9000)
 public class TLogDubboxInvokeTimeFilter extends TLogRPCHandler implements Filter {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TLogDubboxInvokeTimeFilter.class);
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {

@@ -12,7 +12,7 @@ import org.slf4j.MDC;
 
 public class TLogRPCHandler {
 
-    protected Logger log = LoggerFactory.getLogger(this.getClass());
+    protected static final Logger log = LoggerFactory.getLogger(TLogRPCHandler.class);
 
     public void processProviderSide(TLogLabelBean labelBean){
         if(StringUtils.isBlank(labelBean.getPreIvkApp())){

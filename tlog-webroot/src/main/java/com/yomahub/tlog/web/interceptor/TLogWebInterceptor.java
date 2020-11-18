@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class TLogWebInterceptor implements HandlerInterceptor {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(TLogWebInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
