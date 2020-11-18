@@ -2,7 +2,6 @@ package com.yomahub.tlog.web.interceptor;
 
 import com.alibaba.fastjson.JSON;
 import com.yomahub.tlog.context.TLogContext;
-import com.yomahub.tlog.web.common.TLogWebCommon;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +21,16 @@ public class TLogWebInvokeTimeInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (handler instanceof HandlerMethod) {
-            if (!TLogContext.enableInvokeTimePrint()) {
-                return true;
+
+            if (TLogContext.enableInvokeTimePrint()) {
+                String url = request.getRequestURI();
+                String parameters = JSON.toJSONString(request.getParameterMap());
+                log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
+
+                StopWatch stopWatch = new StopWatch();
+                invokeTimeTL.set(stopWatch);
+                stopWatch.start();
             }
-
-            String url = request.getRequestURI();
-            String parameters = JSON.toJSONString(request.getParameterMap());
-            log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
-
-            StopWatch stopWatch = new StopWatch();
-            invokeTimeTL.set(stopWatch);
-            stopWatch.start();
         }
 
         return true;
@@ -45,12 +43,14 @@ public class TLogWebInvokeTimeInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (!TLogContext.enableInvokeTimePrint()) {
-            return;
+        if (handler instanceof HandlerMethod) {
+
+            if (TLogContext.enableInvokeTimePrint()) {
+                StopWatch stopWatch = invokeTimeTL.get();
+                stopWatch.stop();
+                log.info("[TLOG]结束URL[{}]的调用,耗时为:{}毫秒", request.getRequestURI(), stopWatch.getTime());
+                invokeTimeTL.remove();
+            }
         }
-        StopWatch stopWatch = invokeTimeTL.get();
-        stopWatch.stop();
-        log.info("[TLOG]结束URL[{}]的调用,耗时为:{}毫秒", request.getRequestURI(), stopWatch.getTime());
-        invokeTimeTL.remove();
     }
 }
