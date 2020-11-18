@@ -30,10 +30,11 @@ public class TLogWebInvokeTimeInterceptor implements HandlerInterceptor {
                 StopWatch stopWatch = new StopWatch();
                 invokeTimeTL.set(stopWatch);
                 stopWatch.start();
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     @Override
