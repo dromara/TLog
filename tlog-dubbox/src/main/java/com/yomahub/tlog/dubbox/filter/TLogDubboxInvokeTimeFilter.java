@@ -23,27 +23,27 @@ public class TLogDubboxInvokeTimeFilter extends TLogRPCHandler implements Filter
 
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        if (!TLogContext.enableInvokeTimePrint()) {
-            return invoker.invoke(invocation);
+        if (TLogContext.enableInvokeTimePrint()) {
+            Result result;
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+
+            try {
+                log.info("[TLOG]开始调用接口[{}]的方法[{}],参数为:{}", invoker.getInterface().getSimpleName(),
+                        invocation.getMethodName(),
+                        JSON.toJSONString(invocation.getArguments()));
+                //调用dubbo
+                result = invoker.invoke(invocation);
+            } finally {
+                stopWatch.stop();
+                log.info("[TLOG]结束接口[{}]中方法[{}]的调用,耗时为:{}毫秒", invoker.getInterface().getSimpleName(),
+                        invocation.getMethodName(),
+                        stopWatch.getTime());
+            }
+
+            return result;
         }
 
-        Result result;
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
-
-        try {
-            log.info("[TLOG]开始调用接口[{}]的方法[{}],参数为:{}", invoker.getInterface().getSimpleName(),
-                    invocation.getMethodName(),
-                    JSON.toJSONString(invocation.getArguments()));
-            //调用dubbo
-            result = invoker.invoke(invocation);
-        } finally {
-            stopWatch.stop();
-            log.info("[TLOG]结束接口[{}]中方法[{}]的调用,耗时为:{}毫秒", invoker.getInterface().getSimpleName(),
-                    invocation.getMethodName(),
-                    stopWatch.getTime());
-        }
-
-        return result;
+        return invoker.invoke(invocation);
     }
 }
