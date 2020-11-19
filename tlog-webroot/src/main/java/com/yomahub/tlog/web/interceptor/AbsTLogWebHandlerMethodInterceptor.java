@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public abstract class TLogWebHandlerMethodInterceptor implements HandlerInterceptor {
+public abstract class AbsTLogWebHandlerMethodInterceptor implements HandlerInterceptor {
 
     public abstract boolean preHandleByHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception;
 

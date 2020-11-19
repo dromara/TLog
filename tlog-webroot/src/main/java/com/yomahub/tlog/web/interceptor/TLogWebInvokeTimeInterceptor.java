@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Bryan.Zhang
  * @since 1.1.6
  */
-public class TLogWebInvokeTimeInterceptor extends TLogWebHandlerMethodInterceptor {
+public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(TLogWebInvokeTimeInterceptor.class);
 
