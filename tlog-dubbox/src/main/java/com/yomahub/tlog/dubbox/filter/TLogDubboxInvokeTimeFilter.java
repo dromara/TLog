@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * dubbo的调用拦截器
+ * dubbox的时间统计调用拦截器
  *
  * @author Bryan.Zhang
- * @since 2020/9/11
+ * @since 1.1.6
  */
 @Activate(group = {Constants.PROVIDER}, order = -9000)
 public class TLogDubboxInvokeTimeFilter extends TLogRPCHandler implements Filter {

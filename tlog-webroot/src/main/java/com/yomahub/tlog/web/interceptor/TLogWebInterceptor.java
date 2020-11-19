@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * web controller的拦截器
  *
  * @author Bryan.Zhang
- * @since 2020/9/11
+ * @since 1.1.5
  */
 public class TLogWebInterceptor extends TLogWebHandlerMethodInterceptor {
 

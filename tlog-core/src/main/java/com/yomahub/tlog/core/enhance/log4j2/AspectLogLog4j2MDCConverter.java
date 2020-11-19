@@ -12,8 +12,16 @@ import org.apache.logging.log4j.util.ReadOnlyStringMap;
 import org.apache.logging.log4j.util.StringBuilders;
 import org.apache.logging.log4j.util.TriConsumer;
 
+/**
+ * log4j2的MDC converter<br>
+ * 这个类的绝大多数代码来源于{@link org.apache.logging.log4j.core.pattern.MdcPatternConverter}<br>
+ * 真正有用的代码只是 {@code TLogContext.setHasTLogMDC(true);}
+ *
+ * @author Bryan.Zhang
+ * @since 1.1.5
+ */
 @Plugin(name = "AspectLogLog4j2MDCConverter", category = PatternConverter.CATEGORY)
-@ConverterKeys({ "X", "mdc", "MDC" })
+@ConverterKeys({"X", "mdc", "MDC"})
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter {
 
@@ -96,7 +104,7 @@ public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter 
                     return;
                 }
                 appendSelectedKeys(keys, contextData, toAppendTo);
-            } else if (contextData != null){
+            } else if (contextData != null) {
                 // otherwise they just want a single key output
                 final Object value = contextData.getValue(key);
                 if (value != null) {

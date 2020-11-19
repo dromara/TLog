@@ -8,6 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
+/**
+ * TLog的参数自动装配类
+ *
+ * @author Bryan.Zhang
+ * @since 1.0.0
+ */
 @Configuration
 @EnableConfigurationProperties(TLogProperty.class)
 @PropertySource(
@@ -16,7 +22,7 @@ import org.springframework.context.annotation.PropertySource;
 public class TLogPropertyConfiguration {
 
     @Bean
-    public TLogPropertyInit tLogPropertyInit(TLogProperty tLogProperty){
+    public TLogPropertyInit tLogPropertyInit(TLogProperty tLogProperty) {
         TLogPropertyInit tLogPropertyInit = new TLogPropertyInit();
         tLogPropertyInit.setPattern(tLogProperty.getPattern());
         tLogPropertyInit.setEnableInvokeTimePrint(tLogProperty.enableInvokeTimePrint());

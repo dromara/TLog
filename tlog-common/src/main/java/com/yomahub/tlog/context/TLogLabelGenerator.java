@@ -2,8 +2,9 @@ package com.yomahub.tlog.context;
 
 /**
  * TLog的日志标签生成器
+ *
  * @author Bryan.Zhang
- * @since 2020/9/15
+ * @since 1.0.0
  */
 public class TLogLabelGenerator {
 

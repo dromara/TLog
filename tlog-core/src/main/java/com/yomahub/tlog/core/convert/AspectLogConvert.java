@@ -1,7 +1,9 @@
 package com.yomahub.tlog.core.convert;
 /**
+ * 自定义参数转换器
+ *
  * @author Bryan.Zhang
- * 参数转换器
+ * @since 1.1.0
  */
 public interface AspectLogConvert {
 

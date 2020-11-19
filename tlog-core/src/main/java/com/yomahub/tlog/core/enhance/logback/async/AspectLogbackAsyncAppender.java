@@ -12,8 +12,9 @@ import java.lang.reflect.Field;
 
 /**
  * Logback的异步日志增强appender
+ *
  * @author Bryan.Zhang
- * @since 2020/9/30
+ * @since 1.1.1
  */
 public class AspectLogbackAsyncAppender extends AsyncAppender {
 

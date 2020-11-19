@@ -12,17 +12,18 @@ import org.slf4j.Marker;
 
 /**
  * Logback的字节增强类
+ *
  * @author Bryan.Zhang
- * @since 2020/9/29
+ * @since 1.1.3
  */
 public class LogbackBytesEnhance {
 
     public static void enhance(final String localFQCN, final Marker marker, final Level level, final String msg, final Object[] params,
-                               final Throwable t, Logger thisObj){
+                               final Throwable t, Logger thisObj) {
         String resultLog;
-        if(StringUtils.isNotBlank(AspectLogContext.getLogValue())){
-            resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(),msg);
-        }else{
+        if (StringUtils.isNotBlank(AspectLogContext.getLogValue())) {
+            resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(), msg);
+        } else {
             resultLog = msg;
         }
 

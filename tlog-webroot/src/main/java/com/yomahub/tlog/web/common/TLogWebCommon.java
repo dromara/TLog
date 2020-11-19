@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * TLog web这块的逻辑封装类
+ *
+ * @author Bryan.Zhang
+ * @since 1.1.5
+ */
 public class TLogWebCommon extends TLogRPCHandler {
 
     private final static Logger log = LoggerFactory.getLogger(TLogWebCommon.class);
