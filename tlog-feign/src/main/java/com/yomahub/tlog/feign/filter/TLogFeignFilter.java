@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Value;
 
 /**
  * feign的拦截器
+ *
  * @author Bryan.Zhang
- * @since 2020/9/11
+ * @since 1.0.0
  */
 public class TLogFeignFilter implements RequestInterceptor {
 

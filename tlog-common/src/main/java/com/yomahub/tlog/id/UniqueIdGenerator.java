@@ -1,22 +1,14 @@
 package com.yomahub.tlog.id;
 
-import cn.hutool.core.lang.ObjectId;
-import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.HexUtil;
-import cn.hutool.core.util.IdUtil;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.Set;
 
 /**
  * 自生成Id生成器.

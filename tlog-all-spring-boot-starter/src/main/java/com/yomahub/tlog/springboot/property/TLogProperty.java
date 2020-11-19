@@ -3,8 +3,9 @@ package com.yomahub.tlog.springboot.property;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 /**
  * tlog的springboot配置参数
+ *
  * @author Bryan.Zhang
- * @since 2020/9/16
+ * @since 1.1.0
  */
 @ConfigurationProperties(prefix = "tlog", ignoreUnknownFields = true)
 public class TLogProperty {

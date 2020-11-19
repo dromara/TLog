@@ -10,9 +10,10 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
- * log4j的MDC转换器，这个类copy的是PatternParser的一个内部类
+ * log4j的MDC转换器，这个类copy的是PatternParser的一个内部类<br>
  * 目的是当pattern里有mdc配置的话，设置全局变量mdc为true
- * @author bryan.zhang
+ *
+ * @author Bryan.Zhang
  * @since 1.1.5
  */
 public class AspectLog4jMDCPatternConverter extends PatternConverter {
@@ -43,7 +44,7 @@ public class AspectLog4jMDCPatternConverter extends PatternConverter {
             return buf.toString();
         } else {
             Object val = event.getMDC(key);
-            if(val == null) {
+            if (val == null) {
                 return null;
             } else {
                 return val.toString();

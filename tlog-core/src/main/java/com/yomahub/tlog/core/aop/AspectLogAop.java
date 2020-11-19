@@ -22,8 +22,10 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * @author Bryan.Zhang
  * 自定义埋点注解切面，用于拦截@AspectLogAop
+ *
+ * @author Bryan.Zhang
+ * @since 1.1.0
  */
 @Aspect
 public class AspectLogAop {
@@ -31,37 +33,38 @@ public class AspectLogAop {
     private static final Logger log = LoggerFactory.getLogger(AspectLogAop.class);
 
     @Pointcut("@annotation(com.yomahub.tlog.core.annotation.TLogAspect)")
-    public void cut(){}
+    public void cut() {
+    }
 
     @Around("cut()")
-    public Object around(ProceedingJoinPoint jp) throws Throwable{
+    public Object around(ProceedingJoinPoint jp) throws Throwable {
         Object[] args = jp.getArgs();
-        MethodSignature signature = (MethodSignature)jp.getSignature();
+        MethodSignature signature = (MethodSignature) jp.getSignature();
         Method method = signature.getMethod();
         String[] parameterNames = signature.getParameterNames();
-        Map<String,Object> paramNameValueMap = Maps.newHashMap();
+        Map<String, Object> paramNameValueMap = Maps.newHashMap();
         for (int i = 0; i < parameterNames.length; i++) {
-            paramNameValueMap.put(parameterNames[i],args[i]);
+            paramNameValueMap.put(parameterNames[i], args[i]);
         }
 
         TLogAspect tlogAspect = method.getAnnotation(TLogAspect.class);
         String[] aspectExpressions = tlogAspect.value();
-        String pattern = tlogAspect.pattern().replaceAll("\\{\\}","{0}");
+        String pattern = tlogAspect.pattern().replaceAll("\\{\\}", "{0}");
         String joint = tlogAspect.joint();
         Class<? extends AspectLogConvert> convertClazz = tlogAspect.convert();
 
         StringBuilder sb = new StringBuilder();
-        if(!convertClazz.equals(AspectLogConvert.class)){
+        if (!convertClazz.equals(AspectLogConvert.class)) {
             AspectLogConvert convert = convertClazz.newInstance();
-            try{
+            try {
                 sb.append(convert.convert(args));
-            }catch (Throwable t){
-                log.error("[AspectLog]some errors happens in AspectLog's convert",t);
+            } catch (Throwable t) {
+                log.error("[AspectLog]some errors happens in AspectLog's convert", t);
             }
-        }else{
-            for (String aspectExpression : aspectExpressions){
-                String aspLogValueItem = getExpressionValue(aspectExpression,paramNameValueMap);
-                if(StringUtils.isNotBlank(aspLogValueItem)){
+        } else {
+            for (String aspectExpression : aspectExpressions) {
+                String aspLogValueItem = getExpressionValue(aspectExpression, paramNameValueMap);
+                if (StringUtils.isNotBlank(aspLogValueItem)) {
                     sb.append(aspLogValueItem);
                     sb.append(joint);
                 }
@@ -69,52 +72,52 @@ public class AspectLogAop {
         }
 
         String aspLogValue = sb.toString();
-        if(StringUtils.isNotBlank(aspLogValue)){
-            aspLogValue = aspLogValue.substring(0,aspLogValue.length()-1);
+        if (StringUtils.isNotBlank(aspLogValue)) {
+            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - 1);
 
-            aspLogValue = MessageFormat.format(pattern,aspLogValue);
+            aspLogValue = MessageFormat.format(pattern, aspLogValue);
 
             //拿到之前的标签
             String currentLabel = AspectLogContext.getLogValue();
             AspectLogContext.putLogValue(currentLabel + aspLogValue);
         }
 
-        try{
+        try {
             return jp.proceed();
-        }finally {
+        } finally {
             AspectLogContext.remove();
         }
     }
 
-    private String getExpressionValue(String expression, Object o){
+    private String getExpressionValue(String expression, Object o) {
         String[] expressionItems = expression.split("\\.");
-        for(String item : expressionItems){
-            if(String.class.isAssignableFrom(o.getClass())){
-                return (String)o;
-            }else if(Integer.class.isAssignableFrom(o.getClass())) {
+        for (String item : expressionItems) {
+            if (String.class.isAssignableFrom(o.getClass())) {
+                return (String) o;
+            } else if (Integer.class.isAssignableFrom(o.getClass())) {
                 return ((Integer) o).toString();
-            }else if(Long.class.isAssignableFrom(o.getClass())){
+            } else if (Long.class.isAssignableFrom(o.getClass())) {
                 return ((Long) o).toString();
-            }else if(Double.class.isAssignableFrom(o.getClass())){
+            } else if (Double.class.isAssignableFrom(o.getClass())) {
                 return ((Double) o).toString();
-            }else if(BigDecimal.class.isAssignableFrom(o.getClass())) {
+            } else if (BigDecimal.class.isAssignableFrom(o.getClass())) {
                 return ((BigDecimal) o).toPlainString();
-            }else if(Date.class.isAssignableFrom(o.getClass())){
+            } else if (Date.class.isAssignableFrom(o.getClass())) {
                 return DateUtil.formatDateTime((Date) o);
-            }else if(Map.class.isAssignableFrom(o.getClass())){
-                Object v = ((Map)o).get(item);
-                if(v == null){
+            } else if (Map.class.isAssignableFrom(o.getClass())) {
+                Object v = ((Map) o).get(item);
+                if (v == null) {
                     return null;
                 }
-                return getExpressionValue(getRemainExpression(expression,item),v);
-            }else{
-                try{
-                    Object v = MethodUtils.invokeMethod(o,"get"+item.substring(0,1).toUpperCase() + item.substring(1));
-                    if(v == null){
+                return getExpressionValue(getRemainExpression(expression, item), v);
+            } else {
+                try {
+                    Object v = MethodUtils.invokeMethod(o, "get" + item.substring(0, 1).toUpperCase() + item.substring(1));
+                    if (v == null) {
                         return null;
                     }
-                    return getExpressionValue(getRemainExpression(expression,item),v);
-                }catch (Exception e){
+                    return getExpressionValue(getRemainExpression(expression, item), v);
+                } catch (Exception e) {
                     return null;
                 }
             }
@@ -122,11 +125,11 @@ public class AspectLogAop {
         return null;
     }
 
-    private String getRemainExpression(String expression, String expressionItem){
-        if(expression.equals(expressionItem)){
+    private String getRemainExpression(String expression, String expressionItem) {
+        if (expression.equals(expressionItem)) {
             return expressionItem;
-        }else{
-            return expression.substring(expressionItem.length()+1);
+        } else {
+            return expression.substring(expressionItem.length() + 1);
         }
     }
 }

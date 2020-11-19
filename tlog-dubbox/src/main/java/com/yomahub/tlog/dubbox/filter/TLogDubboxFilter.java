@@ -15,10 +15,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * dubbox的调用拦截器
+ *
  * @author Bryan.Zhang
- * @since 2020/9/11
+ * @since 1.0.0
  */
-@Activate(group = {Constants.PROVIDER, Constants.CONSUMER},order = -10000)
+@Activate(group = {Constants.PROVIDER, Constants.CONSUMER}, order = -10000)
 public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
 
     private static final Logger log = LoggerFactory.getLogger(TLogDubboxFilter.class);
@@ -28,7 +29,7 @@ public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
         Result result;
         String side = invoker.getUrl().getParameter(Constants.SIDE_KEY);
 
-        if(side.equals(Constants.PROVIDER_SIDE)){
+        if (side.equals(Constants.PROVIDER_SIDE)) {
             String preIvkApp = invocation.getAttachment(TLogConstants.PRE_IVK_APP_KEY);
             String preIp = invocation.getAttachment(TLogConstants.PRE_IP_KEY);
             String traceId = invocation.getAttachment(TLogConstants.TLOG_TRACE_KEY);
@@ -38,30 +39,30 @@ public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
 
             processProviderSide(labelBean);
 
-            try{
+            try {
                 //调用dubbo
                 result = invoker.invoke(invocation);
-            }finally {
+            } finally {
                 cleanThreadLocal();
             }
 
             return result;
-        }else if(side.equals(Constants.CONSUMER_SIDE)){
+        } else if (side.equals(Constants.CONSUMER_SIDE)) {
             String traceId = TLogContext.getTraceId();
 
-            if(StringUtils.isNotBlank(traceId)){
+            if (StringUtils.isNotBlank(traceId)) {
                 String appName = invoker.getUrl().getParameter(Constants.APPLICATION_KEY);
                 String ip = NetUtil.getLocalhostStr();
 
-                RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY,traceId);
-                RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY,appName);
-                RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY,ip);
-                RpcContext.getContext().setAttachment(TLogConstants.TLOG_SPANID_KEY,SpanIdGenerator.generateNextSpanId());
-            }else{
+                RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY, traceId);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY, appName);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY, ip);
+                RpcContext.getContext().setAttachment(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
+            } else {
                 log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
             }
             result = invoker.invoke(invocation);
-        }else{
+        } else {
             result = null;
         }
         return result;

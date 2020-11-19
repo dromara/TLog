@@ -7,7 +7,10 @@ import org.apache.log4j.helpers.PatternConverter;
 import org.apache.log4j.spi.LoggingEvent;
 
 /**
+ * 基于日志适配方式的log4j的自定义PatternConvert
+ *
  * @author Bryan.Zhang
+ * @since 1.0.0
  */
 public class AspectLog4jPatternConverter extends PatternConverter {
     @Override

@@ -17,21 +17,27 @@ import org.springframework.web.method.HandlerMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * TLog web这块的逻辑封装类
+ *
+ * @author Bryan.Zhang
+ * @since 1.1.5
+ */
 public class TLogWebCommon extends TLogRPCHandler {
 
     private static Logger log = LoggerFactory.getLogger(TLogWebCommon.class);
 
     private static TLogWebCommon tLogWebCommon;
 
-    public static TLogWebCommon loadInstace(){
-        if(tLogWebCommon == null){
+    public static TLogWebCommon loadInstace() {
+        if (tLogWebCommon == null) {
             tLogWebCommon = new TLogWebCommon();
         }
         return tLogWebCommon;
     }
 
-    public void preHandle(HttpServletRequest request, HttpServletResponse response, Object handler){
-        if(handler instanceof HandlerMethod) {
+    public void preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (handler instanceof HandlerMethod) {
             String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
             String spanId = request.getHeader(TLogConstants.TLOG_SPANID_KEY);
             String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
@@ -43,7 +49,7 @@ public class TLogWebCommon extends TLogRPCHandler {
         }
     }
 
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler){
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (handler instanceof HandlerMethod) {
             cleanThreadLocal();
         }

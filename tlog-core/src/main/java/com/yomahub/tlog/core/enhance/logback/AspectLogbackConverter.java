@@ -7,20 +7,23 @@ import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
 
 /**
+ * 基于日志适配方式的logback的convert
+ *
  * @author Bryan.Zhang
+ * @since 1.0.0
  */
 public class AspectLogbackConverter extends ClassicConverter {
     @Override
     public String convert(ILoggingEvent event) {
         //只有在MDC没有设置的情况下才加到message里
-        if(!TLogContext.hasTLogMDC()){
+        if (!TLogContext.hasTLogMDC()) {
             String logValue = AspectLogContext.getLogValue();
-            if(StringUtils.isBlank(logValue)){
+            if (StringUtils.isBlank(logValue)) {
                 return event.getFormattedMessage();
-            }else{
+            } else {
                 return logValue + " " + event.getFormattedMessage();
             }
-        }else{
+        } else {
             return event.getFormattedMessage();
         }
     }

@@ -14,8 +14,10 @@ import org.springframework.web.servlet.config.annotation.*;
 import java.util.List;
 
 /**
+ * TLog webconfig类
+ *
  * @author Bryan.Zhang
- * @since 2020/9/11
+ * @since 1.0.0
  */
 public class TLogWebConfig implements WebMvcConfigurer {
     @Override

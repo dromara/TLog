@@ -4,6 +4,12 @@ import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import org.springframework.beans.factory.InitializingBean;
 
+/**
+ * TLog参数初始化类，适用于springboot和spring
+ *
+ * @author Bryan.Zhang
+ * @since 1.1.6
+ */
 public class TLogPropertyInit implements InitializingBean {
 
     private String pattern;
