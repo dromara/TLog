@@ -65,7 +65,8 @@ public class AspectLogAop {
             for (String aspectExpression : aspectExpressions) {
                 String aspLogValueItem = getExpressionValue(aspectExpression, paramNameValueMap);
                 if (StringUtils.isNotBlank(aspLogValueItem)) {
-                    sb.append(aspLogValueItem);
+                    String key = aspectExpression.substring(aspectExpression.lastIndexOf(".") + 1);
+                    sb.append(String.format("%s:%s", key, aspLogValueItem));
                     sb.append(joint);
                 }
             }

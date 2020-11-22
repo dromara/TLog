@@ -19,7 +19,7 @@ public @interface TLogAspect {
 
     String[] value() default {};
 
-    String joint() default "-";
+    String joint() default ",";
 
     String pattern() default "[{}]";
 
