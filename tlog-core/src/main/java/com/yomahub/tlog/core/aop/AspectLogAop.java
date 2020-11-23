@@ -1,6 +1,7 @@
 package com.yomahub.tlog.core.aop;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
@@ -65,8 +66,7 @@ public class AspectLogAop {
             for (String aspectExpression : aspectExpressions) {
                 String aspLogValueItem = getExpressionValue(aspectExpression, paramNameValueMap);
                 if (StringUtils.isNotBlank(aspLogValueItem)) {
-                    String key = aspectExpression.substring(aspectExpression.lastIndexOf(".") + 1);
-                    sb.append(String.format("%s:%s", key, aspLogValueItem));
+                    sb.append(StrUtil.format("{}:{}", aspectExpression, aspLogValueItem));
                     sb.append(joint);
                 }
             }
