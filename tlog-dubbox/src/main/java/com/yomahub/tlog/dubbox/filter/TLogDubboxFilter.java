@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetAddress;
+
 /**
  * dubbox的调用拦截器
  *
@@ -31,11 +33,12 @@ public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
 
         if (side.equals(Constants.PROVIDER_SIDE)) {
             String preIvkApp = invocation.getAttachment(TLogConstants.PRE_IVK_APP_KEY);
+            String preIvkHost = invocation.getAttachment(TLogConstants.PRE_IVK_APP_HOST);
             String preIp = invocation.getAttachment(TLogConstants.PRE_IP_KEY);
             String traceId = invocation.getAttachment(TLogConstants.TLOG_TRACE_KEY);
             String spanId = invocation.getAttachment(TLogConstants.TLOG_SPANID_KEY);
 
-            TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIp, traceId, spanId);
+            TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
 
             processProviderSide(labelBean);
 
@@ -53,9 +56,14 @@ public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
             if (StringUtils.isNotBlank(traceId)) {
                 String appName = invoker.getUrl().getParameter(Constants.APPLICATION_KEY);
                 String ip = NetUtil.getLocalhostStr();
+                String hostName = TLogConstants.UNKNOWN;
+                try{
+                    hostName = InetAddress.getLocalHost().getHostName();
+                }catch (Exception e){}
 
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY, traceId);
                 RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY, appName);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_HOST, hostName);
                 RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY, ip);
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             } else {

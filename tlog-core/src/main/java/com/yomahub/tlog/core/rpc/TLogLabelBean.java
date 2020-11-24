@@ -10,14 +10,17 @@ public class TLogLabelBean {
 
     private String preIvkApp;
 
+    private String preIvkHost;
+
     private String preIp;
 
     private String traceId;
 
     private String spanId;
 
-    public TLogLabelBean(String preIvkApp, String preIp, String traceId, String spanId) {
+    public TLogLabelBean(String preIvkApp, String preIvkHost, String preIp, String traceId, String spanId) {
         this.preIvkApp = preIvkApp;
+        this.preIvkHost = preIvkHost;
         this.preIp = preIp;
         this.traceId = traceId;
         this.spanId = spanId;
@@ -53,5 +56,13 @@ public class TLogLabelBean {
 
     public void setSpanId(String spanId) {
         this.spanId = spanId;
+    }
+
+    public String getPreIvkHost() {
+        return preIvkHost;
+    }
+
+    public void setPreIvkHost(String preIvkHost) {
+        this.preIvkHost = preIvkHost;
     }
 }

@@ -36,9 +36,10 @@ public class TLogWebCommon extends TLogRPCHandler {
         String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
         String spanId = request.getHeader(TLogConstants.TLOG_SPANID_KEY);
         String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
+        String preIvkHost = request.getHeader(TLogConstants.PRE_IVK_APP_HOST);
         String preIp = request.getHeader(TLogConstants.PRE_IP_KEY);
 
-        TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIp, traceId, spanId);
+        TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
 
         processProviderSide(labelBean);
     }

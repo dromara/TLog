@@ -12,6 +12,8 @@ public class TLogConstants {
 
     public final static String PRE_IVK_APP_KEY = "pre_ivk_app";
 
+    public final static String PRE_IVK_APP_HOST = "pre_ivk_host";
+
     public final static String PRE_IP_KEY = "pre_ip";
 
     public final static String UNKNOWN = "NONE";

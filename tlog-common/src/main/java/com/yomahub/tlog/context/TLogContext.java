@@ -17,6 +17,8 @@ public class TLogContext {
 
     private static InheritableThreadLocal<String> preIvkAppTL = new InheritableThreadLocal<>();
 
+    private static InheritableThreadLocal<String> preIvkHostTL = new InheritableThreadLocal<>();
+
     private static InheritableThreadLocal<String> preIpTL = new InheritableThreadLocal<>();
 
     public static void putTraceId(String traceId) {
@@ -53,6 +55,18 @@ public class TLogContext {
 
     public static void removePreIvkApp() {
         preIvkAppTL.remove();
+    }
+
+    public static String getPreIvkHost(){
+        return preIvkHostTL.get();
+    }
+
+    public static void putPreIvkHost(String preIvkHost){
+        preIvkHostTL.set(preIvkHost);
+    }
+
+    public static void removePreIvkHost(){
+        preIvkHostTL.remove();
     }
 
     public static String getPreIp() {

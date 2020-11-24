@@ -10,8 +10,9 @@ public class TLogLabelGenerator {
 
     public static String labelPattern = "<$spanId><$traceId>";
 
-    public static String generateTLogLabel(String preApp, String preIp, String traceId, String spanId){
+    public static String generateTLogLabel(String preApp, String preHost, String preIp, String traceId, String spanId){
         return labelPattern.replace("$preApp",preApp)
+                .replace("$preHost",preHost)
                 .replace("$preIp",preIp)
                 .replace("$traceId",traceId)
                 .replace("$spanId",spanId);

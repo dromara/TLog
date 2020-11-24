@@ -26,6 +26,11 @@ public class TLogRPCHandler {
         }
         TLogContext.putPreIvkApp(labelBean.getPreIvkApp());
 
+        if (StringUtils.isBlank(labelBean.getPreIvkHost())) {
+            labelBean.setPreIvkHost(TLogConstants.UNKNOWN);
+        }
+        TLogContext.putPreIvkHost(labelBean.getPreIvkHost());
+
         if (StringUtils.isBlank(labelBean.getPreIp())) {
             labelBean.setPreIp(TLogConstants.UNKNOWN);
         }
@@ -45,6 +50,7 @@ public class TLogRPCHandler {
 
         //生成日志标签
         String tlogLabel = TLogLabelGenerator.generateTLogLabel(labelBean.getPreIvkApp(),
+                labelBean.getPreIvkHost(),
                 labelBean.getPreIp(),
                 labelBean.getTraceId(),
                 TLogContext.getSpanId());
@@ -61,6 +67,7 @@ public class TLogRPCHandler {
     public void cleanThreadLocal() {
         //移除ThreadLocal里的数据
         TLogContext.removePreIvkApp();
+        TLogContext.removePreIvkHost();
         TLogContext.removePreIp();
         TLogContext.removeTraceId();
         TLogContext.removeSpanId();
