@@ -18,6 +18,9 @@ public class TLogLabelBean {
 
     private String spanId;
 
+    public TLogLabelBean() {
+    }
+
     public TLogLabelBean(String preIvkApp, String preIvkHost, String preIp, String traceId, String spanId) {
         this.preIvkApp = preIvkApp;
         this.preIvkHost = preIvkHost;
