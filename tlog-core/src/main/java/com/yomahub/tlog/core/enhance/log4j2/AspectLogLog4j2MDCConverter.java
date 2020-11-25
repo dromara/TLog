@@ -13,7 +13,7 @@ import org.apache.logging.log4j.util.StringBuilders;
 import org.apache.logging.log4j.util.TriConsumer;
 
 @Plugin(name = "AspectLogLog4j2MDCConverter", category = PatternConverter.CATEGORY)
-@ConverterKeys({ "X", "mdc", "MDC" })
+@ConverterKeys({ "X", "mdc", "MDC", "TX"})
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter {
 
