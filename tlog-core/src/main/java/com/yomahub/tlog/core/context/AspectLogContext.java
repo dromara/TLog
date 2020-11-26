@@ -15,9 +15,7 @@ public class AspectLogContext {
 
     public static void putLogValue(String logValue) {
         logValueTL.set(logValue);
-        //如果是log4j2开启了异步日志
-        if ("org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
-                .equals(System.getProperty("Log4jContextSelector"))) {
+        if (isLog4jContextSelector()) {
             ThreadContext.put(TLogConstants.T_LOG_LABEL, logValue);
         }
     }
@@ -28,10 +26,14 @@ public class AspectLogContext {
 
     public static void remove() {
         logValueTL.remove();
-        //如果是log4j2开启了异步日志
-        if ("org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
-                .equals(System.getProperty("Log4jContextSelector"))) {
+        if (isLog4jContextSelector()) {
             ThreadContext.remove(TLogConstants.T_LOG_LABEL);
         }
+    }
+
+    //如果是log4j2开启了异步日志
+    private static boolean isLog4jContextSelector() {
+        return "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+                .equals(System.getProperty("Log4jContextSelector"));
     }
 }
