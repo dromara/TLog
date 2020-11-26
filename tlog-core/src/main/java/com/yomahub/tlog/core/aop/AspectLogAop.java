@@ -1,7 +1,10 @@
 package com.yomahub.tlog.core.aop;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
@@ -19,8 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.Date;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 自定义埋点注解切面，用于拦截@AspectLogAop
@@ -45,7 +47,18 @@ public class AspectLogAop {
         String[] parameterNames = signature.getParameterNames();
         Map<String, Object> paramNameValueMap = Maps.newHashMap();
         for (int i = 0; i < parameterNames.length; i++) {
+            if(args[i] instanceof  String){
+                try {
+                    Object parse = JSON.parse(String.valueOf(args[i]));
+                    if(parse instanceof JSONObject){
+                        args[i] = parse;
+                    }
+                } catch (Exception e) {
+
+                }
+            }
             paramNameValueMap.put(parameterNames[i], args[i]);
+
         }
 
         TLogAspect tlogAspect = method.getAnnotation(TLogAspect.class);
@@ -105,10 +118,22 @@ public class AspectLogAop {
                 return ((BigDecimal) o).toPlainString();
             } else if (Date.class.isAssignableFrom(o.getClass())) {
                 return DateUtil.formatDateTime((Date) o);
+            } else if(JSONObject.class.isAssignableFrom(o.getClass())) {
+                Object o1 = ((JSONObject) o).get(item);
+                if(o1 instanceof JSONObject && !isRemainExpression(expression,item)){
+                    return getExpressionValue(getRemainExpression(expression, item), o1);
+                }
+                if(ObjectUtil.isNotNull(o1)){
+                    return (String) o1;
+                }
+                return ((JSONObject) o).toJSONString();
             } else if (Map.class.isAssignableFrom(o.getClass())) {
                 Object v = ((Map) o).get(item);
                 if (v == null) {
                     return null;
+                }
+                if(!JSONObject.class.isAssignableFrom(v.getClass()) && String.class.isAssignableFrom(v.getClass()) && !isRemainExpression(expression,item)) {
+                    return "NONE";
                 }
                 return getExpressionValue(getRemainExpression(expression, item), v);
             } else {
@@ -133,4 +158,16 @@ public class AspectLogAop {
             return expression.substring(expressionItem.length() + 1);
         }
     }
+
+    private boolean isRemainExpression(String expression, String expressionItem){
+        if (expression.equals(expressionItem)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
 }
