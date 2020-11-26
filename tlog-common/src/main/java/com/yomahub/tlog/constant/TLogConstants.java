@@ -1,6 +1,8 @@
 package com.yomahub.tlog.constant;
+
 /**
  * 静态变量类
+ *
  * @author Bryan.Zhang
  * @since 1.0.0
  */
@@ -20,6 +22,6 @@ public class TLogConstants {
 
     public final static String MDC_KEY = "tl";
 
-    public final static String T_LOG_LABEL="tlogLabel";
+    public final static String T_LOG_LABEL = "tlogLabel";
 
 }

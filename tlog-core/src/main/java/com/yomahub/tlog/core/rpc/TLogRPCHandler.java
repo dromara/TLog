@@ -60,10 +60,10 @@ public class TLogRPCHandler {
         AspectLogContext.putLogValue(tlogLabel);
 
         //如果是log4j2开启了异步日志
-        if("org.apache.logging.log4j.core.async.AsyncLoggerContextSelector".equals(System.getProperty("Log4jContextSelector"))){
+        if ("org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+                .equals(System.getProperty("Log4jContextSelector"))) {
             ThreadContext.put(TLogConstants.T_LOG_LABEL, tlogLabel);
         }
-
 
         //如果有MDC，则往MDC中放入日志标签
         if (TLogContext.hasTLogMDC()) {
