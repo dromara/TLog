@@ -6,7 +6,6 @@ import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.id.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.logging.log4j.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

@@ -31,7 +31,7 @@ public class AspectLogContext {
         }
     }
 
-    //如果是log4j2开启了异步日志
+    // 如果是log4j2开启了异步日志
     private static boolean isLog4j2AsyncLoggerContextSelector() {
         return "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
                 .equals(System.getProperty("Log4jContextSelector"));
