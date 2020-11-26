@@ -32,9 +32,8 @@ public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterce
             StopWatch stopWatch = new StopWatch();
             invokeTimeTL.set(stopWatch);
             stopWatch.start();
-            return true;
         }
-        return false;
+        return true;
     }
 
     @Override
