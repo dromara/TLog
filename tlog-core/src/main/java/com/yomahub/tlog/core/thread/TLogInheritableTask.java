@@ -96,7 +96,9 @@ public abstract class TLogInheritableTask implements Runnable {
         boolean isSet = false;
         Thread currentThread = Thread.currentThread();
         Field field = getInheritableThreadLocalsField();
-        MDC.setContextMap(_cm);
+        if (_cm != null){
+            MDC.setContextMap(_cm);
+        }
         try {
             if (obj != null && field != null) {
                 field.set(currentThread, obj);
