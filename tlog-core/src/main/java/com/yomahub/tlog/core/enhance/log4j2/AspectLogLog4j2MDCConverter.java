@@ -21,7 +21,7 @@ import org.apache.logging.log4j.util.TriConsumer;
  * @since 1.1.5
  */
 @Plugin(name = "AspectLogLog4j2MDCConverter", category = PatternConverter.CATEGORY)
-@ConverterKeys({"X", "mdc", "MDC"})
+@ConverterKeys({ "X", "mdc", "MDC", "TX"})
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter {
 
@@ -104,7 +104,7 @@ public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter 
                     return;
                 }
                 appendSelectedKeys(keys, contextData, toAppendTo);
-            } else if (contextData != null) {
+            } else if (contextData != null){
                 // otherwise they just want a single key output
                 final Object value = contextData.getValue(key);
                 if (value != null) {
