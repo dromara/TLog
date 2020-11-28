@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * dubbo的时间统计调用拦截器
  *
  * @author Bryan.Zhang
- * @since 1.1.6
+ * @since 1.2.0
  */
 @Activate(group = {CommonConstants.PROVIDER}, order = -9000)
 public class TLogDubboInvokeTimeFilter extends TLogRPCHandler implements Filter {

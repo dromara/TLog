@@ -16,7 +16,7 @@ import java.net.InetAddress;
  * 针对于Mq的包装Bean
  *
  * @author Bryan.Zhang
- * @since 1.1.6
+ * @since 1.2.0
  */
 public class TLogMqWrapBean<T> extends TLogLabelBean {
 

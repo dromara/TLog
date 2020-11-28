@@ -14,7 +14,7 @@ import org.springframework.core.env.Environment;
  * Spring的上下文处理器
  *
  * @author Bryan.Zhang
- * @since 1.1.6
+ * @since 1.2.0
  */
 public class TLogSpringAware implements ApplicationContextAware{
 

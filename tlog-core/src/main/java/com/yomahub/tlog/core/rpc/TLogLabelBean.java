@@ -4,7 +4,7 @@ package com.yomahub.tlog.core.rpc;
  * TLog的日志标签包装类
  *
  * @author Bryan.Zhang
- * @since 1.1.6
+ * @since 1.2.0
  */
 public class TLogLabelBean {
 
