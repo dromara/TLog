@@ -45,4 +45,12 @@ public class TLogMqWrapBean<T> extends TLogLabelBean {
             log.warn("[TLOG]本地kafka客户端没有正确传递traceId,本次发送不传递traceId");
         }
     }
+
+    public T getT() {
+        return t;
+    }
+
+    public void setT(T t) {
+        this.t = t;
+    }
 }
