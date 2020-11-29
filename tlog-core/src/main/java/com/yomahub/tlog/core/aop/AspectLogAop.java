@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.yomahub.tlog.core.annotation.TLogAspect;
@@ -119,15 +120,41 @@ public class AspectLogAop {
             } else if (Date.class.isAssignableFrom(o.getClass())) {
                 return DateUtil.formatDateTime((Date) o);
             } else if(JSONObject.class.isAssignableFrom(o.getClass())) {
-                Object o1 = ((JSONObject) o).get(item);
+                int x = item.indexOf("[");
+                int y = item.indexOf("]");
+                Object o1 = null;
+                if(x != -1 && y != -1 ){
+                    o1 = ((JSONObject) o).get( item.substring(0,x));
+                }else {
+                    o1 = ((JSONObject) o).get(item);
+                }
                 if(o1 instanceof JSONObject && !isRemainExpression(expression,item)){
                     return getExpressionValue(getRemainExpression(expression, item), o1);
+                }
+                if(o1 instanceof JSONArray){
+                    return getExpressionValue(item, o1);
                 }
                 if(ObjectUtil.isNotNull(o1)){
                     return (String) o1;
                 }
                 return ((JSONObject) o).toJSONString();
-            } else if (Map.class.isAssignableFrom(o.getClass())) {
+            } else if(JSONArray.class.isAssignableFrom(o.getClass())){
+                int x = item.indexOf("[");
+                int y = item.indexOf("]");
+                if(x != -1 && y != -1){
+                    Integer num = Integer.valueOf(item.substring(x + 1, y));
+                    item  = item.substring(0, x);
+                    Object o1 = ((JSONArray) o).get(num);
+                    if(!isRemainExpression(expression,item)){
+                        return getExpressionValue(getRemainExpression(expression, item), o1);
+                    }
+                    return o1.toString();
+                }
+                if(!isRemainExpression(expression,item)){
+                    return getExpressionValue(getRemainExpression(expression, item), o);
+                }
+                return ((JSONArray) o).toJSONString();
+            }else if (Map.class.isAssignableFrom(o.getClass())) {
                 Object v = ((Map) o).get(item);
                 if (v == null) {
                     return null;
@@ -150,6 +177,7 @@ public class AspectLogAop {
         }
         return null;
     }
+
 
     private String getRemainExpression(String expression, String expressionItem) {
         if (expression.equals(expressionItem)) {
