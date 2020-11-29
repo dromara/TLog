@@ -20,6 +20,7 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
@@ -132,7 +133,7 @@ public class AspectLogAop {
                     return getExpressionValue(getRemainExpression(expression, item), o1);
                 }
                 if(o1 instanceof JSONArray){
-                    return getExpressionValue(item, o1);
+                    return getExpressionValue(expression, o1);
                 }
                 if(ObjectUtil.isNotNull(o1)){
                     return (String) o1;
@@ -143,7 +144,7 @@ public class AspectLogAop {
                 int y = item.indexOf("]");
                 if(x != -1 && y != -1){
                     Integer num = Integer.valueOf(item.substring(x + 1, y));
-                    item  = item.substring(0, x);
+
                     Object o1 = ((JSONArray) o).get(num);
                     if(!isRemainExpression(expression,item)){
                         return getExpressionValue(getRemainExpression(expression, item), o1);
