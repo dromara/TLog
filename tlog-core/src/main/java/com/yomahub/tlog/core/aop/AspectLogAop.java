@@ -120,6 +120,15 @@ public class AspectLogAop {
                 return ((BigDecimal) o).toPlainString();
             } else if (Date.class.isAssignableFrom(o.getClass())) {
                 return DateUtil.formatDateTime((Date) o);
+            } else if (Map.class.isAssignableFrom(o.getClass())) {
+                Object v = ((Map) o).get(item);
+                if (v == null) {
+                    return null;
+                }
+                if(!JSONObject.class.isAssignableFrom(v.getClass()) && String.class.isAssignableFrom(v.getClass()) && !isRemainExpression(expression,item)) {
+                    return "NONE";
+                }
+                return getExpressionValue(getRemainExpression(expression, item), v);
             } else if(JSONObject.class.isAssignableFrom(o.getClass())) {
                 int x = item.indexOf("[");
                 int y = item.indexOf("]");
@@ -129,16 +138,10 @@ public class AspectLogAop {
                 }else {
                     o1 = ((JSONObject) o).get(item);
                 }
-                if(o1 instanceof JSONObject && !isRemainExpression(expression,item)){
-                    return getExpressionValue(getRemainExpression(expression, item), o1);
-                }
                 if(o1 instanceof JSONArray){
                     return getExpressionValue(expression, o1);
                 }
-                if(ObjectUtil.isNotNull(o1)){
-                    return (String) o1;
-                }
-                return ((JSONObject) o).toJSONString();
+                return getExpressionValue(getRemainExpression(expression, item), o1);
             } else if(JSONArray.class.isAssignableFrom(o.getClass())){
                 int x = item.indexOf("[");
                 int y = item.indexOf("]");
@@ -155,15 +158,6 @@ public class AspectLogAop {
                     return getExpressionValue(getRemainExpression(expression, item), o);
                 }
                 return ((JSONArray) o).toJSONString();
-            }else if (Map.class.isAssignableFrom(o.getClass())) {
-                Object v = ((Map) o).get(item);
-                if (v == null) {
-                    return null;
-                }
-                if(!JSONObject.class.isAssignableFrom(v.getClass()) && String.class.isAssignableFrom(v.getClass()) && !isRemainExpression(expression,item)) {
-                    return "NONE";
-                }
-                return getExpressionValue(getRemainExpression(expression, item), v);
             } else {
                 try {
                     Object v = MethodUtils.invokeMethod(o, "get" + item.substring(0, 1).toUpperCase() + item.substring(1));
