@@ -16,7 +16,7 @@ import java.net.InetAddress;
  * 针对于Mq的包装Bean
  *
  * @author Bryan.Zhang
- * @since 1.1.6
+ * @since 1.2.0
  */
 public class TLogMqWrapBean<T> extends TLogLabelBean {
 
@@ -44,5 +44,13 @@ public class TLogMqWrapBean<T> extends TLogLabelBean {
         } else {
             log.warn("[TLOG]本地kafka客户端没有正确传递traceId,本次发送不传递traceId");
         }
+    }
+
+    public T getT() {
+        return t;
+    }
+
+    public void setT(T t) {
+        this.t = t;
     }
 }

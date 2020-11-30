@@ -14,7 +14,7 @@ import org.slf4j.MDC;
  * TLog的RPC处理逻辑的封装类
  *
  * @author Bryan.Zhang
- * @since 1.1.6
+ * @since 1.2.0
  */
 public class TLogRPCHandler {
 

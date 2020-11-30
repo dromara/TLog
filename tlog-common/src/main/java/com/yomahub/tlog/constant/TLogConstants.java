@@ -22,6 +22,4 @@ public class TLogConstants {
 
     public static final String MDC_KEY = "tl";
 
-    public static final String T_LOG_LABEL = "tlogLabel";
-
 }
