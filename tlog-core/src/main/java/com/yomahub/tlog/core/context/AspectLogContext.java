@@ -24,7 +24,7 @@ public class AspectLogContext {
 
     public static String getLogValue() {
         String result = logValueTL.get();
-        if (StringUtils.isBlank(result)){
+        if (isLog4j2AsyncLoggerContextSelector()){
             result = ThreadContext.get(TLogConstants.LOG_THREAD_CONTEXT_LABEL);
         }
         return result;
