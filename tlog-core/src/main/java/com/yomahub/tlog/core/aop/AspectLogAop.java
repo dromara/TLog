@@ -49,10 +49,10 @@ public class AspectLogAop {
         String[] parameterNames = signature.getParameterNames();
         Map<String, Object> paramNameValueMap = Maps.newHashMap();
         for (int i = 0; i < parameterNames.length; i++) {
-            if(args[i] instanceof  String){
+            if (args[i] instanceof String) {
                 try {
                     Object parse = JSON.parse(String.valueOf(args[i]));
-                    if(parse instanceof JSONObject){
+                    if (parse instanceof JSONObject) {
                         args[i] = parse;
                     }
                 } catch (Exception e) {
@@ -60,7 +60,6 @@ public class AspectLogAop {
                 }
             }
             paramNameValueMap.put(parameterNames[i], args[i]);
-
         }
 
         TLogAspect tlogAspect = method.getAnnotation(TLogAspect.class);
@@ -125,36 +124,37 @@ public class AspectLogAop {
                 if (v == null) {
                     return null;
                 }
-                if(!JSONObject.class.isAssignableFrom(v.getClass()) && String.class.isAssignableFrom(v.getClass()) && !isRemainExpression(expression,item)) {
-                    return "NONE";
+
+                if (JSONObject.class.isAssignableFrom(o.getClass())) {
+                    int x = item.indexOf("[");
+                    int y = item.indexOf("]");
+                    Object o1 = null;
+                    if (x != -1 && y != -1) {
+                        o1 = ((JSONObject) o).get(item.substring(0, x));
+                    } else {
+                        o1 = ((JSONObject) o).get(item);
+                    }
+                    if (o1 instanceof JSONArray) {
+                        return getExpressionValue(expression, o1);
+                    }
+                }
+                if (expression.equals(getRemainExpression(expression, item))) {
+                    v = JSON.toJSONString(v);
                 }
                 return getExpressionValue(getRemainExpression(expression, item), v);
-            } else if(JSONObject.class.isAssignableFrom(o.getClass())) {
+            } else if (JSONArray.class.isAssignableFrom(o.getClass())) {
                 int x = item.indexOf("[");
                 int y = item.indexOf("]");
-                Object o1 = null;
-                if(x != -1 && y != -1 ){
-                    o1 = ((JSONObject) o).get( item.substring(0,x));
-                }else {
-                    o1 = ((JSONObject) o).get(item);
-                }
-                if(o1 instanceof JSONArray){
-                    return getExpressionValue(expression, o1);
-                }
-                return getExpressionValue(getRemainExpression(expression, item), o1);
-            } else if(JSONArray.class.isAssignableFrom(o.getClass())){
-                int x = item.indexOf("[");
-                int y = item.indexOf("]");
-                if(x != -1 && y != -1){
+                if (x != -1 && y != -1) {
                     Integer num = Integer.valueOf(item.substring(x + 1, y));
 
                     Object o1 = ((JSONArray) o).get(num);
-                    if(!isRemainExpression(expression,item)){
+                    if (!isRemainExpression(expression, item)) {
                         return getExpressionValue(getRemainExpression(expression, item), o1);
                     }
                     return o1.toString();
                 }
-                if(!isRemainExpression(expression,item)){
+                if (!isRemainExpression(expression, item)) {
                     return getExpressionValue(getRemainExpression(expression, item), o);
                 }
                 return ((JSONArray) o).toJSONString();
@@ -164,6 +164,11 @@ public class AspectLogAop {
                     if (v == null) {
                         return null;
                     }
+
+                    if (expression.equals(getRemainExpression(expression, item))) {
+                        v = JSON.toJSONString(v);
+                    }
+
                     return getExpressionValue(getRemainExpression(expression, item), v);
                 } catch (Exception e) {
                     return null;
@@ -182,15 +187,13 @@ public class AspectLogAop {
         }
     }
 
-    private boolean isRemainExpression(String expression, String expressionItem){
+    private boolean isRemainExpression(String expression, String expressionItem) {
         if (expression.equals(expressionItem)) {
             return true;
         } else {
             return false;
         }
     }
-
-
 
 
 }
