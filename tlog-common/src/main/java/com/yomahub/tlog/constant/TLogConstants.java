@@ -22,4 +22,6 @@ public class TLogConstants {
 
     public static final String MDC_KEY = "tl";
 
+    public static final String LOG_THREAD_CONTEXT_LABEL = "log_thread_context_label";
+
 }
