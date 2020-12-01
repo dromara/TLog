@@ -51,6 +51,10 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-cache</artifactId>
+        </dependency>
         <!-- slf4j api包 -->
         <dependency>
             <groupId>org.slf4j</groupId>
