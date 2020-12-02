@@ -37,7 +37,7 @@ public class TLogDubboInvokeTimeFilter extends TLogRPCHandler implements Filter 
                 result = invoker.invoke(invocation);
             } finally {
                 stopWatch.stop();
-                log.info("[TLOG]结束接口[{}]中方法[{}]的调用,耗时为:{}毫秒", invocation.getServiceName(),
+                log.info("[TLOG]结束接口[{}]中方法[{}]的调用,耗时为:{}毫秒", invoker.getInterface().getSimpleName(),
                         invocation.getMethodName(),
                         stopWatch.getTime());
             }
