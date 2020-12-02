@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tlog</artifactId>
         <groupId>com.yomahub</groupId>
-        <version>1.2.0-BETA1</version>
+        <version>1.2.0-BETA2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

@@ -30,7 +30,7 @@ public class TLogDubboInvokeTimeFilter extends TLogRPCHandler implements Filter 
             stopWatch.start();
 
             try {
-                log.info("[TLOG]开始调用接口[{}]的方法[{}],参数为:{}", invocation.getServiceName(),
+                log.info("[TLOG]开始调用接口[{}]的方法[{}],参数为:{}", invoker.getInterface().getSimpleName(),
                         invocation.getMethodName(),
                         JSON.toJSONString(invocation.getArguments()));
                 //调用dubbo
