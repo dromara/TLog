@@ -21,7 +21,7 @@ public abstract class AbsTLogWebHandlerMethodInterceptor implements HandlerInter
         if (handler instanceof HandlerMethod) {
             return preHandleByHandlerMethod(request, response, handler);
         }
-        return false;
+        return true;
     }
 
     @Override
