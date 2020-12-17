@@ -1,4 +1,4 @@
-package com.yomahub.tlog.id;
+package com.yomahub.tlog.id.snowflake;
 
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;

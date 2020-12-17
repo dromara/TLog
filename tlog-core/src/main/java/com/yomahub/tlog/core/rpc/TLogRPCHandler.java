@@ -4,7 +4,8 @@ import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
-import com.yomahub.tlog.id.UniqueIdGenerator;
+import com.yomahub.tlog.id.TLogIdGeneratorLoader;
+import com.yomahub.tlog.id.snowflake.UniqueIdGenerator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class TLogRPCHandler {
 
         //如果从隐式传参里没有获取到，则重新生成一个traceId
         if (StringUtils.isBlank(labelBean.getTraceId())) {
-            labelBean.setTraceId(UniqueIdGenerator.generateStringId());
+            labelBean.setTraceId(TLogIdGeneratorLoader.getIdGenerator().generateTraceId());
             log.debug("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]", labelBean.getPreIvkApp(), labelBean.getTraceId());
         }
 

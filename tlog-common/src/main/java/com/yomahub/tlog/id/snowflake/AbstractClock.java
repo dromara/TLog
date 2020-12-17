@@ -1,4 +1,4 @@
-package com.yomahub.tlog.id;
+package com.yomahub.tlog.id.snowflake;
 
 /**
  * 雪花id生成器

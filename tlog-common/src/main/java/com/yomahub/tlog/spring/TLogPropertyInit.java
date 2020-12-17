@@ -2,6 +2,8 @@ package com.yomahub.tlog.spring;
 
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
+import com.yomahub.tlog.id.TLogIdGenerator;
+import com.yomahub.tlog.id.TLogIdGeneratorLoader;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -16,10 +18,15 @@ public class TLogPropertyInit implements InitializingBean {
 
     private boolean enableInvokeTimePrint;
 
+    private String idGenerator;
+
     @Override
     public void afterPropertiesSet() throws Exception {
         TLogLabelGenerator.setLabelPattern(pattern);
         TLogContext.setEnableInvokeTimePrint(enableInvokeTimePrint);
+
+        TLogIdGenerator tLogIdGenerator = (TLogIdGenerator)TLogSpringAware.registerBean(Class.forName(idGenerator));
+        TLogIdGeneratorLoader.setIdGenerator(tLogIdGenerator);
     }
 
     public String getPattern() {
@@ -36,5 +43,13 @@ public class TLogPropertyInit implements InitializingBean {
 
     public void setEnableInvokeTimePrint(boolean enableInvokeTimePrint) {
         this.enableInvokeTimePrint = enableInvokeTimePrint;
+    }
+
+    public String getIdGenerator() {
+        return idGenerator;
+    }
+
+    public void setIdGenerator(String idGenerator) {
+        this.idGenerator = idGenerator;
     }
 }
