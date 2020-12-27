@@ -16,10 +16,12 @@
  */
 package com.yomahub.tlog.core.enhance.log4j2;
 
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
@@ -115,8 +117,10 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
         if (!TLogContext.hasTLogMDC()) {
             String prefix = AspectLogContext.getLogValue();
-            if (StringUtils.isBlank(prefix)) {
+            //如果用系统参数开启了log4j2的异步日志的话，走特殊逻辑
+            if (StrUtil.isEmpty(prefix)) {
                 prefix = event.getContextData().getValue(TLogConstants.LOG_THREAD_CONTEXT_LABEL);
+                AspectLogContext.putLogValue(prefix);
             }
             if (StringUtils.isNotBlank(prefix)) {
                 toAppendTo.append(prefix + " ");
