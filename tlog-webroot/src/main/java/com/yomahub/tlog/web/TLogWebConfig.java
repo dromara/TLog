@@ -2,6 +2,7 @@ package com.yomahub.tlog.web;
 
 import com.yomahub.tlog.web.interceptor.TLogWebInterceptor;
 import com.yomahub.tlog.web.interceptor.TLogWebInvokeTimeInterceptor;
+import org.springframework.core.Ordered;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.validation.MessageCodesResolver;
@@ -22,8 +23,8 @@ import java.util.List;
 public class TLogWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TLogWebInterceptor());
-        registry.addInterceptor(new TLogWebInvokeTimeInterceptor());
+        registry.addInterceptor(new TLogWebInterceptor()).order(Ordered.HIGHEST_PRECEDENCE);
+        registry.addInterceptor(new TLogWebInvokeTimeInterceptor()).order(Ordered.HIGHEST_PRECEDENCE);
     }
 
     @Override
