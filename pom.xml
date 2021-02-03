@@ -254,6 +254,7 @@
         <module>tlog-all</module>
         <module>tlog-all-spring-boot-starter</module>
         <module>tlog-agent</module>
+        <module>tlog-gateway</module>
     </modules>
 
     <distributionManagement>

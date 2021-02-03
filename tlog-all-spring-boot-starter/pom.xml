@@ -21,16 +21,65 @@
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-dubbox</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-feign</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-common</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-webroot</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-common</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-gateway</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.yomahub</groupId>
+                    <artifactId>tlog-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-gateway</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
