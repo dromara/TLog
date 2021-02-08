@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * @Author: zs
- * @Date: 2021/2/3 16:42
+ * @author zs
+ * @since 1.2.4-BETA1
  */
 public class TLogGatewayCommon extends TLogRPCHandler {
 

@@ -23,7 +23,7 @@ import java.net.InetAddress;
  * gateway 的全局拦截器
  *
  * @author zs
- * @since 1.0.0
+ * @since 1.2.4-BETA1
  */
 public class TLogGatewayFilter implements GlobalFilter, Ordered {
 
