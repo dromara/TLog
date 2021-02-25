@@ -1,5 +1,7 @@
 package com.yomahub.tlog.web;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.yomahub.tlog.web.interceptor.TLogWebInterceptor;
 import com.yomahub.tlog.web.interceptor.TLogWebInvokeTimeInterceptor;
 import org.springframework.core.Ordered;
@@ -12,6 +14,7 @@ import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -23,8 +26,27 @@ import java.util.List;
 public class TLogWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TLogWebInterceptor()).order(Ordered.HIGHEST_PRECEDENCE);
-        registry.addInterceptor(new TLogWebInvokeTimeInterceptor()).order(Ordered.HIGHEST_PRECEDENCE);
+        InterceptorRegistration interceptorRegistration;
+        interceptorRegistration = registry.addInterceptor(new TLogWebInterceptor());
+        //这里是为了兼容springboot 1.5.X，1.5.x没有order这个方法
+        try{
+            Method method = ReflectUtil.getMethod(InterceptorRegistration.class, "order", Integer.class);
+            if (ObjectUtil.isNotNull(method)){
+                method.invoke(interceptorRegistration, Ordered.HIGHEST_PRECEDENCE);
+            }
+        }catch (Exception e){
+
+        }
+        interceptorRegistration = registry.addInterceptor(new TLogWebInvokeTimeInterceptor());
+        //这里是为了兼容springboot 1.5.X，1.5.x没有order这个方法
+        try{
+            Method method = ReflectUtil.getMethod(InterceptorRegistration.class, "order", Integer.class);
+            if (ObjectUtil.isNotNull(method)){
+                method.invoke(interceptorRegistration, Ordered.HIGHEST_PRECEDENCE);
+            }
+        }catch (Exception e){
+
+        }
     }
 
     @Override
