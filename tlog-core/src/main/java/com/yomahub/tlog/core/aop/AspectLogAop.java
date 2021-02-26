@@ -7,6 +7,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import com.yomahub.tlog.constant.TLogConstants;
+import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.core.convert.AspectLogConvert;
@@ -19,6 +21,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.StringReader;
 import java.lang.reflect.Method;
@@ -94,7 +97,12 @@ public class AspectLogAop {
 
             //拿到之前的标签
             String currentLabel = AspectLogContext.getLogValue();
-            AspectLogContext.putLogValue(currentLabel + aspLogValue);
+
+            if (TLogContext.hasTLogMDC()) {
+                MDC.put(TLogConstants.MDC_KEY, currentLabel + aspLogValue);
+            }else{
+                AspectLogContext.putLogValue(currentLabel + aspLogValue);
+            }
         }
 
         try {
