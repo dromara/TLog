@@ -27,7 +27,7 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 ![offIical-wx](static/img/offical-wx.jpg)
 
 ## star趋势图
-[![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/M6HYQQ5L.png)](https://giteye.net/chart/M6HYQQ5L)
+[![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/YNFPXSQU.png)](https://giteye.net/chart/YNFPXSQU)
 
 
 
