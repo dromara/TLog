@@ -1,5 +1,7 @@
 package com.yomahub.tlog.web.interceptor;
 
+import com.yomahub.tlog.constant.TLogConstants;
+import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.web.common.TLogWebCommon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +23,13 @@ public class TLogWebInterceptor extends AbsTLogWebHandlerMethodInterceptor {
     @Override
     public boolean preHandleByHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         TLogWebCommon.loadInstance().preHandle(request, response, handler);
+        //把traceId放入response的header，为了方便有些人有这样的需求，从前端拿整条链路的traceId
+        response.addHeader(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
         return true;
     }
 
     @Override
     public void postHandleByHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
     }
 
     @Override
