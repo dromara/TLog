@@ -6,6 +6,8 @@
 
 <h3>您的star是我继续前进的动力，如果喜欢请右上角帮忙点个star</h3>
 
+![gvp](static/img/gvp.jpg)
+
 ## Gitee的star趋势图
 [![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/89TTFRNP.png)](https://giteye.net/chart/89TTFRNP)
 
