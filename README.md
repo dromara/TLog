@@ -33,12 +33,3 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 
 关注公众号回复`tlog`即可加入TLog开源框架讨论交流群，我会用心回答每一个人的问题
 ![offIical-wx](static/img/offical-wx.jpg)
-
-## Gitee的star趋势图
-[![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/M6HYQQ5L.png)](https://giteye.net/chart/M6HYQQ5L)
-
-## 贡献者
-[![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/UZA4EM66.png)](https://giteye.net/chart/UZA4EM66)
-
-
-
