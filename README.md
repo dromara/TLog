@@ -9,10 +9,10 @@
 ![gvp](static/img/gvp.jpg)
 
 ## Gitee的star趋势图
-[![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/89TTFRNP.png)](https://giteye.net/chart/89TTFRNP)
+[![Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UWFCA2XK.png)](https://giteye.net/chart/UWFCA2XK)
 
 ## 贡献者
-[![Giteye chart](https://chart.giteye.net/gitee/bryan31/TLog/UZA4EM66.png)](https://giteye.net/chart/UZA4EM66)
+[![Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UZA4EM66.png)](https://giteye.net/chart/UZA4EM66)
 
 ## 概述
 TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接入，自动对日志打标签完成微服务的链路追踪。支持log4j，log4j2，logback三大日志框架，支持dubbo，dubbox，springcloud三大RPC框架
