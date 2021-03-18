@@ -1,5 +1,7 @@
 package com.yomahub.tlog.spring;
 
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.id.TLogIdGenerator;
@@ -16,17 +18,28 @@ public class TLogPropertyInit implements InitializingBean {
 
     private String pattern;
 
-    private boolean enableInvokeTimePrint;
+    private Boolean enableInvokeTimePrint;
 
     private String idGenerator;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        TLogLabelGenerator.setLabelPattern(pattern);
-        TLogContext.setEnableInvokeTimePrint(enableInvokeTimePrint);
+        if (StrUtil.isNotBlank(pattern)){
+            TLogLabelGenerator.setLabelPattern(pattern);
+        }
 
-        TLogIdGenerator tLogIdGenerator = (TLogIdGenerator)TLogSpringAware.registerBean(Class.forName(idGenerator));
-        TLogIdGeneratorLoader.setIdGenerator(tLogIdGenerator);
+        if (ObjectUtil.isNotNull(enableInvokeTimePrint)){
+            TLogContext.setEnableInvokeTimePrint(enableInvokeTimePrint);
+        }
+
+        if (StrUtil.isNotBlank(idGenerator)){
+            try{
+                TLogIdGenerator tLogIdGenerator = (TLogIdGenerator)TLogSpringAware.registerBean(Class.forName(idGenerator));
+                TLogIdGeneratorLoader.setIdGenerator(tLogIdGenerator);
+            }catch (Exception e){
+                throw new RuntimeException("Id生成器包路径不正确");
+            }
+        }
     }
 
     public String getPattern() {
@@ -37,11 +50,11 @@ public class TLogPropertyInit implements InitializingBean {
         this.pattern = pattern;
     }
 
-    public boolean getEnableInvokeTimePrint() {
+    public Boolean getEnableInvokeTimePrint() {
         return enableInvokeTimePrint;
     }
 
-    public void setEnableInvokeTimePrint(boolean enableInvokeTimePrint) {
+    public void setEnableInvokeTimePrint(Boolean enableInvokeTimePrint) {
         this.enableInvokeTimePrint = enableInvokeTimePrint;
     }
 
