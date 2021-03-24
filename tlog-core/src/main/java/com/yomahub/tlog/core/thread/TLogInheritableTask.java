@@ -92,7 +92,7 @@ public abstract class TLogInheritableTask implements Runnable {
     public abstract void runTask();
 
     @Override
-    public void run() {
+    public final void run() {
         boolean isSet = false;
         Thread currentThread = Thread.currentThread();
         Field field = getInheritableThreadLocalsField();
