@@ -44,7 +44,7 @@ public class TLogPropertyInit implements InitializingBean {
             }
         }
         //当且仅当用户设置为true时，才修改context里的mdc属性 不影响原先AspectLogbackMDCConverter中，当自定义pattern存在tl时，开启MDC
-        if(BooleanUtil.isTrue(mdcEnable)){
+        if (BooleanUtil.isTrue(mdcEnable)) {
             TLogContext.setHasTLogMDC(true);
         }
     }
