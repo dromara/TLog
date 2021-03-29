@@ -91,7 +91,7 @@ public class AspectLogAop {
 
         String aspLogValue = sb.toString();
         if (StringUtils.isNotBlank(aspLogValue)) {
-            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - 1);
+            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - joint.length());
 
             aspLogValue = MessageFormat.format(pattern, aspLogValue);
 
