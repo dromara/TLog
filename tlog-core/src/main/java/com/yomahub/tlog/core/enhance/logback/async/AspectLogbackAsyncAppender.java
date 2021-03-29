@@ -5,14 +5,13 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
-import cn.hutool.core.collection.ConcurrentHashSet;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.HashSet;
 
 /**
  * Logback的异步日志增强appender
@@ -33,9 +32,9 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
 
             if (!lruCache.containsKey(loggingEvent)){
                 String resultLog;
-
-                if(StringUtils.isNotBlank(AspectLogContext.getLogValue())){
-                    resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(),loggingEvent.getFormattedMessage());
+                final String logValue = AspectLogContext.getLogValue();
+                if (!TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)) {
+                    resultLog = StrUtil.format("{} {}", logValue,loggingEvent.getFormattedMessage());
                     if(field == null){
                         field = ReflectUtil.getField(LoggingEvent.class,"formattedMessage");
                         field.setAccessible(true);
@@ -46,6 +45,7 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
                     } catch (IllegalAccessException e) {
                     }
                 }
+
                 eventObject = loggingEvent;
                 lruCache.put(loggingEvent, Integer.MIN_VALUE);
             }
