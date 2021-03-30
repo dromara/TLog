@@ -28,8 +28,8 @@ public class TLogWebAutoConfiguration {
         registration.setFilter(new ReplaceStreamFilter());
         // 设置拦截路径
         registration.addUrlPatterns("/*");
-        // 设置优先级
-        registration.setOrder(0);
+        // 设置优先级（保证tlog过滤器最先执行）
+        registration.setOrder(-999);
         return registration;
     }
 }
