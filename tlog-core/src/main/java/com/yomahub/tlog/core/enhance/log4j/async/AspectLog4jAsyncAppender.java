@@ -2,6 +2,7 @@ package com.yomahub.tlog.core.enhance.log4j.async;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.AsyncAppender;
@@ -19,16 +20,18 @@ public class AspectLog4jAsyncAppender extends AsyncAppender {
 
     private Field field;
 
+    @Override
     public void doAppend(LoggingEvent event) {
         String resultLog;
-        if (StringUtils.isNotBlank(AspectLogContext.getLogValue())) {
+        if (!TLogContext.hasTLogMDC()
+                && StringUtils.isNotBlank(AspectLogContext.getLogValue())) {
             resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(), event.getMessage());
         } else {
             resultLog = (String) event.getMessage();
         }
 
         if (field == null) {
-            field = ReflectUtil.getField(LoggingEvent.class, "message");
+            field = ReflectUtil.getField(LoggingEvent.class, "renderedMessage");
             field.setAccessible(true);
         }
 
