@@ -29,6 +29,9 @@ public class TLogWebInterceptor extends AbsTLogWebHandlerMethodInterceptor {
         //把traceId放入response的header，为了方便有些人有这样的需求，从前端拿整条链路的traceId
         response.addHeader(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
         String url = request.getRequestURI();
+        if ("/error".equals(url)) {
+            return true;
+        }
         // 打印请求参数
         if (isJson(request)) {
             // json请求
