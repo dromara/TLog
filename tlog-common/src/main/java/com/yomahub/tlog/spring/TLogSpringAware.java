@@ -24,6 +24,7 @@ public class TLogSpringAware implements ApplicationContextAware{
 
 	private static Environment environment = null;
 
+	@Override
 	public void setApplicationContext(ApplicationContext ac) throws BeansException {
 		applicationContext = ac;
 	}
