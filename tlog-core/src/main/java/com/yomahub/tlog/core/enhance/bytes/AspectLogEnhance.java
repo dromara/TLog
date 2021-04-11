@@ -16,17 +16,16 @@ public class AspectLogEnhance {
         try {
             //logback的增强(包括同步和异步日志)
             CtClass cc = null;
+            ClassPool pool = ClassPool.getDefault();
             try {
-                ClassPool pool = ClassPool.getDefault();
                 pool.importPackage("com.yomahub.tlog.core.enhance.bytes.logback.LogbackBytesEnhance");
-
                 cc = pool.get("ch.qos.logback.classic.Logger");
-
                 if (cc != null) {
                     CtMethod ctMethod = cc.getDeclaredMethod("buildLoggingEventAndAppend");
                     ctMethod.setBody("{return LogbackBytesEnhance.enhance($1,$2,$3,$4,$5,$6,this);}");
                     cc.toClass();
                     System.out.println("locakback同步日志增强成功");
+                    return;
                 }
             } catch (Exception e) {
                 System.out.println("locakback同步日志增强失败");
@@ -34,7 +33,6 @@ public class AspectLogEnhance {
 
             //log4j日志增强(包括同步和异步日志)
             try {
-                ClassPool pool = ClassPool.getDefault();
                 pool.importPackage("com.yomahub.tlog.core.enhance.bytes.log4j.Log4jBytesEnhance");
 
                 cc = pool.get("org.apache.log4j.AppenderSkeleton");
@@ -44,6 +42,7 @@ public class AspectLogEnhance {
                     ctMethod.setBody("{Log4jBytesEnhance.enhance($1,closed,name,this);}");
                     cc.toClass();
                     System.out.println("log4j日志增强成功");
+                    return;
                 }
             } catch (Exception e) {
                 System.out.println("log4j日志增强失败");
