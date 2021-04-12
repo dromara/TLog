@@ -1,6 +1,6 @@
 package com.yomahub.tlog.core.enhance.log4j2.async;
 
-import com.yomahub.tlog.core.enhance.log4j2.async.impl.AsyncTlogAppender;
+import com.yomahub.tlog.core.enhance.log4j2.async.impl.AsyncTLogAppender;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.LogEvent;
@@ -11,13 +11,13 @@ import org.apache.logging.log4j.message.Message;
 
 /**
  * <pre>
- * 自定义EventTlogRoute
+ * 自定义EventTLogRoute
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ * @author iwinkfc@dromara.org
+ * @since 1.2.5
  * @see org.apache.logging.log4j.core.async.EventRoute
  */
-public enum EventTlogRoute {
+public enum EventTLogRoute {
 
     /**
      * Enqueues the event for asynchronous logging in the background thread.
@@ -39,7 +39,7 @@ public enum EventTlogRoute {
         }
 
         @Override
-        public void logMessage(AsyncTlogAppender asyncAppender, LogEvent coreEvent) {
+        public void logMessage(AsyncTLogAppender asyncAppender, LogEvent coreEvent) {
             asyncAppender.logMessageInBackgroundThread(coreEvent);
         }
     },
@@ -65,7 +65,7 @@ public enum EventTlogRoute {
         }
 
         @Override
-        public void logMessage(AsyncTlogAppender asyncAppender, LogEvent coreEvent) {
+        public void logMessage(AsyncTLogAppender asyncAppender, LogEvent coreEvent) {
             asyncAppender.logMessageInBackgroundThread(coreEvent);
         }
     },
@@ -90,7 +90,7 @@ public enum EventTlogRoute {
         }
 
         @Override
-        public void logMessage(AsyncTlogAppender asyncAppender, LogEvent coreEvent) {
+        public void logMessage(AsyncTLogAppender asyncAppender, LogEvent coreEvent) {
             // do nothing: drop the event
         }
     };
@@ -102,5 +102,5 @@ public enum EventTlogRoute {
 
     public abstract void logMessage(final AsyncAppender asyncAppender, final LogEvent coreEvent);
 
-    public abstract void logMessage(final AsyncTlogAppender asyncAppender, final LogEvent coreEvent);
+    public abstract void logMessage(final AsyncTLogAppender asyncAppender, final LogEvent coreEvent);
 }

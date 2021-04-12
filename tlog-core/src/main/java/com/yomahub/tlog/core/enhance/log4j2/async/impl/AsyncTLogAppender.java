@@ -4,8 +4,8 @@ import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
-import com.yomahub.tlog.core.enhance.log4j2.async.AsyncTlogQueueFullPolicy;
-import com.yomahub.tlog.core.enhance.log4j2.async.EventTlogRoute;
+import com.yomahub.tlog.core.enhance.log4j2.async.AsyncTLogQueueFullPolicy;
+import com.yomahub.tlog.core.enhance.log4j2.async.EventTLogRoute;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
@@ -18,6 +18,8 @@ import org.apache.logging.log4j.core.config.plugins.*;
 import org.apache.logging.log4j.core.config.plugins.validation.constraints.Required;
 import org.apache.logging.log4j.core.filter.AbstractFilterable;
 import org.apache.logging.log4j.core.impl.Log4jLogEvent;
+import org.apache.logging.log4j.core.impl.MementoMessage;
+import org.apache.logging.log4j.core.impl.MutableLogEvent;
 import org.apache.logging.log4j.core.util.Log4jThread;
 import org.apache.logging.log4j.message.Message;
 import org.apache.logging.log4j.message.ObjectMessage;
@@ -37,14 +39,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * <pre>
- *  自定义异步Plugin：AsyncTlog
+ *  自定义异步Plugin：AsyncTLog
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ *
+ * @author iwinkfc@dromara.org
  * @see org.apache.logging.log4j.core.appender.AbstractAppender
+ * @since 1.2.5
  */
-@Plugin(name = "AsyncTlog", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
-public final class AsyncTlogAppender extends AbstractAppender {
+@Plugin(name = "AsyncTLog", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
+public final class AsyncTLogAppender extends AbstractAppender {
 
     private static final LogEvent SHUTDOWN_LOG_EVENT = new AbstractLogEvent() {
         private static final long serialVersionUID = -1761035149477086338L;
@@ -62,12 +65,15 @@ public final class AsyncTlogAppender extends AbstractAppender {
     private final boolean includeLocation;
     private AppenderControl errorAppender;
     private AsyncThread thread;
-    private AsyncTlogQueueFullPolicy asyncQueueFullPolicy;
+    private AsyncTLogQueueFullPolicy asyncQueueFullPolicy;
     private Field simpleMessage = null;
     private Field parameterMessage = null;
     private Field objectMessage = null;
+    private Field mementoMessage = null;
+    private MutableLogEvent mutableLogEvent = null;
+    private StringBuilder mutableLogBuilder = null;
 
-    public AsyncTlogAppender(final String name, final Filter filter, final AppenderRef[] appenderRefs,
+    public AsyncTLogAppender(final String name, final Filter filter, final AppenderRef[] appenderRefs,
                              final String errorRef, final int queueSize, final boolean blocking, final boolean ignoreExceptions,
                              final long shutdownTimeout, final Configuration config, final boolean includeLocation,
                              final BlockingQueueFactory<LogEvent> blockingQueueFactory, final Property[] properties) {
@@ -104,12 +110,13 @@ public final class AsyncTlogAppender extends AbstractAppender {
         }
         if (appenders.size() > 0) {
             thread = new AsyncThread(appenders, queue);
-            thread.setName("AsyncTlogAppender-" + getName());
+            thread.setName("AsyncTLogAppender-" + getName());
         } else if (errorRef == null) {
-            throw new ConfigurationException("No appenders are available for AsyncTlogAppender " + getName());
+            throw new ConfigurationException("No appenders are available for AsyncTLogAppender " + getName());
         }
-        asyncQueueFullPolicy = AsyncTlogQueueFullPolicyFactory.createTlogQueuePolicy();
+        asyncQueueFullPolicy = AsyncTLogQueueFullPolicyFactory.createTLogQueuePolicy();
 
+        System.setProperty("Log4j2AsyncLoggerContextSelector", "com.yomahub.tlog.core.enhance.log4j2.async.impl.AsyncTLogAppender");
         thread.start();
         super.start();
     }
@@ -118,17 +125,17 @@ public final class AsyncTlogAppender extends AbstractAppender {
     public boolean stop(final long timeout, final TimeUnit timeUnit) {
         setStopping();
         super.stop(timeout, timeUnit, false);
-        LOGGER.trace("AsyncTlogAppender stopping. Queue still has {} events.", queue.size());
+        LOGGER.trace("AsyncTLogAppender stopping. Queue still has {} events.", queue.size());
         thread.shutdown();
         try {
             thread.join(shutdownTimeout);
         } catch (final InterruptedException ex) {
-            LOGGER.warn("Interrupted while stopping AsyncTlogAppender {}", getName());
+            LOGGER.warn("Interrupted while stopping AsyncTLogAppender {}", getName());
         }
-        LOGGER.trace("AsyncTlogAppender stopped. Queue has {} events.", queue.size());
+        LOGGER.trace("AsyncTLogAppender stopped. Queue has {} events.", queue.size());
         /*
         if (DiscardingAsyncQueueFullPolicy.getDiscardCount(asyncQueueFullPolicy) > 0) {
-            LOGGER.trace("AsyncTlogAppender: {} discarded {} events.", asyncQueueFullPolicy,
+            LOGGER.trace("AsyncTLogAppender: {} discarded {} events.", asyncQueueFullPolicy,
                     DiscardingAsyncQueueFullPolicy.getDiscardCount(asyncQueueFullPolicy));
         }*/
         setStopped();
@@ -143,7 +150,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
     @Override
     public void append(final LogEvent logEvent) {
         if (!isStarted()) {
-            throw new IllegalStateException("AsyncTlogAppender " + getName() + " is not active");
+            throw new IllegalStateException("AsyncTLogAppender " + getName() + " is not active");
         }
         final Log4jLogEvent memento = Log4jLogEvent.createMemento(logEvent, includeLocation);
         final Message message = logEvent.getMessage();
@@ -157,6 +164,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
         final boolean isObj = message instanceof ObjectMessage;
         final boolean isSimple = message instanceof SimpleMessage;
         final boolean isParam = message instanceof ParameterizedMessage;
+        final boolean isMemento = message instanceof MementoMessage;
         try {
             if (objectMessage == null && isObj) {
                 objectMessage = ReflectUtil.getField(message.getClass(), "objectString");
@@ -170,6 +178,18 @@ public final class AsyncTlogAppender extends AbstractAppender {
                 parameterMessage = ReflectUtil.getField(message.getClass(), "formattedMessage");
                 parameterMessage.setAccessible(true);
             }
+            if (mementoMessage == null && isMemento) {
+                mementoMessage = ReflectUtil.getField(message.getClass(), "formattedMessage");
+           /*     if(mutableLogMessage==null){
+                    mutableLogBuilder = new StringBuilder(resultLog);
+                    mutableLogEvent = (MutableLogEvent) logEvent;
+                    message.
+                    mutableLogEvent.setMessage();
+                    final Message message1 = mutableLogEvent.getMessage();
+                    mutableLogEvent.set
+                }*/
+                mementoMessage.setAccessible(true);
+            }
             if (objectMessage != null && isObj) {
                 objectMessage.set(message, resultLog);
             }
@@ -178,6 +198,9 @@ public final class AsyncTlogAppender extends AbstractAppender {
             }
             if (simpleMessage != null && isSimple) {
                 simpleMessage.set(message, resultLog);
+            }
+            if (mementoMessage != null && isMemento) {
+                mementoMessage.set(message, resultLog);
             }
         } catch (Exception e) {
         }
@@ -189,11 +212,11 @@ public final class AsyncTlogAppender extends AbstractAppender {
                     logMessageInCurrentThread(logEvent);
                 } else {
                     // delegate to the event router (which may discard, enqueue and block, or log in current thread)
-                    final EventTlogRoute route = asyncQueueFullPolicy.getRoute(thread.getId(), memento.getLevel());
+                    final EventTLogRoute route = asyncQueueFullPolicy.getRoute(thread.getId(), memento.getLevel());
                     route.logMessage(this, memento);
                 }
             } else {
-                error("AsyncTlogAppender " + getName() + " is unable to write primary appenders. queue is full");
+                error("AsyncTLogAppender " + getName() + " is unable to write primary appenders. queue is full");
                 logToErrorAppenderIfNecessary(false, memento);
             }
         }
@@ -245,7 +268,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
     private boolean handleInterruptedException(final LogEvent memento) {
         final boolean appendSuccessful = queue.offer(memento);
         if (!appendSuccessful) {
-            LOGGER.warn("Interrupted while waiting for a free slot in the AsyncTlogAppender LogEvent-queue {}",
+            LOGGER.warn("Interrupted while waiting for a free slot in the AsyncTLogAppender LogEvent-queue {}",
                     getName());
         }
         // set the interrupted flag again.
@@ -266,10 +289,10 @@ public final class AsyncTlogAppender extends AbstractAppender {
     }
 
     public static class Builder<B extends Builder<B>> extends AbstractFilterable.Builder<B>
-            implements org.apache.logging.log4j.core.util.Builder<AsyncTlogAppender> {
+            implements org.apache.logging.log4j.core.util.Builder<AsyncTLogAppender> {
 
         @PluginElement("AppenderRef")
-        @Required(message = "No appender references provided to AsyncTlogAppender")
+        @Required(message = "No appender references provided to AsyncTLogAppender")
         private AppenderRef[] appenderRefs;
 
         @PluginBuilderAttribute
@@ -286,7 +309,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
         private int bufferSize = 1024;
 
         @PluginBuilderAttribute
-        @Required(message = "No name provided for AsyncTlogAppender")
+        @Required(message = "No name provided for AsyncTLogAppender")
         private String name;
 
         @PluginBuilderAttribute
@@ -301,59 +324,59 @@ public final class AsyncTlogAppender extends AbstractAppender {
         @PluginElement(BlockingQueueFactory.ELEMENT_TYPE)
         private BlockingQueueFactory<LogEvent> blockingQueueFactory = new ArrayBlockingQueueFactory<>();
 
-        public AsyncTlogAppender.Builder setAppenderRefs(final AppenderRef[] appenderRefs) {
+        public AsyncTLogAppender.Builder setAppenderRefs(final AppenderRef[] appenderRefs) {
             this.appenderRefs = appenderRefs;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setErrorRef(final String errorRef) {
+        public AsyncTLogAppender.Builder setErrorRef(final String errorRef) {
             this.errorRef = errorRef;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setBlocking(final boolean blocking) {
+        public AsyncTLogAppender.Builder setBlocking(final boolean blocking) {
             this.blocking = blocking;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setShutdownTimeout(final long shutdownTimeout) {
+        public AsyncTLogAppender.Builder setShutdownTimeout(final long shutdownTimeout) {
             this.shutdownTimeout = shutdownTimeout;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setBufferSize(final int bufferSize) {
+        public AsyncTLogAppender.Builder setBufferSize(final int bufferSize) {
             this.bufferSize = bufferSize;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setName(final String name) {
+        public AsyncTLogAppender.Builder setName(final String name) {
             this.name = name;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setIncludeLocation(final boolean includeLocation) {
+        public AsyncTLogAppender.Builder setIncludeLocation(final boolean includeLocation) {
             this.includeLocation = includeLocation;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setConfiguration(final Configuration configuration) {
+        public AsyncTLogAppender.Builder setConfiguration(final Configuration configuration) {
             this.configuration = configuration;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setIgnoreExceptions(final boolean ignoreExceptions) {
+        public AsyncTLogAppender.Builder setIgnoreExceptions(final boolean ignoreExceptions) {
             this.ignoreExceptions = ignoreExceptions;
             return this;
         }
 
-        public AsyncTlogAppender.Builder setBlockingQueueFactory(final BlockingQueueFactory<LogEvent> blockingQueueFactory) {
+        public AsyncTLogAppender.Builder setBlockingQueueFactory(final BlockingQueueFactory<LogEvent> blockingQueueFactory) {
             this.blockingQueueFactory = blockingQueueFactory;
             return this;
         }
 
         @Override
-        public AsyncTlogAppender build() {
-            return new AsyncTlogAppender(name, getFilter(), appenderRefs, errorRef, bufferSize, blocking, ignoreExceptions,
+        public AsyncTLogAppender build() {
+            return new AsyncTLogAppender(name, getFilter(), appenderRefs, errorRef, bufferSize, blocking, ignoreExceptions,
                     shutdownTimeout, configuration, includeLocation, blockingQueueFactory, null);
         }
     }
@@ -368,7 +391,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
         private final BlockingQueue<LogEvent> queue;
 
         public AsyncThread(final List<AppenderControl> appenders, final BlockingQueue<LogEvent> queue) {
-            super("AsyncTlogAppender-" + THREAD_SEQUENCE.getAndIncrement());
+            super("AsyncTLogAppender-" + THREAD_SEQUENCE.getAndIncrement());
             this.appenders = appenders;
             this.queue = queue;
             setDaemon(true);
@@ -398,7 +421,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
                 }
             }
             // Process any remaining items in the queue.
-            LOGGER.trace("AsyncTlogAppender.AsyncThread shutting down. Processing remaining {} queue events.",
+            LOGGER.trace("AsyncTLogAppender.AsyncThread shutting down. Processing remaining {} queue events.",
                     queue.size());
             int count = 0;
             int ignored = 0;
@@ -419,7 +442,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
                     // Here we ignore interrupts and try to process all remaining events.
                 }
             }
-            LOGGER.trace("AsyncTlogAppender.AsyncThread stopped. Queue has {} events remaining. "
+            LOGGER.trace("AsyncTLogAppender.AsyncThread stopped. Queue has {} events remaining. "
                     + "Processed {} and ignored {} events since shutdown started.", queue.size(), count, ignored);
         }
 
@@ -456,7 +479,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
     }
 
     /**
-     * Returns the names of the appenders that this AsyncTlogAppender delegates to as an array of Strings.
+     * Returns the names of the appenders that this AsyncTLogAppender delegates to as an array of Strings.
      *
      * @return the names of the sink appenders
      */
@@ -469,7 +492,7 @@ public final class AsyncTlogAppender extends AbstractAppender {
     }
 
     /**
-     * Returns {@code true} if this AsyncTlogAppender will take a snapshot of the stack with every log event to determine
+     * Returns {@code true} if this AsyncTLogAppender will take a snapshot of the stack with every log event to determine
      * the class and method where the logging call was made.
      *
      * @return {@code true} if location is included with every event, {@code false} otherwise
@@ -479,10 +502,10 @@ public final class AsyncTlogAppender extends AbstractAppender {
     }
 
     /**
-     * Returns {@code true} if this AsyncTlogAppender will block when the queue is full, or {@code false} if events are
+     * Returns {@code true} if this AsyncTLogAppender will block when the queue is full, or {@code false} if events are
      * dropped when the queue is full.
      *
-     * @return whether this AsyncTlogAppender will block or drop events when the queue is full.
+     * @return whether this AsyncTLogAppender will block or drop events when the queue is full.
      */
     public boolean isBlocking() {
         return blocking;
