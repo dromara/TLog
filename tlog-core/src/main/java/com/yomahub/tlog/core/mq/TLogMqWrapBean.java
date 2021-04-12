@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 
 /**
@@ -18,9 +19,10 @@ import java.net.InetAddress;
  * @author Bryan.Zhang
  * @since 1.2.0
  */
-public class TLogMqWrapBean<T> extends TLogLabelBean {
+public class TLogMqWrapBean<T> extends TLogLabelBean implements Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(TLogMqWrapBean.class);
+    private static final long serialVersionUID = -9125086965312434222L;
 
     private T t;
 
