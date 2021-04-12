@@ -24,6 +24,9 @@ public class TLogMqWrapBean<T> extends TLogLabelBean {
 
     private T t;
 
+    public TLogMqWrapBean() {
+    }
+
     public TLogMqWrapBean(T t) {
         this.t = t;
         String traceId = TLogContext.getTraceId();
