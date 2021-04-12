@@ -13,13 +13,13 @@ public class TLogContext {
 
     private static boolean hasTLogMDC;
 
-    private static InheritableThreadLocal<String> traceIdTL = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<String> traceIdTL = new InheritableThreadLocal<>();
 
-    private static InheritableThreadLocal<String> preIvkAppTL = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<String> preIvkAppTL = new InheritableThreadLocal<>();
 
-    private static InheritableThreadLocal<String> preIvkHostTL = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<String> preIvkHostTL = new InheritableThreadLocal<>();
 
-    private static InheritableThreadLocal<String> preIpTL = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<String> preIpTL = new InheritableThreadLocal<>();
 
     public static void putTraceId(String traceId) {
         traceIdTL.set(traceId);
