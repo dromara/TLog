@@ -9,8 +9,8 @@ import org.apache.logging.log4j.util.PropertiesUtil;
  * <pre>
  *  AsyncTlogQueueFullPolicyFactory
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ * @author iwinkfc@dromara.org
+ * @since 1.2.5
  * @see org.apache.logging.log4j.core.async.AsyncQueueFullPolicyFactory
  */
 public class AsyncTlogQueueFullPolicyFactory extends AsyncQueueFullPolicyFactory {

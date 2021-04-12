@@ -13,8 +13,8 @@ import org.apache.logging.log4j.message.Message;
  * <pre>
  * 自定义EventTlogRoute
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ * @author iwinkfc@dromara.org
+ * @since 1.2.5
  * @see org.apache.logging.log4j.core.async.EventRoute
  */
 public enum EventTlogRoute {

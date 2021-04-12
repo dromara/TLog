@@ -6,8 +6,8 @@ import org.apache.logging.log4j.Level;
  * <pre>
  *  自定义异步队列操作策略
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ * @author iwinkfc@dromara.org
+ * @since 1.2.5
  * @see org.apache.logging.log4j.core.async.AsyncQueueFullPolicyFactory
  */
 public interface AsyncTlogQueueFullPolicy {

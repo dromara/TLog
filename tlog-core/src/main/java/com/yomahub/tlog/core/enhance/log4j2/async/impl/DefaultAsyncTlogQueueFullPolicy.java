@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Level;
  * <pre>
  *    DefaultAsyncTlogQueueFullPolicy
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ * @author iwinkfc@dromara.org
+ * @since 1.2.5
  * @see org.apache.logging.log4j.core.async.AsyncQueueFullPolicyFactory
  */
 public class DefaultAsyncTlogQueueFullPolicy implements AsyncTlogQueueFullPolicy {

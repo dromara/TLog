@@ -39,8 +39,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * <pre>
  *  自定义异步Plugin：AsyncTlog
  * </pre>
- * @author: iwinkfc@dromara.org
- * @since: 1.2.5
+ * @author iwinkfc@dromara.org
+ * @since 1.2.5
  * @see org.apache.logging.log4j.core.appender.AbstractAppender
  */
 @Plugin(name = "AsyncTlog", category = Core.CATEGORY_NAME, elementType = Appender.ELEMENT_TYPE, printObject = true)
