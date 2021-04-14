@@ -1,10 +1,12 @@
 package com.yomahub.tlog.web.interceptor;
 
+import cn.hutool.json.JSONUtil;
 import com.yomahub.tlog.context.TLogContext;
-import com.yomahub.tlog.util.JacksonUtil;
+import com.yomahub.tlog.web.wrapper.RequestWrapper;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,14 +22,21 @@ public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterce
 
     private static final Logger log = LoggerFactory.getLogger(TLogWebInvokeTimeInterceptor.class);
 
-    private InheritableThreadLocal<StopWatch> invokeTimeTL = new InheritableThreadLocal<>();
+    private final InheritableThreadLocal<StopWatch> invokeTimeTL = new InheritableThreadLocal<>();
 
     @Override
     public boolean preHandleByHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (TLogContext.enableInvokeTimePrint()) {
             String url = request.getRequestURI();
-            String parameters = JacksonUtil.toJson(request.getParameterMap());
-            log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
+
+            // 打印请求参数
+            if (isJson(request)) {
+                String jsonParam = new RequestWrapper(request).getBodyString();
+                log.info("[TLOG]开始请求URL[{}],参数为:{}", url, jsonParam);
+            } else {
+                String parameters = JSONUtil.toJsonStr(request.getParameterMap());
+                log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
+            }
 
             StopWatch stopWatch = new StopWatch();
             invokeTimeTL.set(stopWatch);
@@ -49,5 +58,19 @@ public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterce
             log.info("[TLOG]结束URL[{}]的调用,耗时为:{}毫秒", request.getRequestURI(), stopWatch.getTime());
             invokeTimeTL.remove();
         }
+    }
+
+    /**
+     * 判断本次请求的数据类型是否为json
+     *
+     * @param request request
+     * @return boolean
+     */
+    private boolean isJson(HttpServletRequest request) {
+        if (request.getContentType() != null) {
+            return request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE) ||
+                    request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE);
+        }
+        return false;
     }
 }

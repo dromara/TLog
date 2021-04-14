@@ -13,11 +13,6 @@
     <dependencies>
         <dependency>
             <groupId>com.yomahub</groupId>
-            <artifactId>tlog-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.yomahub</groupId>
             <artifactId>tlog-core</artifactId>
             <version>${project.version}</version>
         </dependency>

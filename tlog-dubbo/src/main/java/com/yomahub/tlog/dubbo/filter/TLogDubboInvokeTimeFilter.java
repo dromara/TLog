@@ -1,8 +1,8 @@
 package com.yomahub.tlog.dubbo.filter;
 
+import cn.hutool.json.JSONUtil;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
-import com.yomahub.tlog.util.JacksonUtil;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.dubbo.common.constants.CommonConstants;
 import org.apache.dubbo.common.extension.Activate;
@@ -32,7 +32,7 @@ public class TLogDubboInvokeTimeFilter extends TLogRPCHandler implements Filter 
             try {
                 log.info("[TLOG]开始调用接口[{}]的方法[{}],参数为:{}", invoker.getInterface().getSimpleName(),
                         invocation.getMethodName(),
-                        JacksonUtil.toJson(invocation.getArguments()));
+                        JSONUtil.toJsonStr(invocation.getArguments()));
                 //调用dubbo
                 result = invoker.invoke(invocation);
             } finally {
