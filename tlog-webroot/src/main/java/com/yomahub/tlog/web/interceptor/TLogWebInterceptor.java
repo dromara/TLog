@@ -1,8 +1,8 @@
 package com.yomahub.tlog.web.interceptor;
 
-import com.alibaba.fastjson.JSON;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
+import com.yomahub.tlog.util.JacksonUtil;
 import com.yomahub.tlog.web.wrapper.RequestWrapper;
 import com.yomahub.tlog.web.common.TLogWebCommon;
 import org.slf4j.Logger;
@@ -38,7 +38,8 @@ public class TLogWebInterceptor extends AbsTLogWebHandlerMethodInterceptor {
             String jsonParam = new RequestWrapper(request).getBodyString();
             log.info("[TLOG]开始请求URL[{}],参数为:{}", url, jsonParam);
         } else {
-            String parameters = JSON.toJSONString(request.getParameterMap());
+
+            String parameters = JacksonUtil.toJson(request.getParameterMap());
             log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
         }
         return true;
