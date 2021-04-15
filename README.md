@@ -37,4 +37,4 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 
 开源不易，支持就请赞助TLog
 
-![zanshang](static/img/zanshang.jpg)
+<img src="static/img/zanshang.jpg" alt="zanshang" style="zoom:25%;" />
