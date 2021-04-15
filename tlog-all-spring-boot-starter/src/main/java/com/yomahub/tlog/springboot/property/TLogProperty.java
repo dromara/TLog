@@ -16,6 +16,8 @@ public class TLogProperty {
 
     private String idGenerator;
 
+    private Boolean mdcEnable;
+
     public String getPattern() {
         return pattern;
     }
@@ -42,5 +44,13 @@ public class TLogProperty {
 
     public void setIdGenerator(String idGenerator) {
         this.idGenerator = idGenerator;
+    }
+
+    public Boolean getMdcEnable() {
+        return mdcEnable;
+    }
+
+    public void setMdcEnable(Boolean mdcEnable) {
+        this.mdcEnable = mdcEnable;
     }
 }

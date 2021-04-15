@@ -1,17 +1,14 @@
 package com.yomahub.tlog.core.aop;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.core.convert.AspectLogConvert;
+import com.yomahub.tlog.util.JacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -23,11 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * 自定义埋点注解切面，用于拦截@AspectLogAop
@@ -52,16 +49,6 @@ public class AspectLogAop {
         String[] parameterNames = signature.getParameterNames();
         Map<String, Object> paramNameValueMap = Maps.newHashMap();
         for (int i = 0; i < parameterNames.length; i++) {
-            if (args[i] instanceof String) {
-                try {
-                    Object parse = JSON.parse(String.valueOf(args[i]));
-                    if (parse instanceof JSONObject) {
-                        args[i] = parse;
-                    }
-                } catch (Exception e) {
-
-                }
-            }
             paramNameValueMap.put(parameterNames[i], args[i]);
         }
 
@@ -91,7 +78,7 @@ public class AspectLogAop {
 
         String aspLogValue = sb.toString();
         if (StringUtils.isNotBlank(aspLogValue)) {
-            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - 1);
+            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - joint.length());
 
             aspLogValue = MessageFormat.format(pattern, aspLogValue);
 
@@ -100,7 +87,7 @@ public class AspectLogAop {
 
             if (TLogContext.hasTLogMDC()) {
                 MDC.put(TLogConstants.MDC_KEY, currentLabel + aspLogValue);
-            }else{
+            } else {
                 AspectLogContext.putLogValue(currentLabel + aspLogValue);
             }
         }
@@ -132,51 +119,19 @@ public class AspectLogAop {
                 if (v == null) {
                     return null;
                 }
-
-                if (JSONObject.class.isAssignableFrom(o.getClass())) {
-                    int x = item.indexOf("[");
-                    int y = item.indexOf("]");
-                    Object o1 = null;
-                    if (x != -1 && y != -1) {
-                        o1 = ((JSONObject) o).get(item.substring(0, x));
-                    } else {
-                        o1 = ((JSONObject) o).get(item);
-                    }
-                    if (o1 instanceof JSONArray) {
-                        return getExpressionValue(expression, o1);
-                    }
-                }
                 if (expression.equals(getRemainExpression(expression, item))) {
-                    v = JSON.toJSONString(v);
+                    v = JacksonUtil.toJson(v);
                 }
                 return getExpressionValue(getRemainExpression(expression, item), v);
-            } else if (JSONArray.class.isAssignableFrom(o.getClass())) {
-                int x = item.indexOf("[");
-                int y = item.indexOf("]");
-                if (x != -1 && y != -1) {
-                    Integer num = Integer.valueOf(item.substring(x + 1, y));
-
-                    Object o1 = ((JSONArray) o).get(num);
-                    if (!isRemainExpression(expression, item)) {
-                        return getExpressionValue(getRemainExpression(expression, item), o1);
-                    }
-                    return o1.toString();
-                }
-                if (!isRemainExpression(expression, item)) {
-                    return getExpressionValue(getRemainExpression(expression, item), o);
-                }
-                return ((JSONArray) o).toJSONString();
             } else {
                 try {
                     Object v = MethodUtils.invokeMethod(o, "get" + item.substring(0, 1).toUpperCase() + item.substring(1));
                     if (v == null) {
                         return null;
                     }
-
                     if (expression.equals(getRemainExpression(expression, item))) {
-                        v = JSON.toJSONString(v);
+                        v = JacksonUtil.toJson(v);
                     }
-
                     return getExpressionValue(getRemainExpression(expression, item), v);
                 } catch (Exception e) {
                     return null;

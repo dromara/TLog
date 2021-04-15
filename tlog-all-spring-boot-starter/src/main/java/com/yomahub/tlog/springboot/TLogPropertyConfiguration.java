@@ -31,6 +31,7 @@ public class TLogPropertyConfiguration {
         tLogPropertyInit.setPattern(tLogProperty.getPattern());
         tLogPropertyInit.setEnableInvokeTimePrint(tLogProperty.enableInvokeTimePrint());
         tLogPropertyInit.setIdGenerator(tLogProperty.getIdGenerator());
+        tLogPropertyInit.setMdcEnable(tLogProperty.getMdcEnable());
         return tLogPropertyInit;
     }
 }

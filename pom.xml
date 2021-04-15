@@ -6,7 +6,7 @@
     <groupId>com.yomahub</groupId>
     <artifactId>tlog</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <name>tlog</name>
     <description>a lightweight log tracking framework</description>
     <url>https://github.com/bryan31/TLog</url>
@@ -46,7 +46,7 @@
         <commons-collections.version>4.1</commons-collections.version>
         <spring-boot.version>2.0.5.RELEASE</spring-boot.version>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-        <fastjson.version>1.2.7</fastjson.version>
+        <jackson.version>2.10.0</jackson.version>
         <guava.version>19.0</guava.version>
         <dubbox.version>2.8.4</dubbox.version>
         <dubbo.version>2.7.6</dubbo.version>
@@ -59,15 +59,40 @@
         <logback.version>1.2.3</logback.version>
         <log4j.version>1.2.17</log4j.version>
         <slf4j-log4j12.version>1.6.1</slf4j-log4j12.version>
-        <log4j2.version>2.9.1</log4j2.version>
+        <log4j2.version>2.12.0</log4j2.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-parameter-names</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jdk8</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -177,6 +202,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <source>${java.version}</source>
@@ -227,7 +253,7 @@
                 </executions>
             </plugin>
             <!-- Gpg Signature -->
-            <plugin>
+            <!--<plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.6</version>
@@ -240,7 +266,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
