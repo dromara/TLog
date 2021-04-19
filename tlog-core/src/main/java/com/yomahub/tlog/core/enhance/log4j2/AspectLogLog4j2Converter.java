@@ -123,7 +123,7 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
                 AspectLogContext.putLogValue(prefix);
             }
             if (StringUtils.isNotBlank(prefix)) {
-                toAppendTo.append(prefix + " ");
+                toAppendTo.append(StrUtil.format("{} ", prefix));
             }
         }
         final Message msg = event.getMessage();
