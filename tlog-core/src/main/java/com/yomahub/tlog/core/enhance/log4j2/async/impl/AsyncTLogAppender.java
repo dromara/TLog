@@ -2,11 +2,13 @@ package com.yomahub.tlog.core.enhance.log4j2.async.impl;
 
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.core.enhance.log4j2.async.AsyncTLogQueueFullPolicy;
 import com.yomahub.tlog.core.enhance.log4j2.async.EventTLogRoute;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.ThreadContext;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.async.ArrayBlockingQueueFactory;
@@ -160,6 +162,8 @@ public final class AsyncTLogAppender extends AbstractAppender {
         if (!TLogContext.hasTLogMDC()
                 && StringUtils.isNotBlank(AspectLogContext.getLogValue())) {
             resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(), resultLog);
+        }else{
+            ThreadContext.put(TLogConstants.MDC_KEY, AspectLogContext.getLogValue());
         }
         final boolean isObj = message instanceof ObjectMessage;
         final boolean isSimple = message instanceof SimpleMessage;
