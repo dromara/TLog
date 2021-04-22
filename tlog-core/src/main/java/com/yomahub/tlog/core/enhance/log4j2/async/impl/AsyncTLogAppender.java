@@ -135,11 +135,7 @@ public final class AsyncTLogAppender extends AbstractAppender {
             LOGGER.warn("Interrupted while stopping AsyncTLogAppender {}", getName());
         }
         LOGGER.trace("AsyncTLogAppender stopped. Queue has {} events.", queue.size());
-        /*
-        if (DiscardingAsyncQueueFullPolicy.getDiscardCount(asyncQueueFullPolicy) > 0) {
-            LOGGER.trace("AsyncTLogAppender: {} discarded {} events.", asyncQueueFullPolicy,
-                    DiscardingAsyncQueueFullPolicy.getDiscardCount(asyncQueueFullPolicy));
-        }*/
+
         setStopped();
         return true;
     }
@@ -159,12 +155,17 @@ public final class AsyncTLogAppender extends AbstractAppender {
         InternalAsyncUtil.makeMessageImmutable(logEvent.getMessage());
 
         String resultLog = message.getFormattedMessage();
-        if (!TLogContext.hasTLogMDC()
-                && StringUtils.isNotBlank(AspectLogContext.getLogValue())) {
-            resultLog = StrUtil.format("{} {}", AspectLogContext.getLogValue(), resultLog);
-        }else{
-            ThreadContext.put(TLogConstants.MDC_KEY, AspectLogContext.getLogValue());
+        final String tlogValue = AspectLogContext.getLogValue();
+        
+        if(StringUtils.isNotBlank(tlogValue)){
+            if (!TLogContext.hasTLogMDC() && !resultLog.contains(tlogValue)) {
+                resultLog = StrUtil.format("{} {}", tlogValue, resultLog);
+            }
+            if(TLogContext.hasTLogMDC()){
+                ThreadContext.put(TLogConstants.MDC_KEY, tlogValue);
+            }
         }
+     
         final boolean isObj = message instanceof ObjectMessage;
         final boolean isSimple = message instanceof SimpleMessage;
         final boolean isParam = message instanceof ParameterizedMessage;
@@ -184,14 +185,6 @@ public final class AsyncTLogAppender extends AbstractAppender {
             }
             if (mementoMessage == null && isMemento) {
                 mementoMessage = ReflectUtil.getField(message.getClass(), "formattedMessage");
-           /*     if(mutableLogMessage==null){
-                    mutableLogBuilder = new StringBuilder(resultLog);
-                    mutableLogEvent = (MutableLogEvent) logEvent;
-                    message.
-                    mutableLogEvent.setMessage();
-                    final Message message1 = mutableLogEvent.getMessage();
-                    mutableLogEvent.set
-                }*/
                 mementoMessage.setAccessible(true);
             }
             if (objectMessage != null && isObj) {
@@ -210,12 +203,10 @@ public final class AsyncTLogAppender extends AbstractAppender {
         }
         if (!transfer(memento)) {
             if (blocking) {
-                if (AbstractLogger.getRecursionDepth() > 1) { // LOG4J2-1518, LOG4J2-2031
-                    // If queue is full AND we are in a recursive call, call appender directly to prevent deadlock
+                if (AbstractLogger.getRecursionDepth() > 1) {
                     AsyncQueueFullMessageUtil.logWarningToStatusLogger();
                     logMessageInCurrentThread(logEvent);
                 } else {
-                    // delegate to the event router (which may discard, enqueue and block, or log in current thread)
                     final EventTLogRoute route = asyncQueueFullPolicy.getRoute(thread.getId(), memento.getLevel());
                     route.logMessage(this, memento);
                 }
@@ -250,7 +241,6 @@ public final class AsyncTLogAppender extends AbstractAppender {
      */
     public void logMessageInBackgroundThread(final LogEvent logEvent) {
         try {
-            // wait for free slots in the queue
             queue.put(logEvent);
         } catch (final InterruptedException e) {
             final boolean appendSuccessful = handleInterruptedException(logEvent);
@@ -258,24 +248,12 @@ public final class AsyncTLogAppender extends AbstractAppender {
         }
     }
 
-    // LOG4J2-1049: Some applications use Thread.interrupt() to send
-    // messages between application threads. This does not necessarily
-    // mean that the queue is full. To prevent dropping a log message,
-    // quickly try to offer the event to the queue again.
-    // (Yes, this means there is a possibility the same event is logged twice.)
-    //
-    // Finally, catching the InterruptedException means the
-    // interrupted flag has been cleared on the current thread.
-    // This may interfere with the application's expectation of
-    // being interrupted, so when we are done, we set the interrupted
-    // flag again.
     private boolean handleInterruptedException(final LogEvent memento) {
         final boolean appendSuccessful = queue.offer(memento);
         if (!appendSuccessful) {
             LOGGER.warn("Interrupted while waiting for a free slot in the AsyncTLogAppender LogEvent-queue {}",
                     getName());
         }
-        // set the interrupted flag again.
         Thread.currentThread().interrupt();
         return appendSuccessful;
     }
@@ -412,7 +390,7 @@ public final class AsyncTLogAppender extends AbstractAppender {
                         continue;
                     }
                 } catch (final InterruptedException ex) {
-                    break; // LOG4J2-830
+                    break;
                 }
                 event.setEndOfBatch(queue.isEmpty());
                 final boolean success = callAppenders(event);
@@ -420,11 +398,9 @@ public final class AsyncTLogAppender extends AbstractAppender {
                     try {
                         errorAppender.callAppender(event);
                     } catch (final Exception ex) {
-                        // Silently accept the error.
                     }
                 }
             }
-            // Process any remaining items in the queue.
             LOGGER.trace("AsyncTLogAppender.AsyncThread shutting down. Processing remaining {} queue events.",
                     queue.size());
             int count = 0;
@@ -442,8 +418,6 @@ public final class AsyncTLogAppender extends AbstractAppender {
                         LOGGER.trace("Ignoring event of class {}", event.getClass().getName());
                     }
                 } catch (final InterruptedException ex) {
-                    // May have been interrupted to shut down.
-                    // Here we ignore interrupts and try to process all remaining events.
                 }
             }
             LOGGER.trace("AsyncTLogAppender.AsyncThread stopped. Queue has {} events remaining. "
@@ -465,7 +439,6 @@ public final class AsyncTLogAppender extends AbstractAppender {
                     control.callAppender(event);
                     success = true;
                 } catch (final Exception ex) {
-                    // If no appender is successful the error appender will get it.
                 }
             }
             return success;
@@ -477,7 +450,7 @@ public final class AsyncTLogAppender extends AbstractAppender {
                 queue.offer(SHUTDOWN_LOG_EVENT);
             }
             if (getState() == State.TIMED_WAITING || getState() == State.WAITING) {
-                this.interrupt(); // LOG4J2-1422: if underlying appender is stuck in wait/sleep/join/park call
+                this.interrupt();
             }
         }
     }
