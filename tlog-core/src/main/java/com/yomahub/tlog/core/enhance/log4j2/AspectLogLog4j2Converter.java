@@ -115,15 +115,17 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
      */
     @Override
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
+
+        String logLable = AspectLogContext.getLogValue();
+        //如果用系统参数开启了log4j2的异步日志的话，走特殊逻辑
+        if (StrUtil.isEmpty(logLable)) {
+            logLable = event.getContextData().getValue(TLogConstants.MDC_KEY);
+            AspectLogContext.putLogValue(logLable);
+        }
+
         if (!TLogContext.hasTLogMDC()) {
-            String prefix = AspectLogContext.getLogValue();
-            //如果用系统参数开启了log4j2的异步日志的话，走特殊逻辑
-            if (StrUtil.isEmpty(prefix)) {
-                prefix = event.getContextData().getValue(TLogConstants.LOG_THREAD_CONTEXT_LABEL);
-                AspectLogContext.putLogValue(prefix);
-            }
-            if (StringUtils.isNotBlank(prefix)) {
-                toAppendTo.append(StrUtil.format("{} ", prefix));
+            if (StrUtil.isNotBlank(logLable)) {
+                toAppendTo.append(StrUtil.format("{} ", logLable));
             }
         }
         final Message msg = event.getMessage();
