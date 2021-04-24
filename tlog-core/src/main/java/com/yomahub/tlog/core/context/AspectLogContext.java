@@ -18,14 +18,14 @@ public class AspectLogContext {
     public static void putLogValue(String logValue) {
         logValueTL.set(logValue);
         if (isLog4j2AsyncLoggerContextSelector()) {
-            ThreadContext.put(TLogConstants.LOG_THREAD_CONTEXT_LABEL, logValue);
+            ThreadContext.put(TLogConstants.MDC_KEY, logValue);
         }
     }
 
     public static String getLogValue() {
         String result = logValueTL.get();
         if (isLog4j2AsyncLoggerContextSelector()){
-            result = ThreadContext.get(TLogConstants.LOG_THREAD_CONTEXT_LABEL);
+            result = ThreadContext.get(TLogConstants.MDC_KEY);
         }
         return result;
     }
@@ -33,13 +33,23 @@ public class AspectLogContext {
     public static void remove() {
         logValueTL.remove();
         if (isLog4j2AsyncLoggerContextSelector()) {
-            ThreadContext.remove(TLogConstants.LOG_THREAD_CONTEXT_LABEL);
+            ThreadContext.remove(TLogConstants.MDC_KEY);
         }
     }
 
-    // 如果是log4j2开启了异步日志
+    // 如果是log4j2开启了异步日志,或者存在log4j2的包
     private static boolean isLog4j2AsyncLoggerContextSelector() {
-        return "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+        boolean flag1 = "org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
                 .equals(System.getProperty("Log4jContextSelector"));
+
+        boolean flag2;
+        try{
+            Class.forName("org.apache.logging.log4j.core.pattern.LogEventPatternConverter");
+            flag2 = true;
+        } catch (Exception e){
+            flag2 = false;
+        }
+
+        return flag1 || flag2;
     }
 }
