@@ -115,7 +115,6 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
      */
     @Override
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
-
         String logLable = AspectLogContext.getLogValue();
         //如果用系统参数开启了log4j2的异步日志的话，走特殊逻辑
         if (StrUtil.isEmpty(logLable)) {

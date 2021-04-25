@@ -1,5 +1,6 @@
 package com.yomahub.tlog.core.context;
 
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import org.apache.logging.log4j.ThreadContext;
 import com.alibaba.ttl.TransmittableThreadLocal;
@@ -24,7 +25,7 @@ public class AspectLogContext {
 
     public static String getLogValue() {
         String result = logValueTL.get();
-        if (isLog4j2AsyncLoggerContextSelector()){
+        if (StrUtil.isBlank(result) && isLog4j2AsyncLoggerContextSelector()){
             result = ThreadContext.get(TLogConstants.MDC_KEY);
         }
         return result;

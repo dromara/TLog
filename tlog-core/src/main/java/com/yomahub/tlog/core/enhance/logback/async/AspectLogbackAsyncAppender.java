@@ -7,11 +7,14 @@ import cn.hutool.cache.Cache;
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Logback的异步日志增强appender
@@ -33,6 +36,13 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
             if (!lruCache.containsKey(loggingEvent)){
                 String resultLog;
                 final String logValue = AspectLogContext.getLogValue();
+
+                if (TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)){
+                    Map<String, String> mdcMap = new HashMap<>();
+                    mdcMap.put(TLogConstants.MDC_KEY, logValue);
+                    loggingEvent.setMDCPropertyMap(mdcMap);
+                }
+
                 if (!TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)) {
                     resultLog = StrUtil.format("{} {}", logValue,loggingEvent.getFormattedMessage());
                     if(field == null){

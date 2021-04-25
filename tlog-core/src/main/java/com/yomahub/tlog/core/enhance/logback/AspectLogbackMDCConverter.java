@@ -32,4 +32,13 @@ public class AspectLogbackMDCConverter extends MDCConverter {
             TLogContext.setHasTLogMDC(true);
         }
     }
+
+    @Override
+    public String convert(ILoggingEvent event) {
+        String value = super.convert(event);
+        if (StrUtil.isBlank(value)){
+            value = AspectLogContext.getLogValue();
+        }
+        return value;
+    }
 }
