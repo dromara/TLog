@@ -120,7 +120,9 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
         //如果用系统参数开启了log4j2的异步日志的话，走特殊逻辑
         if (StrUtil.isEmpty(logLable)) {
             logLable = event.getContextData().getValue(TLogConstants.MDC_KEY);
-            AspectLogContext.putLogValue(logLable);
+            if (StrUtil.isNotBlank(logLable)){
+                AspectLogContext.putLogValue(logLable);
+            }
         }
 
         if (!TLogContext.hasTLogMDC()) {

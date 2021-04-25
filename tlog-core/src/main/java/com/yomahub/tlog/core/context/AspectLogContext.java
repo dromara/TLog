@@ -1,8 +1,8 @@
 package com.yomahub.tlog.core.context;
 
 import com.yomahub.tlog.constant.TLogConstants;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.ThreadContext;
+import com.alibaba.ttl.TransmittableThreadLocal;
 
 /**
  * 日志切面的上下文，用于管理当前线程以及子线程的的增强内容
@@ -13,7 +13,7 @@ import org.apache.logging.log4j.ThreadContext;
  */
 public class AspectLogContext {
 
-    private static InheritableThreadLocal<String> logValueTL = new InheritableThreadLocal<>();
+    private static TransmittableThreadLocal<String> logValueTL = new TransmittableThreadLocal<>();
 
     public static void putLogValue(String logValue) {
         logValueTL.set(logValue);
