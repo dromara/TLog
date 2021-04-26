@@ -39,6 +39,10 @@ public class AspectLogbackMDCConverter extends MDCConverter {
         if (StrUtil.isBlank(value)){
             value = AspectLogContext.getLogValue();
         }
+
+        if (StrUtil.isBlank(value)){
+            value = "";
+        }
         return value;
     }
 }
