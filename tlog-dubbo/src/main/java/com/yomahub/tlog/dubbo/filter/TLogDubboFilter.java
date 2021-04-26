@@ -58,7 +58,7 @@ public class TLogDubboFilter extends TLogRPCHandler implements Filter {
                 String ip = NetUtil.getLocalhostStr();
                 String hostName = TLogConstants.UNKNOWN;
                 try{
-                    hostName = InetAddress.getLocalHost().getHostName();
+                    hostName = NetUtil.getLocalHostName();
                 }catch (Exception e){}
 
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY, traceId);
