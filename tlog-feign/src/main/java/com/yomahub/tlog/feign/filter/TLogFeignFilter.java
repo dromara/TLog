@@ -33,7 +33,7 @@ public class TLogFeignFilter implements RequestInterceptor {
         if(StringUtils.isNotBlank(traceId)){
             String hostName = TLogConstants.UNKNOWN;
             try{
-                hostName = InetAddress.getLocalHost().getHostName();
+                hostName = NetUtil.getLocalHostName();
             }catch (Exception e){}
 
             requestTemplate.header(TLogConstants.TLOG_TRACE_KEY, traceId);
