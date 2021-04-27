@@ -33,10 +33,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>transmittable-thread-local</artifactId>
-        </dependency>
+
         <!-- slf4j api包 -->
         <dependency>
             <groupId>org.slf4j</groupId>

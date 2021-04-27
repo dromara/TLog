@@ -1,6 +1,7 @@
 package com.yomahub.tlog.web.interceptor;
 
 import cn.hutool.json.JSONUtil;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.web.wrapper.RequestWrapper;
 import org.apache.commons.lang3.time.StopWatch;
@@ -22,7 +23,7 @@ public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterce
 
     private static final Logger log = LoggerFactory.getLogger(TLogWebInvokeTimeInterceptor.class);
 
-    private final InheritableThreadLocal<StopWatch> invokeTimeTL = new InheritableThreadLocal<>();
+    private final TransmittableThreadLocal<StopWatch> invokeTimeTL = new TransmittableThreadLocal<>();
 
     @Override
     public boolean preHandleByHandlerMethod(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

@@ -1,6 +1,7 @@
 package com.yomahub.tlog.core.enhance.log4j2;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.context.AspectLogContext;
@@ -29,7 +30,7 @@ import org.apache.logging.log4j.util.TriConsumer;
 @PerformanceSensitive("allocation")
 public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter {
 
-    private static final InheritableThreadLocal<StringBuilder> threadLocal = new InheritableThreadLocal<>();
+    private static final TransmittableThreadLocal<StringBuilder> threadLocal = new TransmittableThreadLocal<>();
     private static final int DEFAULT_STRING_BUILDER_SIZE = 64;
 
     /**

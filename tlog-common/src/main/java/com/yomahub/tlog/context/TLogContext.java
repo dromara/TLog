@@ -1,6 +1,8 @@
 package com.yomahub.tlog.context;
 
 
+import com.alibaba.ttl.TransmittableThreadLocal;
+
 /**
  * TLog上下文
  *
@@ -13,13 +15,13 @@ public class TLogContext {
 
     private static boolean hasTLogMDC;
 
-    private static final InheritableThreadLocal<String> traceIdTL = new InheritableThreadLocal<>();
+    private static final TransmittableThreadLocal<String> traceIdTL = new TransmittableThreadLocal<>();
 
-    private static final InheritableThreadLocal<String> preIvkAppTL = new InheritableThreadLocal<>();
+    private static final TransmittableThreadLocal<String> preIvkAppTL = new TransmittableThreadLocal<>();
 
-    private static final InheritableThreadLocal<String> preIvkHostTL = new InheritableThreadLocal<>();
+    private static final TransmittableThreadLocal<String> preIvkHostTL = new TransmittableThreadLocal<>();
 
-    private static final InheritableThreadLocal<String> preIpTL = new InheritableThreadLocal<>();
+    private static final TransmittableThreadLocal<String> preIpTL = new TransmittableThreadLocal<>();
 
     public static void putTraceId(String traceId) {
         traceIdTL.set(traceId);

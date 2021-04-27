@@ -1,6 +1,7 @@
 package com.yomahub.tlog.context;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.ttl.TransmittableThreadLocal;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -11,9 +12,9 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SpanIdGenerator {
 
-    private static InheritableThreadLocal<String> currentSpanIdTL = new InheritableThreadLocal<>();
+    private static TransmittableThreadLocal<String> currentSpanIdTL = new TransmittableThreadLocal<>();
 
-    private static InheritableThreadLocal<Integer> spanIndex = new InheritableThreadLocal<>();
+    private static TransmittableThreadLocal<Integer> spanIndex = new TransmittableThreadLocal<>();
 
     private static String INITIAL_VALUE = "0";
 
