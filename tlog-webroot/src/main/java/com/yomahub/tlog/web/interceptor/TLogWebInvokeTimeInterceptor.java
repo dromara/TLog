@@ -31,13 +31,17 @@ public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterce
             String url = request.getRequestURI();
 
             // 打印请求参数
-            if (isJson(request)) {
+            // 先屏蔽掉打印body的功能，目前只打印get参数
+            /*if (isJson(request)) {
                 String jsonParam = new RequestWrapper(request).getBodyString();
                 log.info("[TLOG]开始请求URL[{}],参数为:{}", url, jsonParam);
             } else {
                 String parameters = JSONUtil.toJsonStr(request.getParameterMap());
                 log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
-            }
+            }*/
+
+            String parameters = JSONUtil.toJsonStr(request.getParameterMap());
+            log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
 
             StopWatch stopWatch = new StopWatch();
             invokeTimeTL.set(stopWatch);

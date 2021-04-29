@@ -21,7 +21,8 @@ public class TLogWebAutoConfiguration {
         return new TLogWebConfig();
     }
 
-    @Bean
+    //目前先屏蔽掉打印body的功能
+    /*@Bean
     public FilterRegistrationBean<ReplaceStreamFilter> filterRegistration() {
         FilterRegistrationBean<ReplaceStreamFilter> registration = new FilterRegistrationBean<>();
         // 设置自定义拦截器
@@ -31,5 +32,5 @@ public class TLogWebAutoConfiguration {
         // 设置优先级（保证tlog过滤器最先执行）
         registration.setOrder(-999);
         return registration;
-    }
+    }*/
 }
