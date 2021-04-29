@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.yomahub</groupId>
         <artifactId>tlog</artifactId>
-        <version>1.2.5</version>
+        <version>1.2.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,16 +16,6 @@
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-common</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>${commons.lang3.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-collections4</artifactId>
-            <version>${commons-collections.version}</version>
         </dependency>
         <dependency>
             <groupId>dom4j</groupId>
@@ -43,14 +33,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-cache</artifactId>
-        </dependency>
+
         <!-- slf4j api包 -->
         <dependency>
             <groupId>org.slf4j</groupId>

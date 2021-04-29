@@ -2,13 +2,13 @@ package com.yomahub.tlog.core.aop;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Maps;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.core.convert.AspectLogConvert;
-import com.yomahub.tlog.util.JacksonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -120,7 +120,7 @@ public class AspectLogAop {
                     return null;
                 }
                 if (expression.equals(getRemainExpression(expression, item))) {
-                    v = JacksonUtil.toJson(v);
+                    v = JSONUtil.toJsonStr(v);
                 }
                 return getExpressionValue(getRemainExpression(expression, item), v);
             } else {
@@ -130,7 +130,7 @@ public class AspectLogAop {
                         return null;
                     }
                     if (expression.equals(getRemainExpression(expression, item))) {
-                        v = JacksonUtil.toJson(v);
+                        v = JSONUtil.toJsonStr(v);
                     }
                     return getExpressionValue(getRemainExpression(expression, item), v);
                 } catch (Exception e) {

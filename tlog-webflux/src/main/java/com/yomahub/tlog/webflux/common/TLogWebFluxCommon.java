@@ -74,7 +74,7 @@ public class TLogWebFluxCommon extends TLogRPCHandler {
         if(StringUtils.isNotBlank(labelBean.getTraceId())){
             String hostName = TLogConstants.UNKNOWN;
             try{
-                hostName = InetAddress.getLocalHost().getHostName();
+                hostName = NetUtil.getLocalHostName();
             }catch (Exception e){}
 
             String finalHostName = hostName;

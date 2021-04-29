@@ -5,18 +5,13 @@
     <parent>
         <artifactId>tlog</artifactId>
         <groupId>com.yomahub</groupId>
-        <version>1.2.5</version>
+        <version>1.2.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tlog-dubbo</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-core</artifactId>

@@ -38,7 +38,7 @@ public class TLogMqWrapBean<T> extends TLogLabelBean implements Serializable {
             String ip = NetUtil.getLocalhostStr();
             String hostName = TLogConstants.UNKNOWN;
             try{
-                hostName = InetAddress.getLocalHost().getHostName();
+                hostName = NetUtil.getLocalHostName();
             }catch (Exception e){}
 
             this.setTraceId(traceId);
