@@ -1,30 +1,29 @@
-package com.yomahub.tlog.gateway.filter;
-
+package com.yomahub.tlog.webflux.filter;
 import com.yomahub.tlog.webflux.common.TLogWebFluxCommon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 /**
- * gateway 的全局拦截器
+ * webflux 的全局拦截器
  *
- * @author zs
+ * @author naah
  * @since 1.2.4-BETA1
  */
-public class TLogGatewayFilter implements GlobalFilter, Ordered {
+public class TLogWebFluxFilter implements WebFilter, Ordered {
 
     @Value("${spring.application.name}")
     private String appName;
 
-    private static final Logger log = LoggerFactory.getLogger(TLogGatewayFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(TLogWebFluxFilter.class);
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName));
     }
 

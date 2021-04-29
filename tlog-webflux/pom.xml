@@ -9,19 +9,23 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tlog-dubbox</artifactId>
+    <artifactId>tlog-webflux</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
             <optional>true</optional>
         </dependency>
     </dependencies>
-
 </project>

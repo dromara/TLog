@@ -1,4 +1,4 @@
-package com.yomahub.tlog.gateway.common;
+package com.yomahub.tlog.webflux.common;
 
 import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
@@ -20,19 +20,19 @@ import java.util.function.Consumer;
  * @author zs
  * @since 1.2.4-BETA1
  */
-public class TLogGatewayCommon extends TLogRPCHandler {
+public class TLogWebFluxCommon extends TLogRPCHandler {
 
-    private final static Logger log = LoggerFactory.getLogger(TLogGatewayCommon.class);
+    private final static Logger log = LoggerFactory.getLogger(TLogWebFluxCommon.class);
 
-    private static volatile TLogGatewayCommon tLogWebCommon;
+    private static volatile TLogWebFluxCommon tLogWebCommon;
 
     private static final Integer FIRST = 0;
 
-    public static TLogGatewayCommon loadInstance() {
+    public static TLogWebFluxCommon loadInstance() {
         if (tLogWebCommon == null) {
-            synchronized (TLogGatewayCommon.class) {
+            synchronized (TLogWebFluxCommon.class) {
                 if (tLogWebCommon == null) {
-                    tLogWebCommon = new TLogGatewayCommon();
+                    tLogWebCommon = new TLogWebFluxCommon();
                 }
             }
         }

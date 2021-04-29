@@ -6,7 +6,7 @@
     <groupId>com.yomahub</groupId>
     <artifactId>tlog</artifactId>
     <packaging>pom</packaging>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
     <name>tlog</name>
     <description>a lightweight log tracking framework</description>
     <url>https://github.com/bryan31/TLog</url>
@@ -261,6 +261,7 @@
         <module>tlog-all-spring-boot-starter</module>
         <module>tlog-agent</module>
         <module>tlog-gateway</module>
+        <module>tlog-webflux</module>
     </modules>
 
     <distributionManagement>

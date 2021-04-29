@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tlog</artifactId>
         <groupId>com.yomahub</groupId>
-        <version>1.2.6</version>
+        <version>1.2.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,6 +35,11 @@
         <dependency>
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-gateway</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-webflux</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
