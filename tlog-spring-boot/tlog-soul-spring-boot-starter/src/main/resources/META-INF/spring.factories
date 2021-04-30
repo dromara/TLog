@@ -1,4 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.yomahub.tlog.springboot.TLogSoulGatewayAutoConfiguration
-
-
