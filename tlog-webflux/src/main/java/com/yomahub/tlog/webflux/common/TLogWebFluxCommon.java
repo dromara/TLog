@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 
 /**
  * @author zs
- * @since 1.2.4-BETA1
+ * @since 1.3.0
  */
 public class TLogWebFluxCommon extends TLogRPCHandler {
 

@@ -1,14 +1,11 @@
 package com.yomahub.tlog.springboot;
 
-import com.yomahub.tlog.spring.TLogSpringAware;
-import com.yomahub.tlog.springboot.property.TLogProperty;
 import com.yomahub.tlog.spring.TLogPropertyInit;
+import com.yomahub.tlog.springboot.property.TLogProperty;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 
 /**

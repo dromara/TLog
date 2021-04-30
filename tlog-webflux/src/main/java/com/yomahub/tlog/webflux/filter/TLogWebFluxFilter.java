@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
  * webflux 的全局拦截器
  *
  * @author naah
- * @since 1.2.4-BETA1
+ * @since 1.3.0
  */
 public class TLogWebFluxFilter implements WebFilter, Ordered {
 

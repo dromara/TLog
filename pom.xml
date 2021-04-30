@@ -259,10 +259,10 @@
         <module>tlog-core</module>
         <module>tlog-feign</module>
         <module>tlog-all</module>
-        <module>tlog-all-spring-boot-starter</module>
         <module>tlog-agent</module>
         <module>tlog-gateway</module>
         <module>tlog-webflux</module>
+        <module>tlog-spring-boot</module>
     </modules>
 
     <distributionManagement>

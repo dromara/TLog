@@ -1,6 +1,7 @@
 package com.yomahub.tlog.springboot.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
 /**
  * tlog的springboot配置参数
  *
