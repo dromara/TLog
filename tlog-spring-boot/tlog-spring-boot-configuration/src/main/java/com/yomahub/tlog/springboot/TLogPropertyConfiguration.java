@@ -3,6 +3,7 @@ package com.yomahub.tlog.springboot;
 import com.yomahub.tlog.spring.TLogPropertyInit;
 import com.yomahub.tlog.springboot.property.TLogProperty;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.PropertySource;
 public class TLogPropertyConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(TLogPropertyInit.class)
     public TLogPropertyInit tLogPropertyInit(TLogProperty tLogProperty) {
         TLogPropertyInit tLogPropertyInit = new TLogPropertyInit();
         tLogPropertyInit.setPattern(tLogProperty.getPattern());

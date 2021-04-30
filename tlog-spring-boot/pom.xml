@@ -25,6 +25,7 @@
         <module>tlog-feign-spring-boot-starter</module>
         <module>tlog-gateway-spring-boot-starter</module>
         <module>tlog-soul-spring-boot-starter</module>
+        <module>tlog-web-spring-boot-starter</module>
     </modules>
 
 </project>
