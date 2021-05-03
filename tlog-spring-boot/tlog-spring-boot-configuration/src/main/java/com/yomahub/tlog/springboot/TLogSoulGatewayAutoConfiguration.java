@@ -10,7 +10,7 @@ import org.springframework.core.annotation.Order;
 
 /**
  * @author naah
- * @since 1.2.4-BETA1
+ * @since 1.3.0
  */
 @Configuration
 @ConditionalOnClass(name = {"org.dromara.soul.web.handler.SoulWebHandler"})
