@@ -8,6 +8,9 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.SignalType;
+
+import java.util.function.Consumer;
 
 /**
  * webflux 的全局拦截器
@@ -24,7 +27,8 @@ public class TLogWebFluxFilter implements WebFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName));
+        return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName))
+                .doFinally(signalType -> TLogWebFluxCommon.loadInstance().cleanThreadLocal());
     }
 
     @Override

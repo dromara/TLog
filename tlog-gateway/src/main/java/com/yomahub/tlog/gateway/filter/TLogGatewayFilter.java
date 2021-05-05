@@ -9,6 +9,9 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.SignalType;
+
+import java.util.function.Consumer;
 
 /**
  * gateway 的全局拦截器
@@ -25,7 +28,8 @@ public class TLogGatewayFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName));
+        return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName))
+                .doFinally(signalType -> TLogWebFluxCommon.loadInstance().cleanThreadLocal());
     }
 
     @Override
