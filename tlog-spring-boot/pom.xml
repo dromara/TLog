@@ -12,11 +12,6 @@
 
     <artifactId>tlog-spring-boot</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
     <modules>
         <module>tlog-spring-boot-configuration</module>
         <module>tlog-all-spring-boot-starter</module>
