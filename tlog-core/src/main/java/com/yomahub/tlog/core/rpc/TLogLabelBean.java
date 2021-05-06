@@ -1,6 +1,10 @@
 package com.yomahub.tlog.core.rpc;
 
+import cn.hutool.core.util.ObjectUtil;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * TLog的日志标签包装类
@@ -20,6 +24,8 @@ public class TLogLabelBean implements Serializable {
     private String traceId;
 
     private String spanId;
+
+    private Map<String, Object> extData;
 
     public TLogLabelBean() {
     }
@@ -70,5 +76,16 @@ public class TLogLabelBean implements Serializable {
 
     public void setPreIvkHost(String preIvkHost) {
         this.preIvkHost = preIvkHost;
+    }
+
+    public void putExtData(String key, Object value){
+        if (ObjectUtil.isNull(extData)){
+            extData = new HashMap<>();
+        }
+        extData.put(key, value);
+    }
+
+    public Map<String, Object> getExtData() {
+        return extData;
     }
 }

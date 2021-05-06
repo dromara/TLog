@@ -68,6 +68,7 @@ public class TLogWebFluxCommon extends TLogRPCHandler {
         }
 
         TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
+        labelBean.putExtData(TLogConstants.WEBFLUX_EXCHANGE, exchange);
 
         processProviderSide(labelBean);
 
