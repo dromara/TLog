@@ -73,5 +73,19 @@
             <artifactId>log4j-slf4j-impl</artifactId>
             <optional>true</optional>
         </dependency>
+        <!-- spring的相关依赖包 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <version>${spring.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <!-- quartz -->
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>

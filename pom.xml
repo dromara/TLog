@@ -63,6 +63,7 @@
         <slf4j-log4j12.version>1.6.1</slf4j-log4j12.version>
         <log4j2.version>2.12.0</log4j2.version>
         <ttl.version>2.12.1</ttl.version>
+        <quartz.version>2.3.0</quartz.version>
     </properties>
 
     <dependencyManagement>
