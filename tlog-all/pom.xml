@@ -27,5 +27,15 @@
             <artifactId>tlog-webroot</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-httpclient</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-okhttp</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>
