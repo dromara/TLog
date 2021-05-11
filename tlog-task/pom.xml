@@ -9,26 +9,26 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tlog-okhttp</artifactId>
-
+    <artifactId>tlog-task</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.yomahub</groupId>
-            <artifactId>tlog-common</artifactId>
+            <artifactId>tlog-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- spring的相关依赖包 -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
             <optional>true</optional>
         </dependency>
+        <!-- quartz -->
         <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
             <optional>true</optional>
-            <version>${okhttp.version}</version>
         </dependency>
     </dependencies>
-
 </project>

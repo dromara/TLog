@@ -1,4 +1,4 @@
-package com.yomahub.tlog.core.task.jdk;
+package com.yomahub.tlog.task.jdk;
 
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;

@@ -270,6 +270,7 @@
         <module>tlog-gateway</module>
         <module>tlog-webflux</module>
         <module>tlog-spring-boot</module>
+        <module>tlog-task</module>
     </modules>
 
     <distributionManagement>

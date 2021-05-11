@@ -1,4 +1,4 @@
-package com.yomahub.tlog.core.task.quartz;
+package com.yomahub.tlog.task.quartz;
 
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
