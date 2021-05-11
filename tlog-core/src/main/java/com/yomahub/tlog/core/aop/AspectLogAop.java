@@ -92,11 +92,7 @@ public class AspectLogAop {
             }
         }
 
-        try {
-            return jp.proceed();
-        } finally {
-            AspectLogContext.remove();
-        }
+        return jp.proceed();
     }
 
     private String getExpressionValue(String expression, Object o) {

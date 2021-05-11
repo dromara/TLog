@@ -1,5 +1,7 @@
 package com.yomahub.tlog.id;
 
+import java.util.Map;
+
 public class TLogIdGeneratorLoader {
 
     private static TLogIdGenerator idGenerator = new TLogDefaultIdGenerator();

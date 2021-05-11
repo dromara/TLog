@@ -1,6 +1,5 @@
 package com.yomahub.tlog.gateway.filter;
 
-import com.yomahub.tlog.gateway.request.ReactiveRequestContextHolder;
 import com.yomahub.tlog.webflux.common.TLogWebFluxCommon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,6 @@ public class TLogGatewayFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName))
-                .subscriberContext(ctx -> ctx.put(ReactiveRequestContextHolder.CONTEXT_KEY, exchange.getRequest()))
                 .doFinally(signalType -> TLogWebFluxCommon.loadInstance().cleanThreadLocal());
     }
 

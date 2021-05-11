@@ -9,6 +9,7 @@ import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
+import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,16 +56,11 @@ public class TLogDubboxFilter extends TLogRPCHandler implements Filter {
 
             if (StringUtils.isNotBlank(traceId)) {
                 String appName = invoker.getUrl().getParameter(Constants.APPLICATION_KEY);
-                String ip = NetUtil.getLocalhostStr();
-                String hostName = TLogConstants.UNKNOWN;
-                try{
-                    hostName = NetUtil.getLocalHostName();
-                }catch (Exception e){}
 
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_TRACE_KEY, traceId);
                 RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_KEY, appName);
-                RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_HOST, hostName);
-                RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY, ip);
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
+                RpcContext.getContext().setAttachment(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
                 RpcContext.getContext().setAttachment(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             } else {
                 log.warn("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");

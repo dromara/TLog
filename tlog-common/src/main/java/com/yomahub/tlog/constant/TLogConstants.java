@@ -8,20 +8,20 @@ package com.yomahub.tlog.constant;
  */
 public class TLogConstants {
 
-    public static final String TLOG_TRACE_KEY = "tlog_trace_id";
+    public static final String TLOG_TRACE_KEY = "tlogTraceId";
 
-    public static final String TLOG_SPANID_KEY = "tlog_spanid";
+    public static final String TLOG_SPANID_KEY = "tlogSpanId";
 
-    public static final String PRE_IVK_APP_KEY = "pre_ivk_app";
+    public static final String PRE_IVK_APP_KEY = "preIvkApp";
 
-    public static final String PRE_IVK_APP_HOST = "pre_ivk_host";
+    public static final String PRE_IVK_APP_HOST = "preIvkHost";
 
-    public static final String PRE_IP_KEY = "pre_ip";
+    public static final String PRE_IP_KEY = "preIp";
 
     public static final String UNKNOWN = "NONE";
 
     public static final String MDC_KEY = "tl";
 
-    public static final String LOG_THREAD_CONTEXT_LABEL = "log_thread_context_label";
+    public static final String WEBFLUX_EXCHANGE = "exchange";
 
 }

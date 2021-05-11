@@ -39,7 +39,7 @@ public class TLogRPCHandler {
 
         //如果没有获取到，则重新生成一个traceId
         if (StringUtils.isBlank(labelBean.getTraceId())) {
-            labelBean.setTraceId(TLogIdGeneratorLoader.getIdGenerator().generateTraceId());
+            labelBean.setTraceId(TLogIdGeneratorLoader.getIdGenerator().withExtData(labelBean.getExtData()).generateTraceId());
             log.debug("[TLOG]可能上一个节点[{}]没有没有正确传递traceId,重新生成traceId[{}]", labelBean.getPreIvkApp(), labelBean.getTraceId());
         }
 

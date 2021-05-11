@@ -4,6 +4,7 @@ import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
+import com.yomahub.tlog.utils.LocalhostUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.apache.commons.lang3.StringUtils;
@@ -31,16 +32,12 @@ public class TLogFeignFilter implements RequestInterceptor {
         String traceId = TLogContext.getTraceId();
 
         if(StringUtils.isNotBlank(traceId)){
-            String hostName = TLogConstants.UNKNOWN;
-            try{
-                hostName = NetUtil.getLocalHostName();
-            }catch (Exception e){}
 
             requestTemplate.header(TLogConstants.TLOG_TRACE_KEY, traceId);
             requestTemplate.header(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             requestTemplate.header(TLogConstants.PRE_IVK_APP_KEY, appName);
-            requestTemplate.header(TLogConstants.PRE_IVK_APP_HOST, hostName);
-            requestTemplate.header(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
+            requestTemplate.header(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
+            requestTemplate.header(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
         }else{
             log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }

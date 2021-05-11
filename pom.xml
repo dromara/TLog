@@ -63,6 +63,9 @@
         <slf4j-log4j12.version>1.6.1</slf4j-log4j12.version>
         <log4j2.version>2.12.0</log4j2.version>
         <ttl.version>2.12.1</ttl.version>
+        <quartz.version>2.3.0</quartz.version>
+        <httpclient.version>4.5.10</httpclient.version>
+        <okhttp.version>3.2.0</okhttp.version>
     </properties>
 
     <dependencyManagement>
@@ -260,11 +263,14 @@
         <module>tlog-dubbox</module>
         <module>tlog-core</module>
         <module>tlog-feign</module>
+        <module>tlog-httpclient</module>
+        <module>tlog-okhttp</module>
         <module>tlog-all</module>
         <module>tlog-agent</module>
         <module>tlog-gateway</module>
         <module>tlog-webflux</module>
         <module>tlog-spring-boot</module>
+        <module>tlog-task</module>
         <module>tlog-xxl-job</module>
     </modules>
 
