@@ -5,6 +5,7 @@ import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.spring.TLogSpringAware;
+import com.yomahub.tlog.utils.LocalhostUtil;
 import okhttp3.Interceptor;
 import okhttp3.Request.Builder;
 import okhttp3.Response;
@@ -23,19 +24,12 @@ public class TLogOkHttpInterceptor implements Interceptor {
         Builder builder = chain.request().newBuilder();
         String traceId = TLogContext.getTraceId();
         if (StringUtils.isNotBlank(traceId)) {
-            String hostName = TLogConstants.UNKNOWN;
-            String appName = TLogConstants.UNKNOWN;
-            try {
-                hostName = NetUtil.getLocalHostName();
-                appName = TLogSpringAware.getProperty("spring.application.name");
-            } catch (Exception e) {
-                log.error("get hostName or appName error,exception:{}",e);
-            }
+            String appName = TLogSpringAware.getProperty("spring.application.name");
             builder.header(TLogConstants.TLOG_TRACE_KEY, traceId);
             builder.header(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             builder.header(TLogConstants.PRE_IVK_APP_KEY, appName);
-            builder.header(TLogConstants.PRE_IVK_APP_HOST, hostName);
-            builder.header(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
+            builder.header(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
+            builder.header(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
         } else {
             log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }
