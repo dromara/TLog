@@ -5,6 +5,7 @@ import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
+import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,18 +74,12 @@ public class TLogWebFluxCommon extends TLogRPCHandler {
         processProviderSide(labelBean);
 
         if(StringUtils.isNotBlank(labelBean.getTraceId())){
-            String hostName = TLogConstants.UNKNOWN;
-            try{
-                hostName = NetUtil.getLocalHostName();
-            }catch (Exception e){}
-
-            String finalHostName = hostName;
             Consumer<HttpHeaders> httpHeaders = httpHeader -> {
                 httpHeader.set(TLogConstants.TLOG_TRACE_KEY, labelBean.getTraceId());
                 httpHeader.set(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
                 httpHeader.set(TLogConstants.PRE_IVK_APP_KEY, appName);
-                httpHeader.set(TLogConstants.PRE_IVK_APP_HOST, finalHostName);
-                httpHeader.set(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
+                httpHeader.set(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
+                httpHeader.set(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
             };
             ServerHttpRequest serverHttpRequest = exchange.getRequest().mutate().headers(httpHeaders).build();
             return exchange.mutate().request(serverHttpRequest).build();
