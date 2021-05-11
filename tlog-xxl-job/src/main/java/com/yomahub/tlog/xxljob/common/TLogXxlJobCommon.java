@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- *
  * @author zs
  * @since 1.3.0
  */
@@ -70,15 +69,15 @@ public class TLogXxlJobCommon extends TLogRPCHandler {
         TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
 
         processProviderSide(labelBean);
-
-        if(StringUtils.isNotBlank(labelBean.getTraceId())){
+        appName = StringUtils.isEmpty(appName) ? "" : appName;
+        if (StringUtils.isNotBlank(labelBean.getTraceId())) {
             msg.headers().add(TLogConstants.TLOG_TRACE_KEY, labelBean.getTraceId());
             msg.headers().add(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             msg.headers().add(TLogConstants.PRE_IVK_APP_KEY, appName);
             msg.headers().add(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
             msg.headers().add(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
             return msg;
-        }else{
+        } else {
             log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
             return msg;
         }
