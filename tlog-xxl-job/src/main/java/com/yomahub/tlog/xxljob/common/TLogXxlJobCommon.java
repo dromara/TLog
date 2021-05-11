@@ -5,6 +5,7 @@ import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
+import com.yomahub.tlog.utils.LocalhostUtil;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.HttpHeaders;
 import org.apache.commons.lang3.StringUtils;
@@ -71,16 +72,11 @@ public class TLogXxlJobCommon extends TLogRPCHandler {
         processProviderSide(labelBean);
 
         if(StringUtils.isNotBlank(labelBean.getTraceId())){
-            String hostName = TLogConstants.UNKNOWN;
-            try{
-                hostName = NetUtil.getLocalHostName();
-            }catch (Exception e){}
-            String finalHostName = hostName;
             msg.headers().add(TLogConstants.TLOG_TRACE_KEY, labelBean.getTraceId());
             msg.headers().add(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
             msg.headers().add(TLogConstants.PRE_IVK_APP_KEY, appName);
-            msg.headers().add(TLogConstants.PRE_IVK_APP_HOST, finalHostName);
-            msg.headers().add(TLogConstants.PRE_IP_KEY, NetUtil.getLocalhostStr());
+            msg.headers().add(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
+            msg.headers().add(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
             return msg;
         }else{
             log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");

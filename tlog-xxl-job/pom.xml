@@ -8,21 +8,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-
     <artifactId>tlog-xxl-job</artifactId>
-    <properties>
-        <xxl-job.version>2.3.0</xxl-job.version>
-    </properties>
     <dependencies>
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-common</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <!-- spring的依赖包 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <optional>true</optional>
         </dependency>
         <!-- xxl-job-core -->
         <dependency>
