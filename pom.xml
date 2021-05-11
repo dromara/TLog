@@ -271,6 +271,7 @@
         <module>tlog-webflux</module>
         <module>tlog-spring-boot</module>
         <module>tlog-task</module>
+        <module>tlog-xxl-job</module>
     </modules>
 
     <distributionManagement>
