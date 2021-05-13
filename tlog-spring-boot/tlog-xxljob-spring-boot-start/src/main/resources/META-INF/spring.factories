@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.yomahub.tlog.springboot.TLogCommonAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogXxljobAutoConfiguration
