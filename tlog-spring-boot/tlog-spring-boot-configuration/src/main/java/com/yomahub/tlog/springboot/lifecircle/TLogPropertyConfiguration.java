@@ -1,6 +1,7 @@
-package com.yomahub.tlog.springboot;
+package com.yomahub.tlog.springboot.lifecircle;
 
 import com.yomahub.tlog.spring.TLogPropertyInit;
+import com.yomahub.tlog.springboot.TLogCommonAutoConfiguration;
 import com.yomahub.tlog.springboot.property.TLogProperty;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
