@@ -2,6 +2,7 @@ package com.yomahub.tlog.springboot;
 
 import com.yomahub.tlog.springboot.lifecircle.TLogXxljobEnhanceInit;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnClass(name = {"com.xxl.job.core.server.EmbedServer"})
 public class TLogXxljobAutoConfiguration {
 
+    @Bean
     public TLogXxljobEnhanceInit tLogXxljobEnhanceInit(){
         return new TLogXxljobEnhanceInit();
     }
