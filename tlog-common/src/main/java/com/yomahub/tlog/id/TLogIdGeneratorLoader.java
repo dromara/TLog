@@ -1,6 +1,5 @@
 package com.yomahub.tlog.id;
 
-import java.util.Map;
 
 public class TLogIdGeneratorLoader {
 
