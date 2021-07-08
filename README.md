@@ -34,7 +34,7 @@ TLog is a lightweight distributed log tagging tracker, accessible in 10 minutes,
 
 Since the community group is over 200 people, you need to invite to join the group. Follow the public number and click `Personal WeChat` to add me, I can pull you into the group
 
-! [offIical-wx](static/img/offical-wx.jpg)
+![offIical-wx](static/img/offical-wx.jpg)
 
 Open source is not easy, please sponsor TLog if you support it
 
