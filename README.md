@@ -6,13 +6,11 @@
 
 <h3>Your star is my motivation to keep going, please help with a star in the top right corner if you like it</h3>
 
-! [gvp](static/img/gvp.jpg)
-
 ## Gitee's star trend graph
-[! [Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UWFCA2XK.png)](https://giteye.net/chart/UWFCA2XK)
+[![Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UWFCA2XK.png)](https://giteye.net/chart/UWFCA2XK)
 
 ## Contributors
-[! [Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UZA4EM66.png)](https://giteye.net/chart/UZA4EM66)
+[![Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UZA4EM66.png)](https://giteye.net/chart/UZA4EM66)
 
 ## Overview
 TLog is a lightweight distributed log tagging tracker, accessible in 10 minutes, automatically tags logs to complete microservice link tracking. Support log4j, log4j2, logback three logging framework, support dubbo, dubbox, springcloud three RPC framework
