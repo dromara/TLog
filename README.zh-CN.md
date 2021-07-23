@@ -38,6 +38,15 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 
 ![offIical-wx](static/img/offical-wx.jpg)
 
+### 精品项目推荐
+
+|项目名称 | 项目地址 | 项目介绍 |
+|---|---|---|
+| LiteFlow      | [https://gitee.com/dromara/liteFlow](https://gitee.com/dromara/liteFlow) | 轻量，快速，稳定，可编排的组件式流程引擎|
+| TLog GVP 项目 | [https://gitee.com/dromara/TLog](https://gitee.com/dromara/TLog) | 一个轻量级的分布式日志标记追踪神器，10分钟即可接入，自动对日志打标签完成微服务的链路追踪 |
+| Sa-Token | [https://gitee.com/dromara/sa-token](https://gitee.com/dromara/sa-token) | 这可能是史上功能最全的 Java 权限认证框架！ |
+| SpringBoot_v2      | [https://gitee.com/bdj/SpringBoot_v2](https://gitee.com/bdj/SpringBoot_v2) | 基于springboot的一款纯净脚手架|
+
 开源不易，支持就请赞助TLog
 
 <img src="static/img/zanshang.jpeg" alt="zanshang" width="258" />
