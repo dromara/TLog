@@ -23,6 +23,8 @@ public class TLogContext {
 
     private static final TransmittableThreadLocal<String> preIpTL = new TransmittableThreadLocal<>();
 
+    private static final TransmittableThreadLocal<String> currIpTL = new TransmittableThreadLocal<>();
+
     public static void putTraceId(String traceId) {
         traceIdTL.set(traceId);
     }
@@ -97,5 +99,17 @@ public class TLogContext {
 
     public static void setEnableInvokeTimePrint(boolean enableInvokeTimePrint) {
         TLogContext.enableInvokeTimePrint = enableInvokeTimePrint;
+    }
+
+    public static String getCurrIp(){
+        return currIpTL.get();
+    }
+
+    public static void putCurrIp(String currIp){
+        currIpTL.set(currIp);
+    }
+
+    public static void removeCurrIp(){
+        currIpTL.remove();
     }
 }

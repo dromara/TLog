@@ -6,6 +6,7 @@ import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.id.TLogIdGeneratorLoader;
 import com.yomahub.tlog.id.snowflake.UniqueIdGenerator;
+import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,10 +50,14 @@ public class TLogRPCHandler {
         //往TLog上下文里放一个当前的traceId
         TLogContext.putTraceId(labelBean.getTraceId());
 
+        //往TLog上下文里放当前的IP
+        TLogContext.putCurrIp(LocalhostUtil.getHostIp());
+
         //生成日志标签
         String tlogLabel = TLogLabelGenerator.generateTLogLabel(labelBean.getPreIvkApp(),
                 labelBean.getPreIvkHost(),
                 labelBean.getPreIp(),
+                TLogContext.getCurrIp(),
                 labelBean.getTraceId(),
                 TLogContext.getSpanId());
 
@@ -70,6 +75,7 @@ public class TLogRPCHandler {
         TLogContext.removePreIvkApp();
         TLogContext.removePreIvkHost();
         TLogContext.removePreIp();
+        TLogContext.removeCurrIp();
         TLogContext.removeTraceId();
         TLogContext.removeSpanId();
         AspectLogContext.remove();

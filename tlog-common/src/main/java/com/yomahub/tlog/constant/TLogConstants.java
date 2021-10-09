@@ -12,6 +12,8 @@ public class TLogConstants {
 
     public static final String TLOG_SPANID_KEY = "tlogSpanId";
 
+    public static final String CURR_IP_KEY = "currIp";
+
     public static final String PRE_IVK_APP_KEY = "preIvkApp";
 
     public static final String PRE_IVK_APP_HOST = "preIvkHost";
