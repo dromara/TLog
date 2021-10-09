@@ -2,7 +2,7 @@ package com.yomahub.tlog.core.aop;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
@@ -116,7 +116,7 @@ public class AspectLogAop {
                     return null;
                 }
                 if (expression.equals(getRemainExpression(expression, item))) {
-                    v = JSONUtil.toJsonStr(v);
+                    v = JSON.toJSONString(v);
                 }
                 return getExpressionValue(getRemainExpression(expression, item), v);
             } else {
@@ -126,7 +126,7 @@ public class AspectLogAop {
                         return null;
                     }
                     if (expression.equals(getRemainExpression(expression, item))) {
-                        v = JSONUtil.toJsonStr(v);
+                        v = JSON.toJSONString(v);
                     }
                     return getExpressionValue(getRemainExpression(expression, item), v);
                 } catch (Exception e) {
