@@ -26,25 +26,24 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
 
     private Field field;
 
-    private static final Cache<LoggingEvent, Integer> lruCache = CacheUtil.newLRUCache(2048);
-
     @Override
     protected void append(ILoggingEvent eventObject) {
         if(eventObject instanceof LoggingEvent){
             LoggingEvent loggingEvent = (LoggingEvent)eventObject;
 
-            if (!lruCache.containsKey(loggingEvent)){
-                String resultLog;
-                final String logValue = AspectLogContext.getLogValue();
+            String resultLog;
+            final String logValue = AspectLogContext.getLogValue();
 
-                if (TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)){
-                    Map<String, String> mdcMap = new HashMap<>();
-                    mdcMap.put(TLogConstants.MDC_KEY, logValue);
-                    loggingEvent.setMDCPropertyMap(mdcMap);
-                }
+            if (TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)){
+                Map<String, String> mdcMap = new HashMap<>();
+                mdcMap.put(TLogConstants.MDC_KEY, logValue);
+                loggingEvent.setMDCPropertyMap(mdcMap);
+            }
 
-                if (!TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)) {
+            if (!TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)) {
+                if (!loggingEvent.getFormattedMessage().contains(logValue)){
                     resultLog = StrUtil.format("{} {}", logValue,loggingEvent.getFormattedMessage());
+
                     if(field == null){
                         field = ReflectUtil.getField(LoggingEvent.class,"formattedMessage");
                         field.setAccessible(true);
@@ -55,10 +54,8 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
                     } catch (IllegalAccessException e) {
                     }
                 }
-
-                eventObject = loggingEvent;
-                lruCache.put(loggingEvent, Integer.MIN_VALUE);
             }
+            eventObject = loggingEvent;
         }
         super.append(eventObject);
     }
