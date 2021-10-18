@@ -1,6 +1,7 @@
 package com.yomahub.tlog.xxljob.enhance;
 
 import com.yomahub.tlog.context.TLogContext;
+import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -17,6 +18,7 @@ public class XxlJobEnhance {
         ClassPool pool = ClassPool.getDefault();
         try {
             pool.importPackage("com.yomahub.tlog.xxljob.enhance.XxlJobBytesEnhance");
+            pool.insertClassPath(new ClassClassPath(XxlJobEnhance.class));
             cc = pool.get("com.xxl.job.core.server.EmbedServer$EmbedHttpServerHandler");
             if (cc != null) {
                 CtMethod ctMethod = cc.getDeclaredMethod("channelRead0");
