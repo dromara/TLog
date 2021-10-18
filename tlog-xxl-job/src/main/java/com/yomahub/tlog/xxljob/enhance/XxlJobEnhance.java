@@ -14,7 +14,7 @@ import javassist.CtMethod;
 public class XxlJobEnhance {
     public static void enhance() {
         //xxl-job增强
-        CtClass cc = null;
+        CtClass cc;
         ClassPool pool = ClassPool.getDefault();
         try {
             pool.importPackage("com.yomahub.tlog.xxljob.enhance.XxlJobBytesEnhance");
