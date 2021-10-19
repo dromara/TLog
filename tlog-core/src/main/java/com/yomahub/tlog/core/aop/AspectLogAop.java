@@ -59,8 +59,9 @@ public class AspectLogAop {
         Class<? extends AspectLogConvert> convertClazz = tlogAspect.convert();
 
         StringBuilder sb = new StringBuilder();
-        if (!convertClazz.equals(AspectLogConvert.class)) {
-            AspectLogConvert convert = convertClazz.newInstance();
+        boolean isAspectLogConvert = convertClazz.equals(AspectLogConvert.class);
+        if (!isAspectLogConvert) {
+            AspectLogConvert convert = convertClazz.getDeclaredConstructor().newInstance();
             try {
                 sb.append(convert.convert(args));
             } catch (Throwable t) {
@@ -78,8 +79,9 @@ public class AspectLogAop {
 
         String aspLogValue = sb.toString();
         if (StringUtils.isNotBlank(aspLogValue)) {
-            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - joint.length());
-
+            if (isAspectLogConvert) {
+                aspLogValue = aspLogValue.substring(0, aspLogValue.length() - joint.length());
+            }
             aspLogValue = MessageFormat.format(pattern, aspLogValue);
 
             //拿到之前的标签
