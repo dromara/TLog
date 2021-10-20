@@ -54,16 +54,24 @@ public class AspectLogAop {
 
         TLogAspect tlogAspect = method.getAnnotation(TLogAspect.class);
         String[] aspectExpressions = tlogAspect.value();
-        String pattern = tlogAspect.pattern().replaceAll("\\{\\}", "{0}");
+        String pattern = tlogAspect.pattern();
         String joint = tlogAspect.joint();
         Class<? extends AspectLogConvert> convertClazz = tlogAspect.convert();
 
         StringBuilder sb = new StringBuilder();
-        boolean isAspectLogConvert = AspectLogConvert.class.isAssignableFrom(convertClazz);
+
+        boolean isAspectLogConvert;
+        if (convertClazz.equals(AspectLogConvert.class)){
+            isAspectLogConvert = false;
+        }else{
+            isAspectLogConvert = AspectLogConvert.class.isAssignableFrom(convertClazz);
+        }
+
         if (isAspectLogConvert) {
-            AspectLogConvert convert = convertClazz.getDeclaredConstructor().newInstance();
+            AspectLogConvert convert = convertClazz.newInstance();
             try {
                 sb.append(convert.convert(args));
+                sb.append(joint);
             } catch (Throwable t) {
                 log.error("[AspectLog]some errors happens in AspectLog's convert", t);
             }
@@ -79,19 +87,16 @@ public class AspectLogAop {
 
         String aspLogValue = sb.toString();
         if (StringUtils.isNotBlank(aspLogValue)) {
-            if (isAspectLogConvert) {
-                aspLogValue = MessageFormat.format(pattern, aspLogValue);
-            }else{
-                aspLogValue = aspLogValue.substring(0, aspLogValue.length() - joint.length());
-            }
+            aspLogValue = aspLogValue.substring(0, aspLogValue.length() - joint.length());
+            aspLogValue = StrUtil.format(pattern, aspLogValue);
 
             //拿到之前的标签
             String currentLabel = AspectLogContext.getLogValue();
 
             if (TLogContext.hasTLogMDC()) {
-                MDC.put(TLogConstants.MDC_KEY, currentLabel + aspLogValue);
+                MDC.put(TLogConstants.MDC_KEY, currentLabel + " " + aspLogValue);
             } else {
-                AspectLogContext.putLogValue(currentLabel + aspLogValue);
+                AspectLogContext.putLogValue(currentLabel + " " + aspLogValue);
             }
         }
 
