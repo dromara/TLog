@@ -66,6 +66,7 @@
         <ttl.version>2.12.1</ttl.version>
         <quartz.version>2.3.0</quartz.version>
         <httpclient.version>4.5.10</httpclient.version>
+        <httpclient5.version>5.1</httpclient5.version>
         <okhttp.version>3.2.0</okhttp.version>
         <xxl-job.version>2.3.0</xxl-job.version>
     </properties>

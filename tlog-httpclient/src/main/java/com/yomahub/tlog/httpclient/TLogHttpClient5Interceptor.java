@@ -6,21 +6,22 @@ import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.spring.TLogSpringAware;
 import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
-import org.apache.http.protocol.HttpContext;
+import org.apache.hc.core5.http.EntityDetails;
+import org.apache.hc.core5.http.HttpException;
+import org.apache.hc.core5.http.HttpRequest;
+import org.apache.hc.core5.http.HttpRequestInterceptor;
+import org.apache.hc.core5.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class TLogHttpClientInterceptor implements HttpRequestInterceptor {
+public class TLogHttpClient5Interceptor implements HttpRequestInterceptor {
     
-    private static final Logger log = LoggerFactory.getLogger(TLogHttpClientInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(TLogHttpClient5Interceptor.class);
     
     @Override
-    public void process(final HttpRequest request, final HttpContext context) throws HttpException, IOException {
+    public void process(HttpRequest request, EntityDetails entityDetails, HttpContext context) throws HttpException, IOException {
         String traceId = TLogContext.getTraceId();
         if(StringUtils.isNotBlank(traceId)) {
             String appName = TLogSpringAware.getProperty("spring.application.name");
