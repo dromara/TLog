@@ -17,7 +17,9 @@ TLog is a lightweight distributed log tagging tracker, accessible in 10 minutes,
 
 ## Project home page please click: [project home page](http://yomahub.com/tlog/en)
 
-## sample project please click: [sample project](https://gitee.com/bryan31/tlog-example)
+## Project documentation please click: [project documentation](https://yomahub.com/tlog/docs)
+
+## Sample project please click: [sample project](https://gitee.com/bryan31/tlog-example)
 
 ## Features
 * lightweight microservice log tracking by tagging the logs
