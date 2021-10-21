@@ -54,12 +54,20 @@ public class AspectLogAop {
 
         TLogAspect tlogAspect = method.getAnnotation(TLogAspect.class);
         String[] aspectExpressions = tlogAspect.value();
+        String str = tlogAspect.str();
         String pattern = tlogAspect.pattern();
         String joint = tlogAspect.joint();
         Class<? extends AspectLogConvert> convertClazz = tlogAspect.convert();
 
         StringBuilder sb = new StringBuilder();
 
+        //处理字符串类型标签
+        if (StrUtil.isNotBlank(str)){
+            sb.append(str);
+            sb.append(joint);
+        }
+
+        //处理自定义converter
         boolean isAspectLogConvert;
         if (convertClazz.equals(AspectLogConvert.class)){
             isAspectLogConvert = false;
@@ -75,13 +83,14 @@ public class AspectLogAop {
             } catch (Throwable t) {
                 log.error("[AspectLog]some errors happens in AspectLog's convert", t);
             }
-        } else {
-            for (String aspectExpression : aspectExpressions) {
-                String aspLogValueItem = getExpressionValue(aspectExpression, paramNameValueMap);
-                if (StringUtils.isNotBlank(aspLogValueItem)) {
-                    sb.append(StrUtil.format("{}:{}", aspectExpression, aspLogValueItem));
-                    sb.append(joint);
-                }
+        }
+
+        //处理表达式
+        for (String aspectExpression : aspectExpressions) {
+            String aspLogValueItem = getExpressionValue(aspectExpression, paramNameValueMap);
+            if (StringUtils.isNotBlank(aspLogValueItem)) {
+                sb.append(StrUtil.format("{}:{}", aspectExpression, aspLogValueItem));
+                sb.append(joint);
             }
         }
 
