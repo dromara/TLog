@@ -3,6 +3,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.yomahub.tlog.springboot.TLogWebAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogFeignAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogAspectAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogSpringScheduledAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogCommonAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogGatewayAutoConfiguration,\
   com.yomahub.tlog.springboot.TLogSoulGatewayAutoConfiguration,\
