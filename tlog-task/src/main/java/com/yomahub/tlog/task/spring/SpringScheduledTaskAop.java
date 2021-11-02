@@ -1,6 +1,5 @@
 package com.yomahub.tlog.task.spring;
 
-import com.ql.util.express.ExpressRunner;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
 import org.aspectj.lang.ProceedingJoinPoint;
