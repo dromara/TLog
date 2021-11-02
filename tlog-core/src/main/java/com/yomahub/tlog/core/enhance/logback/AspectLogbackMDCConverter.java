@@ -36,13 +36,18 @@ public class AspectLogbackMDCConverter extends MDCConverter {
     @Override
     public String convert(ILoggingEvent event) {
         String value = super.convert(event);
-        if (StrUtil.isBlank(value)){
-            value = AspectLogContext.getLogValue();
+
+        String keyValue = (String) ReflectUtil.getFieldValue(this, keyField);
+        if (StrUtil.isNotEmpty(keyValue) & keyValue.equals(TLogConstants.MDC_KEY)) {
+            if (StrUtil.isBlank(value)){
+                value = AspectLogContext.getLogValue();
+            }
+
+            if (StrUtil.isBlank(value)){
+                value = "";
+            }
         }
 
-        if (StrUtil.isBlank(value)){
-            value = "";
-        }
         return value;
     }
 }
