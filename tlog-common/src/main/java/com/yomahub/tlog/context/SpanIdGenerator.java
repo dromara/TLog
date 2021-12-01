@@ -3,6 +3,7 @@ package com.yomahub.tlog.context;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import org.apache.commons.lang3.StringUtils;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * spanId生成器
@@ -12,18 +13,16 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SpanIdGenerator {
 
-    private static TransmittableThreadLocal<String> currentSpanIdTL = new TransmittableThreadLocal<>();
+    public static volatile TransmittableThreadLocal<String> currentSpanIdTL = new TransmittableThreadLocal<>();
 
-    private static TransmittableThreadLocal<Integer> spanIndex = new TransmittableThreadLocal<>();
-
-    private static String INITIAL_VALUE = "0";
+    public static volatile TransmittableThreadLocal<AtomicInteger> spanIndex = new TransmittableThreadLocal<>();
 
     public static void putSpanId(String spanId) {
         if (StringUtils.isBlank(spanId)) {
-            spanId = INITIAL_VALUE;
+            spanId = "0";
         }
         currentSpanIdTL.set(spanId);
-        spanIndex.set(Integer.valueOf(INITIAL_VALUE));
+        spanIndex.set(new AtomicInteger(0));
     }
 
     public static String getSpanId() {
@@ -35,12 +34,8 @@ public class SpanIdGenerator {
     }
 
     public static String generateNextSpanId() {
-        //只在同一个request请求里进行线程安全操作
-        synchronized (TLogContext.getTraceId()) {
-            String currentSpanId = TLogContext.getSpanId();
-            spanIndex.set(spanIndex.get() + 1);
-            String nextSpanId = StrUtil.format("{}.{}", currentSpanId, spanIndex.get());
-            return nextSpanId;
-        }
+        String currentSpanId = TLogContext.getSpanId();
+        spanIndex.set(new AtomicInteger(spanIndex.get().incrementAndGet()));
+        return StrUtil.format("{}.{}", currentSpanId, spanIndex.get());
     }
 }
