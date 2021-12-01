@@ -35,7 +35,7 @@ public class SpanIdGenerator {
 
     public static String generateNextSpanId() {
         String currentSpanId = TLogContext.getSpanId();
-        spanIndex.set(new AtomicInteger(spanIndex.get().incrementAndGet()));
-        return StrUtil.format("{}.{}", currentSpanId, spanIndex.get());
+        int currentSpanIndex = spanIndex.get().incrementAndGet();
+        return StrUtil.format("{}.{}", currentSpanId, currentSpanIndex);
     }
 }
