@@ -52,7 +52,7 @@
         <guava.version>19.0</guava.version>
         <dubbox.version>2.8.4</dubbox.version>
         <dubbo.version>2.7.6</dubbo.version>
-        <hutool.version>5.5.1</hutool.version>
+        <hutool.version>5.7.16</hutool.version>
         <fastjson.version>1.2.70</fastjson.version>
         <commons-logging.version>1.2</commons-logging.version>
         <dom4j.version>1.6.1</dom4j.version>
@@ -68,6 +68,7 @@
         <httpclient.version>4.5.10</httpclient.version>
         <httpclient5.version>5.1</httpclient5.version>
         <okhttp.version>3.2.0</okhttp.version>
+        <forest.version>1.5.14</forest.version>
         <xxl-job.version>2.3.0</xxl-job.version>
         <qlexpress.version>3.2.0</qlexpress.version>
     </properties>
@@ -97,6 +98,11 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-json</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-http</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
             <dependency>
@@ -291,6 +297,8 @@
         <module>tlog-spring-boot</module>
         <module>tlog-task</module>
         <module>tlog-xxl-job</module>
+        <module>tlog-hutool-http</module>
+        <module>tlog-forest</module>
     </modules>
 
     <distributionManagement>
