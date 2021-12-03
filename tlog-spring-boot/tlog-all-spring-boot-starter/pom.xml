@@ -59,6 +59,16 @@
         </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
+            <artifactId>tlog-hutool-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-forest</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
             <artifactId>tlog-task</artifactId>
             <version>${project.version}</version>
         </dependency>

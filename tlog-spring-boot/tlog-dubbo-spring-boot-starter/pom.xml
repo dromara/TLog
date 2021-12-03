@@ -38,6 +38,16 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-hutool-http</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-forest</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
             <optional>true</optional>
