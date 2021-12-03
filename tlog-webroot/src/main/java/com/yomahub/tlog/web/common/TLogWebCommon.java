@@ -33,7 +33,7 @@ public class TLogWebCommon extends TLogRPCHandler {
         return tLogWebCommon;
     }
 
-    public void preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public void preHandle(HttpServletRequest request) {
         String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
         String spanId = request.getHeader(TLogConstants.TLOG_SPANID_KEY);
         String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
@@ -45,7 +45,7 @@ public class TLogWebCommon extends TLogRPCHandler {
         processProviderSide(labelBean);
     }
 
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public void afterCompletion() {
         cleanThreadLocal();
     }
 }
