@@ -1,6 +1,5 @@
 package com.yomahub.tlog.okhttp;
 
-import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
@@ -17,7 +16,7 @@ import java.io.IOException;
 
 public class TLogOkHttpInterceptor implements Interceptor {
     
-    private static final Logger log = LoggerFactory.getLogger(TLogOkHttpInterceptor.class);
+    private final Logger log = LoggerFactory.getLogger(TLogOkHttpInterceptor.class);
     
     @Override
     public Response intercept(final Chain chain) throws IOException {
@@ -33,8 +32,7 @@ public class TLogOkHttpInterceptor implements Interceptor {
         } else {
             log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }
-        
-        Response response = chain.proceed(builder.build());
-        return response;
+
+        return chain.proceed(builder.build());
     }
 }
