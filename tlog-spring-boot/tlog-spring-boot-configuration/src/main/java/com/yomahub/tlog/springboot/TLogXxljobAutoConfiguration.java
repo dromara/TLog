@@ -1,6 +1,6 @@
 package com.yomahub.tlog.springboot;
 
-import com.yomahub.tlog.springboot.lifecircle.TLogXxljobEnhanceInit;
+import com.yomahub.tlog.xxljob.aop.TLogXxlJobAop;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class TLogXxljobAutoConfiguration {
 
     @Bean
-    public TLogXxljobEnhanceInit tLogXxljobEnhanceInit(){
-        return new TLogXxljobEnhanceInit();
+    public TLogXxlJobAop tLogXxlJobAop(){
+        return new TLogXxlJobAop();
     }
 }
