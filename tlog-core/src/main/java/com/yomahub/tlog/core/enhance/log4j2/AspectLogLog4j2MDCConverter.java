@@ -114,10 +114,7 @@ public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter 
                 Object value = contextData.getValue(key);
                 if (key.equals(TLogConstants.MDC_KEY)){
                     if (ObjectUtil.isNull(value)){
-                        value = AspectLogContext.getLogValue();
-                        if (ObjectUtil.isNull(value)){
-                            value = ThreadContext.get(TLogConstants.MDC_KEY);
-                        }
+                        value = ThreadContext.get(TLogConstants.MDC_KEY);
                     }
                 }
                 if (value != null) {
