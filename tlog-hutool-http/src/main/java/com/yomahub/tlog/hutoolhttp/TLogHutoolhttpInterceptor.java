@@ -11,6 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Hutool http组件的拦截器
+ * @author Bryan.Zhang
+ * @since 1.3.5
+ */
 public class TLogHutoolhttpInterceptor implements HttpInterceptor {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

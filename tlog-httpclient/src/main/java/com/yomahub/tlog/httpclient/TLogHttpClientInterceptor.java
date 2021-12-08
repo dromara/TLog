@@ -15,6 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+/**
+ * HttpClient的拦截器
+ * @author Bryan.Zhang
+ * @since 1.3.0
+ */
 public class TLogHttpClientInterceptor implements HttpRequestInterceptor {
     
     private static final Logger log = LoggerFactory.getLogger(TLogHttpClientInterceptor.class);
