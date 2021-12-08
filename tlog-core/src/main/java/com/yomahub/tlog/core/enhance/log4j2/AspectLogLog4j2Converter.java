@@ -117,6 +117,10 @@ public final class AspectLogLog4j2Converter extends LogEventPatternConverter {
     public void format(final LogEvent event, final StringBuilder toAppendTo) {
         String logLable = event.getContextData().getValue(TLogConstants.MDC_KEY);
 
+        if (StrUtil.isBlank(logLable)){
+            logLable = AspectLogContext.getLogValue();
+        }
+
         if (!TLogContext.hasTLogMDC()) {
             if (StrUtil.isNotBlank(logLable)) {
                 toAppendTo.append(StrUtil.format("{} ", logLable));

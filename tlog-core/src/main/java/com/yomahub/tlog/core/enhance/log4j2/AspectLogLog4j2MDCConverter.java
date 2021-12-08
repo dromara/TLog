@@ -1,6 +1,7 @@
 package com.yomahub.tlog.core.enhance.log4j2;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
@@ -115,6 +116,9 @@ public final class AspectLogLog4j2MDCConverter extends LogEventPatternConverter 
                 if (key.equals(TLogConstants.MDC_KEY)){
                     if (ObjectUtil.isNull(value)){
                         value = ThreadContext.get(TLogConstants.MDC_KEY);
+                        if (ObjectUtil.isNull(value)){
+                            value = AspectLogContext.getLogValue();
+                        }
                     }
                 }
                 if (value != null) {
