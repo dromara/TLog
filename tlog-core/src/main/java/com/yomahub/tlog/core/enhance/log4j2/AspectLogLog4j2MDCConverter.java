@@ -17,6 +17,7 @@ import org.apache.logging.log4j.util.PerformanceSensitive;
 import org.apache.logging.log4j.util.ReadOnlyStringMap;
 import org.apache.logging.log4j.util.StringBuilders;
 import org.apache.logging.log4j.util.TriConsumer;
+import org.slf4j.MDC;
 
 /**
  * log4j2的MDC converter<br>
