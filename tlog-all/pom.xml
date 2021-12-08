@@ -52,5 +52,10 @@
             <artifactId>tlog-forest</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-rest-template</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

@@ -299,6 +299,7 @@
         <module>tlog-xxl-job</module>
         <module>tlog-hutool-http</module>
         <module>tlog-forest</module>
+        <module>tlog-rest-template</module>
     </modules>
 
     <distributionManagement>
