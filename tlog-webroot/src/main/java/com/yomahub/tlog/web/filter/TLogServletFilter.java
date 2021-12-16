@@ -23,15 +23,16 @@ public class TLogServletFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (request instanceof HttpServletRequest && response instanceof HttpServletResponse){
-            try{
-                TLogWebCommon.loadInstance().preHandle((HttpServletRequest)request);
-                //把traceId放入response的header，为了方便有些人有这样的需求，从前端拿整条链路的traceId
-                ((HttpServletResponse)response).addHeader(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
-            }finally {
-                TLogWebCommon.loadInstance().afterCompletion();
-            }
+            TLogWebCommon.loadInstance().preHandle((HttpServletRequest)request);
+            //把traceId放入response的header，为了方便有些人有这样的需求，从前端拿整条链路的traceId
+            ((HttpServletResponse)response).addHeader(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
         }
         chain.doFilter(request, response);
+
+        if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
+            // 放置在doFilter后面, 否则未进入方法就清空了
+            TLogWebCommon.loadInstance().afterCompletion();
+        }
     }
 
     @Override
