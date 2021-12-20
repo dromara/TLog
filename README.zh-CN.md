@@ -6,7 +6,7 @@
 
 <h3>您的star是我继续前进的动力，如果喜欢请右上角帮忙点个star</h3>
 
-**[2021中国开源项目评选，请投TLog一票!](https://www.oschina.net/project/top_cn_2021/?id=579)**
+**[我的另一个开源项目LiteFlow已进入2021开源中国最受欢迎开源项目评选TOP 30的角逐，请投LiteFlow一票! 感谢！](https://www.oschina.net/project/top_cn_2021/?id=578)**
 
 ![gvp](static/img/gvp.jpg)
 
