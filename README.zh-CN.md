@@ -8,16 +8,10 @@
 
 ![gvp](static/img/gvp.jpg)
 
-## Gitee的star趋势图
-[![Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UWFCA2XK.png)](https://giteye.net/chart/UWFCA2XK)
-
-## 贡献者
-[![Giteye chart](https://chart.giteye.net/gitee/dromara/TLog/UZA4EM66.png)](https://giteye.net/chart/UZA4EM66)
-
 ## 概述
 TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接入，自动对日志打标签完成微服务的链路追踪。支持log4j，log4j2，logback三大日志框架，支持dubbo，dubbox，springcloud三大RPC框架
 
-## 项目主页请点击：[项目主页](http://yomahub.com/tlog)
+## 项目官网请点击：[项目官网](http://yomahub.com/tlog)
 
 ## 项目文档请点击：[项目文档](https://yomahub.com/tlog/docs)
 
