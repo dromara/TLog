@@ -3,24 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>tlog</artifactId>
+        <artifactId>tlog-logstash</artifactId>
         <groupId>com.yomahub</groupId>
         <version>1.3.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tlog-dubbox</artifactId>
+    <artifactId>tlog-logstash-logback</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
-            <optional>true</optional>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
     </dependencies>
 
