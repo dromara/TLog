@@ -64,9 +64,15 @@ public class TLogRPCHandler {
         //往日志切面器里放一个日志前缀
         AspectLogContext.putLogValue(tlogLabel);
 
-        //如果有MDC，则往MDC中放入日志标签
-        if (TLogContext.hasTLogMDC()) {
+        //如果有MDC或者有logstash，则往MDC中放入日志标签
+        if (TLogContext.hasTLogMDC() || TLogContext.hasLogstash()) {
             MDC.put(TLogConstants.MDC_KEY, tlogLabel);
+            MDC.put(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
+            MDC.put(TLogConstants.TLOG_SPANID_KEY, TLogContext.getSpanId());
+            MDC.put(TLogConstants.CURR_IP_KEY, TLogContext.getCurrIp());
+            MDC.put(TLogConstants.PRE_IP_KEY, TLogContext.getPreIp());
+            MDC.put(TLogConstants.PRE_IVK_APP_HOST, TLogContext.getPreIvkHost());
+            MDC.put(TLogConstants.PRE_IVK_APP_KEY, TLogContext.getPreIvkApp());
         }
     }
 

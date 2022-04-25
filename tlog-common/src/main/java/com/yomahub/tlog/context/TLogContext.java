@@ -15,6 +15,8 @@ public class TLogContext {
 
     private static boolean hasTLogMDC;
 
+    private static boolean hasLogstash;
+
     private static final TransmittableThreadLocal<String> traceIdTL = new TransmittableThreadLocal<>();
 
     private static final TransmittableThreadLocal<String> preIvkAppTL = new TransmittableThreadLocal<>();
@@ -111,5 +113,13 @@ public class TLogContext {
 
     public static void removeCurrIp(){
         currIpTL.remove();
+    }
+
+    public static boolean hasLogstash() {
+        return hasLogstash;
+    }
+
+    public static void setHasLogstash(boolean hasLogstash) {
+        TLogContext.hasLogstash = hasLogstash;
     }
 }
