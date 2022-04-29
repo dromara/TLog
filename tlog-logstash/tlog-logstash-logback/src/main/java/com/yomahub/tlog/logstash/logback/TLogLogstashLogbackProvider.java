@@ -17,7 +17,7 @@ public class TLogLogstashLogbackProvider extends AbstractJsonProvider<ILoggingEv
         event.getMDCPropertyMap().forEach((key, value) -> {
             try {
                 jsonGenerator.writeFieldName(key);
-                jsonGenerator.writeObject(value);
+                jsonGenerator.writeString(value);
             }catch (Exception ignored){}
         });
     }
