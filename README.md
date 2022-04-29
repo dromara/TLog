@@ -9,9 +9,9 @@
 ## Overview
 TLog is a lightweight distributed log tagging tracker, accessible in 10 minutes, automatically tags logs to complete microservice link tracking. Support log4j, log4j2, logback three logging framework, support dubbo, dubbox, springcloud three RPC framework
 
-## Project home page please click: [project home page](http://yomahub.com/tlog/en)
+## Project home page please click: [project home page](https://tlog.yomahub.com/en)
 
-## Project documentation please click: [project documentation](https://yomahub.com/tlog/docs)
+## Project documentation please click: [project documentation](https://tlog.yomahub.com/en/docs/)
 
 ## Sample project please click: [sample project](https://gitee.com/bryan31/tlog-example)
 
