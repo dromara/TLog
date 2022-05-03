@@ -34,12 +34,6 @@ public class AspectLogbackAsyncAppender extends AsyncAppender {
             String resultLog;
             final String logValue = AspectLogContext.getLogValue();
 
-            if (TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)){
-                Map<String, String> mdcMap = new HashMap<>();
-                mdcMap.put(TLogConstants.MDC_KEY, logValue);
-                loggingEvent.setMDCPropertyMap(mdcMap);
-            }
-
             if (!TLogContext.hasTLogMDC() && StringUtils.isNotBlank(logValue)) {
                 if (!loggingEvent.getFormattedMessage().contains(logValue)){
                     resultLog = StrUtil.format("{} {}", logValue,loggingEvent.getFormattedMessage());

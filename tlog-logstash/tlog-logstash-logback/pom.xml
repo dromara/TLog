@@ -18,17 +18,20 @@
             <version>${project.version}</version>
         </dependency>
 
+        <!-- logback 的核心实现包 -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- logstash for logback -->
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
         </dependency>
 
+        <!-- ttl -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>transmittable-thread-local</artifactId>
