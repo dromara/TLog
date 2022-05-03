@@ -64,16 +64,14 @@ public class TLogRPCHandler {
         //往日志切面器里放一个日志前缀
         AspectLogContext.putLogValue(tlogLabel);
 
-        //如果有MDC或者有logstash，则往MDC中放入日志标签
-        if (TLogContext.hasTLogMDC() || TLogContext.hasLogstash()) {
-            MDC.put(TLogConstants.MDC_KEY, tlogLabel);
-            MDC.put(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
-            MDC.put(TLogConstants.TLOG_SPANID_KEY, TLogContext.getSpanId());
-            MDC.put(TLogConstants.CURR_IP_KEY, TLogContext.getCurrIp());
-            MDC.put(TLogConstants.PRE_IP_KEY, TLogContext.getPreIp());
-            MDC.put(TLogConstants.PRE_IVK_APP_HOST, TLogContext.getPreIvkHost());
-            MDC.put(TLogConstants.PRE_IVK_APP_KEY, TLogContext.getPreIvkApp());
-        }
+        //目前无论是不是MDC，都往MDC里放参数，这样就避免了log4j2的特殊设置
+        MDC.put(TLogConstants.MDC_KEY, tlogLabel);
+        MDC.put(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
+        MDC.put(TLogConstants.TLOG_SPANID_KEY, TLogContext.getSpanId());
+        MDC.put(TLogConstants.CURR_IP_KEY, TLogContext.getCurrIp());
+        MDC.put(TLogConstants.PRE_IP_KEY, TLogContext.getPreIp());
+        MDC.put(TLogConstants.PRE_IVK_APP_HOST, TLogContext.getPreIvkHost());
+        MDC.put(TLogConstants.PRE_IVK_APP_KEY, TLogContext.getPreIvkApp());
     }
 
     public void cleanThreadLocal() {
@@ -85,8 +83,14 @@ public class TLogRPCHandler {
         TLogContext.removeTraceId();
         TLogContext.removeSpanId();
         AspectLogContext.remove();
-        if (TLogContext.hasTLogMDC()) {
-            MDC.remove(TLogConstants.MDC_KEY);
-        }
+
+        //移除MDC里的信息
+        MDC.remove(TLogConstants.MDC_KEY);
+        MDC.remove(TLogConstants.TLOG_TRACE_KEY);
+        MDC.remove(TLogConstants.TLOG_SPANID_KEY);
+        MDC.remove(TLogConstants.CURR_IP_KEY);
+        MDC.remove(TLogConstants.PRE_IP_KEY);
+        MDC.remove(TLogConstants.PRE_IVK_APP_HOST);
+        MDC.remove(TLogConstants.PRE_IVK_APP_KEY);
     }
 }
