@@ -105,11 +105,8 @@ public class AspectLogAop {
             //拿到之前的标签
             String currentLabel = AspectLogContext.getLogValue();
 
-            if (TLogContext.hasTLogMDC()) {
-                MDC.put(TLogConstants.MDC_KEY, currentLabel + " " + aspLogValue);
-            } else {
-                AspectLogContext.putLogValue(currentLabel + " " + aspLogValue);
-            }
+            MDC.put(TLogConstants.MDC_KEY, currentLabel + " " + aspLogValue);
+            AspectLogContext.putLogValue(currentLabel + " " + aspLogValue);
         }
 
         return jp.proceed();
