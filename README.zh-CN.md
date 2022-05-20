@@ -1,5 +1,5 @@
 <p align="center">
-<a href="http://yomahub.com/tlog/">
+<a href="https://tlog.yomahub.com/">
     <img width="500" src="static/img/logo.png" alt="logo">
 </a>
 </p>
