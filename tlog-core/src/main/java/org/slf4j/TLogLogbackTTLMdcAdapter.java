@@ -20,18 +20,18 @@ public class TLogLogbackTTLMdcAdapter implements MDCAdapter {
     private static final int WRITE_OPERATION = 1;
     private static final int READ_OPERATION = 2;
 
-    private static TLogLogbackTTLMdcAdapter mtcMDCAdapter;
+    private static TLogLogbackTTLMdcAdapter mdcMDCAdapter;
 
     // keeps track of the last operation performed
     final ThreadLocal<Integer> lastOperation = new ThreadLocal<>();
 
     static {
-        mtcMDCAdapter = new TLogLogbackTTLMdcAdapter();
-        MDC.mdcAdapter = mtcMDCAdapter;
+        mdcMDCAdapter = new TLogLogbackTTLMdcAdapter();
+        MDC.mdcAdapter = mdcMDCAdapter;
     }
 
     public static MDCAdapter getInstance() {
-        return mtcMDCAdapter;
+        return mdcMDCAdapter;
     }
 
     private Integer getAndSetLastOperation(int op) {

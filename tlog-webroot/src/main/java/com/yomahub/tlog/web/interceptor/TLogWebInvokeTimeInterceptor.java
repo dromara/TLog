@@ -1,9 +1,8 @@
 package com.yomahub.tlog.web.interceptor;
 
-import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.yomahub.tlog.context.TLogContext;
-import com.yomahub.tlog.web.wrapper.RequestWrapper;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +39,7 @@ public class TLogWebInvokeTimeInterceptor extends AbsTLogWebHandlerMethodInterce
                 log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
             }*/
 
-            String parameters = JSONUtil.toJsonStr(request.getParameterMap());
+            String parameters = JSON.toJSONString(request.getParameterMap());
             log.info("[TLOG]开始请求URL[{}],参数为:{}", url, parameters);
 
             StopWatch stopWatch = new StopWatch();
