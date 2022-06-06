@@ -1,6 +1,5 @@
 package com.yomahub.tlog.feign.filter;
 
-import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
@@ -11,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-
-import java.net.InetAddress;
 
 /**
  * feign的拦截器

@@ -1,7 +1,5 @@
 package com.yomahub.tlog.core.mq;
 
-import cn.hutool.core.net.NetUtil;
-import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
@@ -10,9 +8,7 @@ import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.Serializable;
-import java.net.InetAddress;
 
 /**
  * 针对于Mq的包装Bean

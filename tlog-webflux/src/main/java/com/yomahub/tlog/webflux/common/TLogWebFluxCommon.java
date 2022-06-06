@@ -1,6 +1,5 @@
 package com.yomahub.tlog.webflux.common;
 
-import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
@@ -12,8 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
-
-import java.net.InetAddress;
 import java.util.List;
 import java.util.function.Consumer;
 

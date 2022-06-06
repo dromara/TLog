@@ -1,6 +1,5 @@
 package com.yomahub.tlog.dubbo.filter;
 
-import cn.hutool.core.net.NetUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.SpanIdGenerator;
 import com.yomahub.tlog.context.TLogContext;
@@ -13,8 +12,6 @@ import org.apache.dubbo.common.extension.Activate;
 import org.apache.dubbo.rpc.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.InetAddress;
 
 /**
  * dubbo的调用拦截器

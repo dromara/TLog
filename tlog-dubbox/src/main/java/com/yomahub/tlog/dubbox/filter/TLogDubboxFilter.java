@@ -1,6 +1,5 @@
 package com.yomahub.tlog.dubbox.filter;
 
-import cn.hutool.core.net.NetUtil;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
@@ -13,8 +12,6 @@ import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.InetAddress;
 
 /**
  * dubbox的调用拦截器
