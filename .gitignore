@@ -19,7 +19,6 @@
 *.jar
 *.rar
 *.tar
-*.zip
 *.war
 *.del
 *.pmd
