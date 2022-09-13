@@ -13,7 +13,7 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 
 ## 项目官网请点击：[项目官网](https://tlog.yomahub.com/)
 
-## 项目文档请点击：[项目文档](https://tlog.yomahub.com/docs)
+## 项目文档请点击：[项目文档](https://tlog.yomahub.com/pages/5b7bd2/)
 
 ## 示例工程请点击：[示例工程](https://gitee.com/bryan31/tlog-example)
 
