@@ -1,5 +1,6 @@
 package com.yomahub.tlog.hutoolhttp;
 
+import cn.hutool.http.HttpBase;
 import cn.hutool.http.HttpInterceptor;
 import cn.hutool.http.HttpRequest;
 import com.yomahub.tlog.constant.TLogConstants;
@@ -21,16 +22,16 @@ public class TLogHutoolhttpInterceptor implements HttpInterceptor {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public void process(HttpRequest request) {
+    public void process(HttpBase httpBase) {
         String traceId = TLogContext.getTraceId();
         if(StringUtils.isNotBlank(traceId)) {
             String appName = TLogSpringAware.getProperty("spring.application.name");
 
-            request.header(TLogConstants.TLOG_TRACE_KEY, traceId);
-            request.header(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
-            request.header(TLogConstants.PRE_IVK_APP_KEY, appName);
-            request.header(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
-            request.header(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
+            httpBase.header(TLogConstants.TLOG_TRACE_KEY, traceId);
+            httpBase.header(TLogConstants.TLOG_SPANID_KEY, SpanIdGenerator.generateNextSpanId());
+            httpBase.header(TLogConstants.PRE_IVK_APP_KEY, appName);
+            httpBase.header(TLogConstants.PRE_IVK_APP_HOST, LocalhostUtil.getHostName());
+            httpBase.header(TLogConstants.PRE_IP_KEY, LocalhostUtil.getHostIp());
         } else {
             log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次调用不传递traceId");
         }

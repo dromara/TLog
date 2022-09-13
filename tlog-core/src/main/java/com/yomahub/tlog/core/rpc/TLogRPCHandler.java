@@ -5,7 +5,6 @@ import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.context.TLogLabelGenerator;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.id.TLogIdGeneratorLoader;
-import com.yomahub.tlog.id.snowflake.UniqueIdGenerator;
 import com.yomahub.tlog.utils.LocalhostUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

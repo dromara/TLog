@@ -5,7 +5,7 @@
     <parent>
         <artifactId>tlog</artifactId>
         <groupId>com.yomahub</groupId>
-        <version>1.4.3</version>
+        <version>1.5.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -19,17 +19,14 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
             <artifactId>httpclient5</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 

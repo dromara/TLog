@@ -1,14 +1,13 @@
 package com.yomahub.tlog.core.aop;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
 import com.ql.util.express.DefaultContext;
 import com.ql.util.express.ExpressRunner;
 import com.ql.util.express.InstructionSet;
 import com.yomahub.tlog.constant.TLogConstants;
-import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.annotation.TLogAspect;
 import com.yomahub.tlog.core.context.AspectLogContext;
 import com.yomahub.tlog.core.convert.AspectLogConvert;
@@ -50,7 +49,7 @@ public class AspectLogAop {
         MethodSignature signature = (MethodSignature) jp.getSignature();
         Method method = signature.getMethod();
         String[] parameterNames = signature.getParameterNames();
-        Map<String, Object> paramNameValueMap = Maps.newHashMap();
+        Map<String, Object> paramNameValueMap = MapUtil.newHashMap();
         for (int i = 0; i < parameterNames.length; i++) {
             paramNameValueMap.put(parameterNames[i], args[i]);
         }
