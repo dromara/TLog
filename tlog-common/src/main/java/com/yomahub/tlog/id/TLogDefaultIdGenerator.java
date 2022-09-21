@@ -1,11 +1,11 @@
 package com.yomahub.tlog.id;
 
-import cn.hutool.core.util.IdUtil;
+import com.yomahub.tlog.id.snowflake.UniqueIdGenerator;
 
 public class TLogDefaultIdGenerator extends TLogIdGenerator{
     @Override
     public String generateTraceId() {
-        return IdUtil.getSnowflakeNextIdStr();
+        return UniqueIdGenerator.generateStringId();
     }
 
     public static void main(String[] args) {

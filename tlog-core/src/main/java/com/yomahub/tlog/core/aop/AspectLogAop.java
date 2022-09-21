@@ -119,6 +119,9 @@ public class AspectLogAop {
             context.put("map", map);
             Object value = expressRunner.execute(instructionSet, context, errorList, true, false, null);
 
+            if (ObjectUtil.isNull(value)){
+                return null;
+            }
             if (ObjectUtil.isBasicType(value)){
                 return value.toString();
             }else{

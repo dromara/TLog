@@ -144,6 +144,12 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>QLExpress</artifactId>
                 <version>${qlexpress.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
