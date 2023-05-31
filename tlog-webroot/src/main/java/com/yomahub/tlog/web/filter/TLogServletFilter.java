@@ -27,6 +27,8 @@ public class TLogServletFilter implements Filter {
                 TLogWebCommon.loadInstance().preHandle((HttpServletRequest)request);
                 //把traceId放入response的header，为了方便有些人有这样的需求，从前端拿整条链路的traceId
                 ((HttpServletResponse)response).addHeader(TLogConstants.TLOG_TRACE_KEY, TLogContext.getTraceId());
+                chain.doFilter(request, response);
+                return;
             }finally {
                 TLogWebCommon.loadInstance().afterCompletion();
             }
