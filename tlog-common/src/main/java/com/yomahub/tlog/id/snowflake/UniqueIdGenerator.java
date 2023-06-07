@@ -102,7 +102,7 @@ public class UniqueIdGenerator {
      *
      * @return 返回@{@link Long}类型的Id
      */
-    public static Long generateId() {
+    public static synchronized Long generateId() {
         long time = clock.millis();
         Assert.isTrue(lastTime <= time, "Clock is moving backwards, last time is {} milliseconds, current time is {} milliseconds", lastTime, time);
         if (lastTime == time) {

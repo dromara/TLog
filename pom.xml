@@ -289,6 +289,14 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- test -->
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>7.7.1</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
