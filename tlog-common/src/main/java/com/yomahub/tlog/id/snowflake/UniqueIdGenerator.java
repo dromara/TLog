@@ -1,6 +1,7 @@
 package com.yomahub.tlog.id.snowflake;
 
 import cn.hutool.core.lang.Assert;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
@@ -27,7 +28,7 @@ import java.util.Enumeration;
  */
 public class UniqueIdGenerator {
 
-	private static final Logger log = LoggerFactory.getLogger(UniqueIdGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(UniqueIdGenerator.class);
 
     public static final long EPOCH;
 
@@ -44,6 +45,11 @@ public class UniqueIdGenerator {
     private static final long WORKER_ID_MAX_VALUE = 1L << WORKER_ID_BITS;
 
     private static AbstractClock clock = AbstractClock.systemClock();
+
+    /**
+     * ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
+     */
+    private static String ID_PREFIX = RandomStringUtils.randomAlphabetic(4);
 
     private static long workerId;
 
@@ -120,7 +126,8 @@ public class UniqueIdGenerator {
     }
 
     public static String generateStringId() {
-        return generateId().toString();
+        // 增加ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
+        return ID_PREFIX + generateId();
     }
 
     private static long waitUntilNextTime(final long lastTime) {
