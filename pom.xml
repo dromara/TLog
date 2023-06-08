@@ -71,6 +71,7 @@
         <xxl-job.version>2.3.0</xxl-job.version>
         <qlexpress.version>3.2.0</qlexpress.version>
         <logstash-logback.version>6.6</logstash-logback.version>
+        <testng.version>7.7.1</testng.version>
     </properties>
 
     <dependencyManagement>
@@ -294,11 +295,20 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.7.1</version>
+                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <!-- test -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
