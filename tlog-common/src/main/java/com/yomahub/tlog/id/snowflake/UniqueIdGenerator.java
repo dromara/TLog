@@ -2,6 +2,7 @@ package com.yomahub.tlog.id.snowflake;
 
 import cn.hutool.core.lang.Assert;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
@@ -49,7 +50,7 @@ public class UniqueIdGenerator {
     /**
      * ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
      */
-    private static String ID_PREFIX = RandomStringUtils.randomAlphabetic(4);
+    private static String idPrefix = RandomStringUtils.randomAlphabetic(4);
 
     private static long workerId;
 
@@ -94,6 +95,15 @@ public class UniqueIdGenerator {
     }
 
     /**
+     * ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
+     *
+     * @param idPrefix ID前缀
+     */
+    public static void setIdPrefix(String idPrefix) {
+        UniqueIdGenerator.idPrefix = StringUtils.defaultIfBlank(idPrefix, "");
+    }
+
+    /**
      * 设置工作进程Id.
      *
      * @param workerId 工作进程Id
@@ -127,7 +137,7 @@ public class UniqueIdGenerator {
 
     public static String generateStringId() {
         // 增加ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
-        return ID_PREFIX + generateId();
+        return idPrefix + generateId();
     }
 
     private static long waitUntilNextTime(final long lastTime) {
