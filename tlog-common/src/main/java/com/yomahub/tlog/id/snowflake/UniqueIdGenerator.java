@@ -33,7 +33,10 @@ public class UniqueIdGenerator {
 
     public static final long EPOCH;
 
-    private static final long SEQUENCE_BITS = 6L;
+    /**
+     * Should be 12, update by javalover123. Thanks to https://gitee.com/yu120/sequence
+     */
+    private static final long SEQUENCE_BITS = 12L;
 
     private static final long WORKER_ID_BITS = 10L;
 
@@ -116,9 +119,9 @@ public class UniqueIdGenerator {
     /**
      * 生成Id.
      *
-     * @return 返回@{@link Long}类型的Id
+     * @return 返回@{@link long}类型的Id
      */
-    public static synchronized Long generateId() {
+    public static synchronized long generateId() {
         long time = clock.millis();
         Assert.isTrue(lastTime <= time, "Clock is moving backwards, last time is {} milliseconds, current time is {} milliseconds", lastTime, time);
         if (lastTime == time) {
