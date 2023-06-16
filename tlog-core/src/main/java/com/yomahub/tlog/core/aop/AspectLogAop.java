@@ -117,7 +117,7 @@ public class AspectLogAop {
             InstructionSet instructionSet = expressRunner.getInstructionSetFromLocalCache("map." + expression);
             DefaultContext<String, Object> context = new DefaultContext<>();
             context.put("map", map);
-            Object value = expressRunner.execute(instructionSet, context, errorList, true, false, null);
+            Object value = expressRunner.execute(instructionSet, context, errorList, false, false);
 
             if (ObjectUtil.isNull(value)){
                 return null;
