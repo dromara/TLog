@@ -1,6 +1,8 @@
 package com.yomahub.tlog.id.snowflake;
 
 import cn.hutool.core.lang.Assert;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.net.InetAddress;
@@ -27,11 +29,14 @@ import java.util.Enumeration;
  */
 public class UniqueIdGenerator {
 
-	private static final Logger log = LoggerFactory.getLogger(UniqueIdGenerator.class);
+    private static final Logger log = LoggerFactory.getLogger(UniqueIdGenerator.class);
 
     public static final long EPOCH;
 
-    private static final long SEQUENCE_BITS = 6L;
+    /**
+     * Should be 12, update by javalover123. Thanks to https://gitee.com/yu120/sequence
+     */
+    private static final long SEQUENCE_BITS = 12L;
 
     private static final long WORKER_ID_BITS = 10L;
 
@@ -44,6 +49,11 @@ public class UniqueIdGenerator {
     private static final long WORKER_ID_MAX_VALUE = 1L << WORKER_ID_BITS;
 
     private static AbstractClock clock = AbstractClock.systemClock();
+
+    /**
+     * ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
+     */
+    private static String idPrefix = RandomStringUtils.randomAlphabetic(4);
 
     private static long workerId;
 
@@ -88,6 +98,15 @@ public class UniqueIdGenerator {
     }
 
     /**
+     * ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
+     *
+     * @param idPrefix ID前缀
+     */
+    public static void setIdPrefix(String idPrefix) {
+        UniqueIdGenerator.idPrefix = StringUtils.defaultIfBlank(idPrefix, "");
+    }
+
+    /**
      * 设置工作进程Id.
      *
      * @param workerId 工作进程Id
@@ -100,9 +119,9 @@ public class UniqueIdGenerator {
     /**
      * 生成Id.
      *
-     * @return 返回@{@link Long}类型的Id
+     * @return 返回@{@link long}类型的Id
      */
-    public static Long generateId() {
+    public static synchronized long generateId() {
         long time = clock.millis();
         Assert.isTrue(lastTime <= time, "Clock is moving backwards, last time is {} milliseconds, current time is {} milliseconds", lastTime, time);
         if (lastTime == time) {
@@ -120,7 +139,8 @@ public class UniqueIdGenerator {
     }
 
     public static String generateStringId() {
-        return generateId().toString();
+        // 增加ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
+        return idPrefix + generateId();
     }
 
     private static long waitUntilNextTime(final long lastTime) {

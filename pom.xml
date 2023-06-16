@@ -71,6 +71,9 @@
         <xxl-job.version>2.3.0</xxl-job.version>
         <qlexpress.version>3.2.0</qlexpress.version>
         <logstash-logback.version>6.6</logstash-logback.version>
+        <junit.version>4.13.2</junit.version>
+        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <testng.version>7.7.1</testng.version>
     </properties>
 
     <dependencyManagement>
@@ -272,6 +275,15 @@
                 <scope>provided</scope>
             </dependency>
 
+            <!-- junit5依赖 -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- springboot依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -291,6 +303,35 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- 引入 ContiPerf 测试工具，https://gitee.com/yu120/sequence -->
+        <dependency>
+            <groupId>com.github.javatlacati</groupId>
+            <artifactId>contiperf</artifactId>
+            <version>2.4.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
