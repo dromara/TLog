@@ -1,5 +1,6 @@
 package com.yomahub.tlog.core.enhance.bytes;
 
+import javassist.ClassClassPath;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
@@ -17,6 +18,7 @@ public class AspectLogEnhance {
             //logback的增强(包括同步和异步日志)
             CtClass cc = null;
             ClassPool pool = ClassPool.getDefault();
+            pool.insertClassPath(new ClassClassPath(AspectLogEnhance.class));
             try {
                 pool.importPackage("com.yomahub.tlog.core.enhance.bytes.logback.LogbackBytesEnhance");
                 cc = pool.get("ch.qos.logback.classic.Logger");
@@ -28,7 +30,10 @@ public class AspectLogEnhance {
                     return;
                 }
             } catch (Exception e) {
-                System.out.println("locakback同步日志增强失败");
+                if (e.getCause() instanceof LinkageError) {
+                    System.out.println("ch.qos.logback.classic.Logger被提前加载，无法增强");
+                }
+                System.out.println("logback同步日志增强失败");
             }
 
             //log4j日志增强(包括同步和异步日志)
@@ -45,6 +50,9 @@ public class AspectLogEnhance {
                     return;
                 }
             } catch (Exception e) {
+                if (e.getCause() instanceof LinkageError) {
+                    System.out.println("org.apache.log4j.AppenderSkeleton被提前加载，无法增强");
+                }
                 System.out.println("log4j日志增强失败");
             }
         } catch (Throwable t) {
