@@ -15,13 +15,17 @@ public class AspectLog4jPatternParser extends PatternParser {
 
     @Override
     protected void finalizeConverter(char c) {
-        if ('m' == c) {
-            addConverter(new AspectLog4jPatternConverter());
-        } else if ('X' == c) {
-            String xOpt = extractOption();
-            addConverter(new AspectLog4jMDCPatternConverter(formattingInfo, xOpt));
-        } else {
-            super.finalizeConverter(c);
+        switch (c) {
+            case 'm':
+                addConverter(new AspectLog4jPatternConverter());
+                break;
+            case 'X':
+                String xOpt = extractOption();
+                addConverter(new AspectLog4jMDCPatternConverter(formattingInfo, xOpt));
+                break;
+            default:
+                super.finalizeConverter(c);
+                break;
         }
     }
 }
