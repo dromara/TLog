@@ -34,9 +34,8 @@ public class TLogWebConfig implements WebMvcConfigurer {
             if (ObjectUtil.isNotNull(method)){
                 method.invoke(interceptorRegistration, Ordered.HIGHEST_PRECEDENCE);
             }
-        }catch (Exception e){
+        }catch (Exception ignored){}
 
-        }
         interceptorRegistration = registry.addInterceptor(new TLogWebInvokeTimeInterceptor());
         //这里是为了兼容springboot 1.5.X，1.5.x没有order这个方法
         try{
@@ -44,9 +43,7 @@ public class TLogWebConfig implements WebMvcConfigurer {
             if (ObjectUtil.isNotNull(method)){
                 method.invoke(interceptorRegistration, Ordered.HIGHEST_PRECEDENCE);
             }
-        }catch (Exception e){
-
-        }
+        }catch (Exception ignored){}
     }
 
     @Override
