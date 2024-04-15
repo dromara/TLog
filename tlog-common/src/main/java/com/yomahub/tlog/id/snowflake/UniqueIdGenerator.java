@@ -53,7 +53,7 @@ public class UniqueIdGenerator {
     /**
      * ID前缀，当 workerId 相同时(容器、多数据中心 等场景，IP相同)，百万倍降低重复概率
      */
-    private static String idPrefix = RandomStringUtils.randomNumeric(4);
+    private static String idPrefix = RandomStringUtils.randomAlphabetic(4);
 
     private static long workerId;
 
