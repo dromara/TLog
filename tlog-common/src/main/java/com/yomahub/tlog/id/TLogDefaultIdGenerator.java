@@ -9,6 +9,6 @@ public class TLogDefaultIdGenerator extends TLogIdGenerator{
     }
 
     public static void main(String[] args) {
-        System.out.println();
+        System.out.println(UniqueIdGenerator.generateStringId());
     }
 }

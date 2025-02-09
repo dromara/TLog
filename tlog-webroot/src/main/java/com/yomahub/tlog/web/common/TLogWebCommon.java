@@ -1,5 +1,6 @@
 package com.yomahub.tlog.web.common;
 
+import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
@@ -34,11 +35,11 @@ public class TLogWebCommon extends TLogRPCHandler {
     }
 
     public void preHandle(HttpServletRequest request) {
-        String traceId = request.getHeader(TLogConstants.TLOG_TRACE_KEY);
-        String spanId = request.getHeader(TLogConstants.TLOG_SPANID_KEY);
-        String preIvkApp = request.getHeader(TLogConstants.PRE_IVK_APP_KEY);
-        String preIvkHost = request.getHeader(TLogConstants.PRE_IVK_APP_HOST);
-        String preIp = request.getHeader(TLogConstants.PRE_IP_KEY);
+        String traceId = StrUtil.nullToDefault(TLogContext.getTraceId(), request.getHeader(TLogConstants.TLOG_TRACE_KEY));
+        String spanId = StrUtil.nullToDefault(TLogContext.getSpanId(), request.getHeader(TLogConstants.TLOG_SPANID_KEY));
+        String preIvkApp = StrUtil.nullToDefault(TLogContext.getPreIvkApp(), request.getHeader(TLogConstants.PRE_IVK_APP_KEY));
+        String preIvkHost = StrUtil.nullToDefault(TLogContext.getPreIvkHost(), request.getHeader(TLogConstants.PRE_IVK_APP_HOST));
+        String preIp = StrUtil.nullToDefault(TLogContext.getPreIp(), request.getHeader(TLogConstants.PRE_IP_KEY));
 
         TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
 
