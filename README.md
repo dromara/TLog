@@ -37,6 +37,12 @@ Since the community group is over 200 people, you need to invite to join the gro
 
 ![offIical-wx](static/img/offical-wx.jpg)
 
+## Sponsors
+
+**Easysearch**
+
+<a href="https://easysearch.cn/"><img src="https://infinilabs.cn/img/download/media-assets/easysearch-banner-4.webp"></a>
+
 Open source is not easy, please sponsor TLog if you support it
 
 <img src="static/img/zanshang.jpeg" alt="zanshang" width="258" />
