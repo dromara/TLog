@@ -1,13 +1,15 @@
 package com.yomahub.tlog.web.common;
 
 import cn.hutool.core.util.StrUtil;
-import com.yomahub.tlog.compat.ServletReflectionUtils;
 import com.yomahub.tlog.constant.TLogConstants;
 import com.yomahub.tlog.context.TLogContext;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
 import com.yomahub.tlog.core.rpc.TLogRPCHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * TLog web这块的逻辑封装类
@@ -32,12 +34,12 @@ public class TLogWebCommon extends TLogRPCHandler {
         return tLogWebCommon;
     }
 
-    public void preHandle(Object request) {
-        String traceId = StrUtil.nullToDefault(TLogContext.getTraceId(), ServletReflectionUtils.getHeader(request, TLogConstants.TLOG_TRACE_KEY));
-        String spanId = StrUtil.nullToDefault(TLogContext.getSpanId(), ServletReflectionUtils.getHeader(request, TLogConstants.TLOG_SPANID_KEY));
-        String preIvkApp = StrUtil.nullToDefault(TLogContext.getPreIvkApp(), ServletReflectionUtils.getHeader(request, TLogConstants.PRE_IVK_APP_KEY));
-        String preIvkHost = StrUtil.nullToDefault(TLogContext.getPreIvkHost(), ServletReflectionUtils.getHeader(request, TLogConstants.PRE_IVK_APP_HOST));
-        String preIp = StrUtil.nullToDefault(TLogContext.getPreIp(), ServletReflectionUtils.getHeader(request, TLogConstants.PRE_IP_KEY));
+    public void preHandle(HttpServletRequest request) {
+        String traceId = StrUtil.nullToDefault(TLogContext.getTraceId(), request.getHeader(TLogConstants.TLOG_TRACE_KEY));
+        String spanId = StrUtil.nullToDefault(TLogContext.getSpanId(), request.getHeader(TLogConstants.TLOG_SPANID_KEY));
+        String preIvkApp = StrUtil.nullToDefault(TLogContext.getPreIvkApp(), request.getHeader(TLogConstants.PRE_IVK_APP_KEY));
+        String preIvkHost = StrUtil.nullToDefault(TLogContext.getPreIvkHost(), request.getHeader(TLogConstants.PRE_IVK_APP_HOST));
+        String preIp = StrUtil.nullToDefault(TLogContext.getPreIp(), request.getHeader(TLogConstants.PRE_IP_KEY));
 
         TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
 
