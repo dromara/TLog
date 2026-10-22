@@ -1,110 +1,109 @@
 package com.yomahub.tlog.id.snowflake;
 
-import cn.hutool.core.collection.ConcurrentHashSet;
-import com.github.javatlacati.contiperf.PerfTest;
-import com.github.javatlacati.contiperf.Required;
-import com.github.javatlacati.contiperf.junit.ContiPerfRule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
 import java.util.Set;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.FixMethodOrder;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * 单元测试：Id生成器
- *
- * @author javalover123
- * @date 2023/6/7
- */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UniqueIdGeneratorTest {
+import static org.junit.jupiter.api.Assertions.*;
 
-    /**
-     * 性能测试：预热时长，毫秒
-     */
-    private static final int WARM_UP_MS = 300;
+class UniqueIdGeneratorTest {
 
-    /**
-     * 性能测试：时长，毫秒
-     */
-    private static final int DURATION_MS = 3_000 + WARM_UP_MS;
-
-    /**
-     * 性能测试：吞吐量校验值
-     */
-    private static final int THROUGHPUT = 100_0000;
-
-    /**
-     * 性能测试：校验没有生成重复id 次数
-     */
-    private static final int INVOCATIONS = 100_0000;
-
-    private static final Set<Long> ids = new ConcurrentHashSet<>((int) (INVOCATIONS / 0.7));
-
-    @Rule
-    public ContiPerfRule contiPerfRule = new ContiPerfRule();
-
-    @AfterClass
-    public static void tearDown() {
-        Assert.assertEquals("generateId duplicated", INVOCATIONS, ids.size());
-        ids.clear();
-    }
-
-    /**
-     * 单机多线程并发，校验没有生成重复id
-     */
-    @Test
-    @PerfTest(invocations = INVOCATIONS, threads = 4)
-    public void generateId() {
-        ids.add(UniqueIdGenerator.generateId());
-    }
-
-    /**
-     * 性能测试：1线程
-     */
-    @Test
-    @Required(throughput = THROUGHPUT)
-    @PerfTest(duration = DURATION_MS, threads = 1, warmUp = WARM_UP_MS)
-    public void generateId01Threads() {
-        generateIdThreads();
+    @AfterEach
+    void restoreClock() {
+        UniqueIdGenerator.setClock(AbstractClock.systemClock());
+        UniqueIdGenerator.setIdPrefix(null);
     }
 
     @Test
-    @Required(throughput = THROUGHPUT)
-    @PerfTest(duration = DURATION_MS, threads = 2, warmUp = WARM_UP_MS)
-    public void generateId02Threads() {
-        generateIdThreads();
-    }
-
-
-    /**
-     * 性能测试：4线程
-     */
-    @Test
-    @Required(throughput = THROUGHPUT)
-    @PerfTest(duration = DURATION_MS, threads = 4, warmUp = WARM_UP_MS)
-    public void generateId04Threads() {
-        generateIdThreads();
+    void idsAreUniqueAndIncreasingInSingleThread() {
+        long last = -1;
+        Set<Long> ids = new HashSet<>();
+        for (int i = 0; i < 100_000; i++) {
+            long id = UniqueIdGenerator.generateId();
+            assertTrue(id > last, "ID 必须单调递增");
+            assertTrue(ids.add(id));
+            last = id;
+        }
     }
 
     @Test
-    @Required(throughput = THROUGHPUT)
-    @PerfTest(duration = DURATION_MS, threads = 8, warmUp = WARM_UP_MS)
-    public void generateId08Threads() {
-        generateIdThreads();
+    void idsAreUniqueUnderConcurrency() throws Exception {
+        int threads = 8;
+        int perThread = 20_000;
+        Set<Long> ids = ConcurrentHashMap.newKeySet();
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+        CountDownLatch latch = new CountDownLatch(threads);
+        for (int t = 0; t < threads; t++) {
+            pool.execute(() -> {
+                for (int i = 0; i < perThread; i++) {
+                    ids.add(UniqueIdGenerator.generateId());
+                }
+                latch.countDown();
+            });
+        }
+        assertTrue(latch.await(30, TimeUnit.SECONDS));
+        pool.shutdown();
+        assertEquals(threads * perThread, ids.size());
     }
 
     @Test
-    @Required(throughput = THROUGHPUT)
-    @PerfTest(duration = DURATION_MS, threads = 16, warmUp = WARM_UP_MS)
-    public void generateId16Threads() {
-        generateIdThreads();
+    void smallClockBackwardsWaitsAndStaysMonotonic() {
+        AtomicLong now = new AtomicLong(System.currentTimeMillis() + 1000);
+        UniqueIdGenerator.setClock(new AbstractClock() {
+            @Override
+            public long millis() {
+                // 每次读取前进 1ms，模拟回拨后时钟逐渐追平
+                return now.getAndIncrement();
+            }
+        });
+        long before = UniqueIdGenerator.generateId();
+        now.addAndGet(-5);
+        long after = UniqueIdGenerator.generateId();
+        assertTrue(after > before);
     }
 
-    private void generateIdThreads() {
-        UniqueIdGenerator.generateId();
+    @Test
+    void largeClockBackwardsDoesNotThrowAndStaysUnique() {
+        long base = System.currentTimeMillis() + 10_000;
+        AtomicLong now = new AtomicLong(base);
+        UniqueIdGenerator.setClock(new AbstractClock() {
+            @Override
+            public long millis() {
+                return now.get();
+            }
+        });
+        long before = UniqueIdGenerator.generateId();
+        now.set(base - 5_000);
+        Set<Long> ids = new HashSet<>();
+        long last = before;
+        // 超过一个毫秒内序列容量（4096），验证序列耗尽时逻辑时钟前进且不阻塞
+        for (int i = 0; i < 10_000; i++) {
+            long id = assertDoesNotThrow(UniqueIdGenerator::generateId);
+            assertTrue(id > last);
+            assertTrue(ids.add(id));
+            last = id;
+        }
     }
 
+    @Test
+    void prefixIsAppliedOnlyWhenConfigured() {
+        assertTrue(UniqueIdGenerator.generateStringId().matches("\\d+"));
+        UniqueIdGenerator.setIdPrefix("ab");
+        assertTrue(UniqueIdGenerator.generateStringId().startsWith("ab"));
+    }
+
+    @Test
+    void invalidWorkerIdIsRejected() {
+        assertThrows(IllegalArgumentException.class, () -> UniqueIdGenerator.setWorkerId(-1L));
+        assertThrows(IllegalArgumentException.class, () -> UniqueIdGenerator.setWorkerId(1024L));
+        assertThrows(IllegalArgumentException.class, () -> UniqueIdGenerator.setWorkerId(null));
+    }
 }

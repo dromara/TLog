@@ -1,13 +1,11 @@
 package com.yomahub.tlog.core.mq;
 
-import com.yomahub.tlog.context.SpanIdGenerator;
-import com.yomahub.tlog.context.TLogContext;
+import com.yomahub.tlog.constant.TLogConstants;
+import com.yomahub.tlog.context.TLogPropagator;
 import com.yomahub.tlog.core.rpc.TLogLabelBean;
-import com.yomahub.tlog.spring.TLogSpringAware;
-import com.yomahub.tlog.utils.LocalhostUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 
 /**
@@ -28,18 +26,29 @@ public class TLogMqWrapBean<T> extends TLogLabelBean implements Serializable {
 
     public TLogMqWrapBean(T t) {
         this.t = t;
-        String traceId = TLogContext.getTraceId();
-
-        if (StringUtils.isNotBlank(traceId)) {
-            String appName = TLogSpringAware.getProperty("spring.application.name");
-
-            this.setTraceId(traceId);
-            this.setPreIvkApp(appName);
-            this.setPreIvkHost(LocalhostUtil.getHostName());
-            this.setPreIp(LocalhostUtil.getHostIp());
-            this.setSpanId(SpanIdGenerator.generateNextSpanId());
-        } else {
-            log.warn("[TLOG]本地kafka客户端没有正确传递traceId,本次发送不传递traceId");
+        boolean injected = TLogPropagator.inject((key, value) -> {
+            switch (key) {
+                case TLogConstants.TLOG_TRACE_KEY:
+                    setTraceId(value);
+                    break;
+                case TLogConstants.TLOG_SPANID_KEY:
+                    setSpanId(value);
+                    break;
+                case TLogConstants.PRE_IVK_APP_KEY:
+                    setPreIvkApp(value);
+                    break;
+                case TLogConstants.PRE_IVK_APP_HOST:
+                    setPreIvkHost(value);
+                    break;
+                case TLogConstants.PRE_IP_KEY:
+                    setPreIp(value);
+                    break;
+                default:
+                    break;
+            }
+        });
+        if (!injected) {
+            log.debug("[TLOG]本地threadLocal变量没有正确传递traceId,本次发送不传递traceId");
         }
     }
 

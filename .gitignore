@@ -51,6 +51,7 @@ Thumbs.db
 # Build output directies
 /target
 */target
+compatibility-tests/**/target/
 /build
 */build
 

@@ -15,18 +15,28 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 
 ## 示例工程请点击：[示例工程](https://gitee.com/bryan31/tlog-example)
 
+## TLog 2.0
+
+同一套 starter 支持 Spring Boot 2、3、4，运行产物为 Java 8 字节码；构建源码需要 JDK 17 或更新版本。具体运行组合与验收方法见 [兼容性测试](compatibility-tests/README.md)。
+
+2.0 使用日志配置文件接入，已移除 javaagent 和 `AspectLogEnhance.enhance()`。1.x 用户请先阅读 [升级指南](docs/TLOG_2.0_UPGRADE.md)。
+
 ## 特性
-* 通过对日志打标签完成轻量级微服务日志追踪
-* 提供三种接入方式：javaagent完全无侵入接入，字节码一行代码接入，基于配置文件的接入
-* 对业务代码无侵入式设计，使用简单，10分钟即可接入
-* 支持常见的log4j，log4j2，logback三大日志框架，并提供自动检测，完成适配
-* 支持dubbo，dubbox，springcloud三大RPC框架
-* 支持Spring Cloud Gateway和Soul网关
-* 适配HttpClient和Okhttp的http调用标签传递
-* 支持三种任务框架，JDK的TimerTask，Quartz，XXL-JOB
-* 支持日志标签的自定义模板的配置，提供多个系统级埋点标签的选择
-* 支持异步线程的追踪，包括线程池，多级异步线程等场景
-* 几乎无性能损耗，快速稳定，经过压测，损耗在0.01%
+
+* 日志标签与 MDC：支持 logback、log4j、log4j2，自定义标签模板和 traceId 生成器。
+* Spring Boot 自动适配 javax/jakarta Servlet，覆盖同步、Callable 和 ASYNC/ERROR 重派发。
+* Spring 管理的线程池自动传播 TLog 上下文和 MDC，保留已有 TaskDecorator；普通线程池可使用 `TLogExecutors.wrap`。
+* 自动配置容器内的 RestTemplate、WebClient.Builder、RestClient.Builder（Spring 6.1+）。
+* 支持 Dubbo、Dubbox、Feign、HttpClient 4/5、OkHttp、Hutool HTTP、Forest。
+* WebFlux、Spring Cloud Gateway、Soul、Shenyu 使用 Reactor Context 隔离请求，在 Reactor 回调中恢复日志上下文。
+* 支持 JDK TimerTask、Quartz、Spring Scheduled、XXL-JOB 以及 MQ 消息包装。
+* 支持 W3C `traceparent` 入站 traceId 复用、总开关和各功能开关；提供 IDE 配置提示。
+
+## 快速接入
+
+引入 `com.yomahub:tlog-web-spring-boot-starter:2.0.0`，并保留应用原有的 Spring Boot Web 或 WebFlux starter。在日志 pattern 中加入 `%X{tl}`，或者使用 TLog 提供的 encoder/layout/converter。
+
+完整配置、异步边界和迁移示例见 [升级指南](docs/TLOG_2.0_UPGRADE.md)，发布前验证命令见 [发布验收](docs/TLOG_2.0_RELEASE.md)。
 
 由于社区群超过200人，需要邀请入群。关注公众号后点击`个人微信`加我，我可以拉你入群
 

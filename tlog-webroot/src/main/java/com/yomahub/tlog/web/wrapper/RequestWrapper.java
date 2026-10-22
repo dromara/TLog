@@ -1,25 +1,28 @@
 package com.yomahub.tlog.web.wrapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 包装HttpServletRequest，目的是让其输入流可重复读
+ * <p>
+ * 2.0 起按原始字节缓存 body（1.x 按行读取会丢失换行，且使用平台默认编码），并按请求声明的编码解码
  *
  * @author jing.li
  * @since 1.2.5
  */
 public class RequestWrapper extends HttpServletRequestWrapper {
-
-    private static final Logger log = LoggerFactory.getLogger(RequestWrapper.class);
 
     /**
      * 存储body数据的容器
@@ -34,24 +37,21 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      */
     public RequestWrapper(HttpServletRequest request) {
         super(request);
-        String bodyStr = getBodyString(request);
-        body = bodyStr.getBytes(Charset.defaultCharset());
+        try {
+            body = readAll(request.getInputStream());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
-
-    /**
-     * 获取请求Body
-     *
-     * @param request request
-     * @return String
-     */
-    public String getBodyString(final ServletRequest request) {
-        try {
-            return inputStream2String(request.getInputStream());
-        } catch (IOException e) {
-            log.error("", e);
-            throw new RuntimeException(e);
+    private static byte[] readAll(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[4096];
+        int n;
+        while ((n = inputStream.read(buffer)) != -1) {
+            out.write(buffer, 0, n);
         }
+        return out.toByteArray();
     }
 
     /**
@@ -60,71 +60,51 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      * @return String
      */
     public String getBodyString() {
-        final InputStream inputStream = new ByteArrayInputStream(body);
-
-        return inputStream2String(inputStream);
+        return new String(body, charset());
     }
 
-    /**
-     * 将inputStream里的数据读取出来并转换成字符串
-     *
-     * @param inputStream inputStream
-     * @return String
-     */
-    private String inputStream2String(InputStream inputStream) {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader reader = null;
-
+    private Charset charset() {
+        String encoding = getCharacterEncoding();
         try {
-            reader = new BufferedReader(new InputStreamReader(inputStream, Charset.defaultCharset()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            log.error("", e);
-            throw new RuntimeException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    log.error("", e);
-                }
-            }
+            return encoding == null ? StandardCharsets.UTF_8 : Charset.forName(encoding);
+        } catch (Exception e) {
+            return StandardCharsets.UTF_8;
         }
-
-        return sb.toString();
     }
 
     @Override
-    public BufferedReader getReader() throws IOException {
-        return new BufferedReader(new InputStreamReader(getInputStream()));
+    public BufferedReader getReader() {
+        return new BufferedReader(new InputStreamReader(getInputStream(), charset()));
     }
 
     @Override
-    public ServletInputStream getInputStream() throws IOException {
-
+    public ServletInputStream getInputStream() {
         final ByteArrayInputStream inputStream = new ByteArrayInputStream(body);
 
         return new ServletInputStream() {
             @Override
-            public int read() throws IOException {
+            public int read() {
                 return inputStream.read();
             }
 
             @Override
+            public int read(byte[] b, int off, int len) {
+                return inputStream.read(b, off, len);
+            }
+
+            @Override
             public boolean isFinished() {
-                return false;
+                return inputStream.available() == 0;
             }
 
             @Override
             public boolean isReady() {
-                return false;
+                return true;
             }
 
             @Override
             public void setReadListener(ReadListener readListener) {
+                throw new UnsupportedOperationException("RequestWrapper 不支持异步读取");
             }
         };
     }

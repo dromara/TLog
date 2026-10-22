@@ -15,18 +15,28 @@ TLog is a lightweight distributed log tagging tracker, accessible in 10 minutes,
 
 ## Sample project please click: [sample project](https://gitee.com/bryan31/tlog-example)
 
+## TLog 2.0
+
+The same starter coordinates support Spring Boot 2, 3 and 4. TLog artifacts target Java 8; building the source requires JDK 17 or newer. See the [compatibility tests](compatibility-tests/README.md) for the tested runtime combinations.
+
+Version 2.0 uses logging configuration. The javaagent and `AspectLogEnhance.enhance()` integration methods have been removed. Read the [upgrade guide](docs/TLOG_2.0_UPGRADE.md) before migrating from 1.x.
+
 ## Features
-* lightweight microservice log tracking by tagging the logs
-* Provide three types of access: javaagent completely non-intrusive access, bytecode one line of code access, configuration file-based access
-* Non-intrusive design for business code, easy to use, 10 minutes to access
-* support for common log4j, log4j2, logback three logging framework, and provides automatic detection, complete adaptation
-* support dubbo, dubbox, springcloud three RPC framework
-* support for Spring Cloud Gateway and Soul gateway
-* adaptation of HttpClient and Okhttp http call tag passing
-* support for three task frameworks, JDK's TimerTask, Quartz, XXL-JOB
-* Supports configuration of custom templates for log tags, providing the option of multiple system-level buried tags
-* Support for asynchronous thread tracking, including thread pools, multi-level asynchronous threads and other scenarios
-* Almost no performance loss, fast and stable, after pressure testing, the loss is 0.01%
+
+* Log labels and MDC for logback, log4j and log4j2, with custom patterns and trace ID generators.
+* Automatic javax/jakarta Servlet selection, including Callable and ASYNC/ERROR redispatch.
+* Context and MDC propagation for Spring-managed executors, composing existing task decorators; `TLogExecutors.wrap` for other executors.
+* Automatic instrumentation of managed RestTemplate, WebClient.Builder and RestClient.Builder (Spring 6.1+).
+* Dubbo, Dubbox, Feign, HttpClient 4/5, OkHttp, Hutool HTTP and Forest adapters.
+* Reactor Context isolation for WebFlux, Spring Cloud Gateway, Soul and Shenyu, restoring log context during Reactor callbacks.
+* JDK TimerTask, Quartz, Spring Scheduled, XXL-JOB and MQ message wrapping.
+* Inbound W3C trace ID reuse, independent feature switches and IDE configuration metadata.
+
+## Getting started
+
+Add `com.yomahub:tlog-web-spring-boot-starter:2.0.0` alongside your application's Spring Boot Web or WebFlux starter. Include `%X{tl}` in the logging pattern, or use a TLog encoder/layout/converter.
+
+See the [upgrade guide](docs/TLOG_2.0_UPGRADE.md) for configuration and asynchronous boundaries, and [release validation](docs/TLOG_2.0_RELEASE.md) for verification commands.
 
 Since the community group is over 200 people, you need to invite to join the group. Follow the public number and click `Personal WeChat` to add me, I can pull you into the group
 

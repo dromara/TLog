@@ -1,0 +1,16 @@
+# Spring Boot 2.x 读取本文件；3.x / 4.x 读取 META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
+# 两份清单内容一致，SB 2.7 同时读取两者时会自动去重
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.yomahub.tlog.springboot.TLogCommonAutoConfiguration,\
+  com.yomahub.tlog.springboot.lifecircle.TLogPropertyConfiguration,\
+  com.yomahub.tlog.springboot.TLogAspectAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogAsyncAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogSpringScheduledAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogWebAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogWebFluxAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogHttpClientAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogFeignAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogGatewayAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogSoulGatewayAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogShenyuGatewayAutoConfiguration,\
+  com.yomahub.tlog.springboot.TLogXxljobAutoConfiguration

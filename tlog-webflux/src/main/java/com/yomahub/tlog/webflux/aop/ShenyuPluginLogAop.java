@@ -1,21 +1,19 @@
 package com.yomahub.tlog.webflux.aop;
 
-import com.yomahub.tlog.constant.TLogConstants;
-import com.yomahub.tlog.core.rpc.TLogLabelBean;
-import com.yomahub.tlog.core.rpc.TLogRPCHandler;
+import com.yomahub.tlog.webflux.common.TLogWebFluxCommon;
+import com.yomahub.tlog.context.TLogContext;
+import com.yomahub.tlog.context.TLogRuntime;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.server.ServerWebExchange;
-
-import java.util.List;
 
 /**
  * ShenyuPluginAspect
- *
+ * <p>
  * Copy from @author naah
+ *
  * @author timgise
  * @since 1.5.0
  */
@@ -23,51 +21,15 @@ import java.util.List;
 @Order(value = 10)
 public class ShenyuPluginLogAop {
 
-    private static final Integer FIRST = 0;
-    private static TLogRPCHandler tLogRPCHandler = new TLogRPCHandler();
-
     @Before(value = "execution(* org.apache.shenyu.plugin..*.execute(..))")
     public void startLog(JoinPoint joinPoint) {
-        String traceId = null;
-        String spanId = null;
-        String preIvkApp = null;
-        String preIvkHost = null;
-        String preIp = null;
-
+        // 请求的 Reactor Context 已由过滤器恢复；插件之间不得重新初始化 span 计数器。
+        if (!TLogRuntime.isEnabled() || TLogContext.getTraceId() != null) {
+            return;
+        }
         Object[] args = joinPoint.getArgs();
-        if (args == null || args.length < 1) {
-            return;
+        if (args != null && args.length > 0 && args[0] instanceof ServerWebExchange) {
+            TLogWebFluxCommon.loadInstance().processExchange((ServerWebExchange) args[0]);
         }
-        if (args[0] == null || !(args[0] instanceof ServerWebExchange)) {
-            return;
-        }
-        ServerWebExchange exchange = (ServerWebExchange) args[0];
-        HttpHeaders headers = exchange.getRequest().getHeaders();
-        List<String> traceIds = headers.get(TLogConstants.TLOG_TRACE_KEY);
-        if (traceIds != null && traceIds.size() > 0) {
-            traceId = traceIds.get(FIRST);
-        }
-        List<String> spanIds = headers.get(TLogConstants.TLOG_SPANID_KEY);
-        if (spanIds != null && spanIds.size() > 0) {
-            spanId = spanIds.get(FIRST);
-        }
-        List<String> preIvkApps = headers.get(TLogConstants.PRE_IVK_APP_KEY);
-        if (preIvkApps != null && preIvkApps.size() > 0) {
-            preIvkApp = preIvkApps.get(FIRST);
-        }
-        List<String> preIvkHosts = headers.get(TLogConstants.PRE_IVK_APP_HOST);
-        if (preIvkHosts != null && preIvkHosts.size() > 0) {
-            preIvkHost = preIvkHosts.get(FIRST);
-        }
-        List<String> preIps = headers.get(TLogConstants.PRE_IP_KEY);
-        if (preIps != null && preIps.size() > 0) {
-            preIp = preIps.get(FIRST);
-        }
-
-        TLogLabelBean labelBean = new TLogLabelBean(preIvkApp, preIvkHost, preIp, traceId, spanId);
-
-        tLogRPCHandler.processProviderSide(labelBean);
-
     }
-
 }

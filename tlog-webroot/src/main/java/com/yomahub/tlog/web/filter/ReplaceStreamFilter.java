@@ -26,12 +26,17 @@ public class ReplaceStreamFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        if (!isFilterExcludeRequest(httpServletRequest)) {
-            ServletRequest requestWrapper = new RequestWrapper(httpServletRequest);
-            chain.doFilter(requestWrapper, response);
+        if (!(request instanceof HttpServletRequest)) {
+            chain.doFilter(request, response);
+            return;
         }
-
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        if (isFilterExcludeRequest(httpServletRequest)) {
+            // 排除路径直接放行（1.x 此处未调用 chain.doFilter，导致请求被吞）
+            chain.doFilter(request, response);
+            return;
+        }
+        chain.doFilter(new RequestWrapper(httpServletRequest), response);
     }
 
     @Override

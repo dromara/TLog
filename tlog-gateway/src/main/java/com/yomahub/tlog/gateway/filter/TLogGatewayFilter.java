@@ -1,17 +1,12 @@
 package com.yomahub.tlog.gateway.filter;
 
 import com.yomahub.tlog.webflux.common.TLogWebFluxCommon;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import com.yomahub.tlog.webflux.context.TLogReactorContext;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-import reactor.core.publisher.SignalType;
-
-import java.util.function.Consumer;
 
 /**
  * gateway 的全局拦截器
@@ -21,15 +16,24 @@ import java.util.function.Consumer;
  */
 public class TLogGatewayFilter implements GlobalFilter, Ordered {
 
-    @Value("${spring.application.name}")
-    private String appName;
+    private boolean responseHeader = true;
 
-    private static final Logger log = LoggerFactory.getLogger(TLogGatewayFilter.class);
+    public TLogGatewayFilter() {
+        this(true);
+    }
+
+    public TLogGatewayFilter(boolean responseHeader) {
+        this.responseHeader = responseHeader;
+        TLogReactorContext.install();
+    }
+
+    public void setResponseHeader(boolean responseHeader) {
+        this.responseHeader = responseHeader;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        return chain.filter(TLogWebFluxCommon.loadInstance().preHandle(exchange, appName))
-                .doFinally(signalType -> TLogWebFluxCommon.loadInstance().cleanThreadLocal());
+        return TLogWebFluxCommon.loadInstance().filter(exchange, chain::filter, responseHeader, true);
     }
 
     @Override

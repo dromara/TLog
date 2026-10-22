@@ -1,130 +1,111 @@
 package com.yomahub.tlog.utils;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.exceptions.UtilException;
-import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.StrUtil;
 import com.yomahub.tlog.constant.TLogConstants;
 
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.Enumeration;
-import java.util.LinkedHashSet;
 
 /**
  * 主要用来获取本地host和ip的工具类，带缓存
+ * <p>
+ * 获取失败时返回 {@link TLogConstants#UNKNOWN}，并在下次调用时重试，不会抛出异常
+ *
  * @author Bryan.Zhang
  * @since 1.3.0
  */
 public class LocalhostUtil {
 
-    private static String hostIp = TLogConstants.UNKNOWN;
+    private static volatile String hostIp;
 
-    private static String hostName = TLogConstants.UNKNOWN;
+    private static volatile String hostName;
 
+    /**
+     * 用户可手动指定主机名（例如容器环境下使用 Pod 名），优先级最高
+     */
     public static String localhostName;
 
-    public static String getHostIp(){
-        try{
-            if (hostIp.equals(TLogConstants.UNKNOWN)){
-                hostIp = getLocalhostStr();
+    public static String getHostIp() {
+        String ip = hostIp;
+        if (ip == null) {
+            InetAddress address = getLocalhost();
+            ip = address == null ? null : address.getHostAddress();
+            if (StrUtil.isBlank(ip)) {
+                return TLogConstants.UNKNOWN;
             }
-        }catch (Exception e){}
-        return hostIp;
+            hostIp = ip;
+        }
+        return ip;
     }
 
-    public static String getHostName(){
-        try{
-            if (hostName.equals(TLogConstants.UNKNOWN)){
-                hostName = getLocalHostName();
-            }
-        }catch (Exception e){}
-        return hostName;
-    }
-
-    private static String getLocalhostStr() {
-        InetAddress localhost = getLocalhost();
-        if (null != localhost) {
-            return localhost.getHostAddress();
-        }
-        return null;
-    }
-
-    private static InetAddress getLocalhost() {
-        final LinkedHashSet<InetAddress> localAddressList = localAddressList(address -> {
-            // 非loopback地址，指127.*.*.*的地址
-            return !address.isLoopbackAddress()
-                    // 需为IPV4地址
-                    && address instanceof Inet4Address;
-        });
-
-        if (CollUtil.isNotEmpty(localAddressList)) {
-            InetAddress address2 = null;
-            for (InetAddress inetAddress : localAddressList) {
-                if (!inetAddress.isSiteLocalAddress()) {
-                    // 非地区本地地址，指10.0.0.0 ~ 10.255.255.255、172.16.0.0 ~ 172.31.255.255、192.168.0.0 ~ 192.168.255.255
-                    return inetAddress;
-                } else if (null == address2) {
-                    address2 = inetAddress;
-                }
-            }
-
-            if (null != address2) {
-                return address2;
-            }
-        }
-
-        try {
-            return InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            // ignore
-        }
-
-        return null;
-    }
-
-    private static LinkedHashSet<InetAddress> localAddressList(Filter<InetAddress> addressFilter) {
-        Enumeration<NetworkInterface> networkInterfaces;
-        try {
-            networkInterfaces = NetworkInterface.getNetworkInterfaces();
-        } catch (SocketException e) {
-            throw new UtilException(e);
-        }
-
-        if (networkInterfaces == null) {
-            throw new UtilException("Get network interface error!");
-        }
-
-        final LinkedHashSet<InetAddress> ipSet = new LinkedHashSet<>();
-
-        while (networkInterfaces.hasMoreElements()) {
-            final NetworkInterface networkInterface = networkInterfaces.nextElement();
-            final Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
-            while (inetAddresses.hasMoreElements()) {
-                final InetAddress inetAddress = inetAddresses.nextElement();
-                if (inetAddress != null && (null == addressFilter || addressFilter.accept(inetAddress))) {
-                    ipSet.add(inetAddress);
-                }
-            }
-        }
-
-        return ipSet;
-    }
-
-    private static String getLocalHostName() {
+    public static String getHostName() {
         if (StrUtil.isNotBlank(localhostName)) {
             return localhostName;
         }
-
-        final InetAddress localhost = getLocalhost();
-        if (null != localhost) {
-            String name = localhost.getHostName();
-            if (StrUtil.isEmpty(name)) {
-                name = localhost.getHostAddress();
+        String name = hostName;
+        if (name == null) {
+            InetAddress address = getLocalhost();
+            if (address == null) {
+                return TLogConstants.UNKNOWN;
             }
-            localhostName = name;
+            name = address.getHostName();
+            if (StrUtil.isBlank(name)) {
+                name = address.getHostAddress();
+            }
+            if (StrUtil.isBlank(name)) {
+                return TLogConstants.UNKNOWN;
+            }
+            hostName = name;
         }
-
-        return localhostName;
+        return name;
     }
 
+    /**
+     * 选择本机地址：优先非站点本地（公网）IPv4，其次站点本地 IPv4，最后回退到 {@link InetAddress#getLocalHost()}
+     */
+    private static InetAddress getLocalhost() {
+        InetAddress siteLocal = null;
+        try {
+            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces != null && interfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = interfaces.nextElement();
+                if (!isUsable(networkInterface)) {
+                    continue;
+                }
+                Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                while (addresses.hasMoreElements()) {
+                    InetAddress address = addresses.nextElement();
+                    if (!(address instanceof Inet4Address) || address.isLoopbackAddress()) {
+                        continue;
+                    }
+                    if (!address.isSiteLocalAddress()) {
+                        return address;
+                    }
+                    if (siteLocal == null) {
+                        siteLocal = address;
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+            // 网卡枚举失败时走兜底逻辑
+        }
+        if (siteLocal != null) {
+            return siteLocal;
+        }
+        try {
+            return InetAddress.getLocalHost();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private static boolean isUsable(NetworkInterface networkInterface) {
+        try {
+            return networkInterface.isUp() && !networkInterface.isLoopback() && !networkInterface.isVirtual();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -11,7 +11,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
  */
 public class AspectLogContext {
 
-    private static TransmittableThreadLocal<String> logValueTL = new TransmittableThreadLocal<>();
+    private static final TransmittableThreadLocal<String> logValueTL = new TransmittableThreadLocal<>();
 
     public static void putLogValue(String logValue) {
         logValueTL.set(logValue);

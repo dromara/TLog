@@ -1,28 +1,16 @@
 package com.yomahub.tlog.utils;
 
+/** 保留 1.x 的时钟扩展 API。 */
 public abstract class AbstractClock {
 
-	/**
-	 * 创建系统时钟.
-	 *
-	 * @return 系统时钟
-	 */
-	public static AbstractClock systemClock() {
-		return new SystemClock();
-	}
+    public static AbstractClock systemClock() {
+        return new AbstractClock() {
+            @Override
+            public long millis() {
+                return System.currentTimeMillis();
+            }
+        };
+    }
 
-	/**
-	 * 返回从纪元开始的毫秒数.
-	 *
-	 * @return 从纪元开始的毫秒数
-	 */
-	public abstract long millis();
-
-	private static final class SystemClock extends AbstractClock {
-
-		@Override
-		public long millis() {
-			return System.currentTimeMillis();
-		}
-	}
+    public abstract long millis();
 }

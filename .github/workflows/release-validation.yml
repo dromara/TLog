@@ -1,0 +1,109 @@
+name: Release validation
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ['17', '21']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - name: Tests, sources and Javadoc artifacts
+        run: mvn -B -ntp clean verify -P release -Dgpg.skip=true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-results-jdk-${{ matrix.java }}
+          path: '**/target/surefire-reports/'
+
+  compatibility:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - boot: 2.0.5.RELEASE
+            java: '8'
+          - boot: 2.7.18
+            java: '8'
+          - boot: 2.7.18
+            java: '17'
+          - boot: 3.2.12
+            java: '17'
+          - boot: 3.5.16
+            java: '21'
+          - boot: 4.0.7
+            java: '25'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - name: Remember runtime JDK
+        run: echo "TLOG_RUNTIME_JAVA=$JAVA_HOME/bin/java" >> "$GITHUB_ENV"
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Build the same Java 8 TLog artifacts
+        run: mvn -B -ntp install -DskipTests
+      - name: Servlet HTTP, async, MDC, clients and switches
+        run: python3 scripts/verify-compatibility.py --boot '${{ matrix.boot }}' --java "$TLOG_RUNTIME_JAVA"
+      - name: Reactive concurrent HTTP and WebClient
+        run: python3 scripts/verify-compatibility.py --mode reactive --boot '${{ matrix.boot }}' --java "$TLOG_RUNTIME_JAVA"
+      - name: Minimal starter classpaths
+        if: (matrix.boot == '2.7.18' && matrix.java == '17') || matrix.boot == '4.0.7'
+        run: |
+          for starter in dubbo dubbox feign gateway soul shenyu xxljob all; do
+            python3 scripts/verify-compatibility.py --boot '${{ matrix.boot }}' --java "$TLOG_RUNTIME_JAVA" --starter "tlog-${starter}-spring-boot-starter" --startup-only
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compatibility-boot-${{ matrix.boot }}-jdk-${{ matrix.java }}
+          path: target/compatibility/
+
+  logback:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - logback: 1.2.13
+            slf4j: 1.7.36
+          - logback: 1.4.14
+            slf4j: 2.0.9
+          - logback: 1.5.38
+            slf4j: 2.0.18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - name: Compile against the baseline API
+        run: mvn -B -ntp -pl tlog-core -am test
+      - name: Run the same bytecode against the selected logging runtime
+        run: mvn -B -ntp -pl tlog-core -am surefire:test -Dlogback.version=${{ matrix.logback }} -Dslf4j.version=${{ matrix.slf4j }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: logback-${{ matrix.logback }}
+          path: '**/target/surefire-reports/'
