@@ -7,6 +7,8 @@ com.yomahub.tlog.springboot.TLogWebAutoConfiguration
 com.yomahub.tlog.springboot.TLogWebFluxAutoConfiguration
 com.yomahub.tlog.springboot.TLogHttpClientAutoConfiguration
 com.yomahub.tlog.springboot.TLogFeignAutoConfiguration
+com.yomahub.tlog.springboot.TLogKafkaAutoConfiguration
+com.yomahub.tlog.springboot.TLogRabbitAutoConfiguration
 com.yomahub.tlog.springboot.TLogGatewayAutoConfiguration
 com.yomahub.tlog.springboot.TLogSoulGatewayAutoConfiguration
 com.yomahub.tlog.springboot.TLogShenyuGatewayAutoConfiguration

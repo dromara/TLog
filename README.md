@@ -29,7 +29,8 @@ Version 2.0 uses logging configuration. The javaagent and `AspectLogEnhance.enha
 * Automatic instrumentation of managed RestTemplate, WebClient.Builder and RestClient.Builder (Spring 6.1+).
 * Dubbo, Dubbox, Feign, HttpClient 4/5, OkHttp, Hutool HTTP and Forest adapters.
 * Reactor Context isolation for WebFlux, Spring Cloud Gateway, Soul and Shenyu, restoring log context during Reactor callbacks.
-* JDK TimerTask, Quartz, Spring Scheduled, XXL-JOB and MQ message wrapping.
+* JDK TimerTask, Quartz, Spring Scheduled, XXL-JOB.
+* Kafka and RabbitMQ propagate the context in message headers: auto-configured for Spring Kafka / Spring AMQP (`tlog.kafka.enabled`, `tlog.rabbitmq.enabled`), one line for the plain clients. Other brokers can keep wrapping the payload with `TLogMqWrapBean`.
 * Inbound W3C trace ID reuse, independent feature switches and IDE configuration metadata.
 
 ## Getting started

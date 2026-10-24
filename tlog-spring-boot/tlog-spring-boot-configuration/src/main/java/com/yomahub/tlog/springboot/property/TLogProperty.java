@@ -52,6 +52,10 @@ public class TLogProperty {
 
     private final Scheduled scheduled = new Scheduled();
 
+    private final Kafka kafka = new Kafka();
+
+    private final Rabbitmq rabbitmq = new Rabbitmq();
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -118,6 +122,14 @@ public class TLogProperty {
 
     public Scheduled getScheduled() {
         return scheduled;
+    }
+
+    public Kafka getKafka() {
+        return kafka;
+    }
+
+    public Rabbitmq getRabbitmq() {
+        return rabbitmq;
     }
 
     public static class Web {
@@ -199,6 +211,38 @@ public class TLogProperty {
 
         /**
          * 是否为 @Scheduled 定时任务生成 traceId
+         */
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    public static class Kafka {
+
+        /**
+         * 是否通过消息 header 透传 TLog 上下文（Spring Kafka 的生产者工厂与 @KafkaListener）
+         */
+        private boolean enabled = true;
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    public static class Rabbitmq {
+
+        /**
+         * 是否通过消息 header 透传 TLog 上下文（Spring AMQP 的 RabbitTemplate 与 @RabbitListener）
          */
         private boolean enabled = true;
 

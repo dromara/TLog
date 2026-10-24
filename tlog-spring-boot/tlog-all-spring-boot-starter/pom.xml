@@ -59,6 +59,16 @@
         </dependency>
         <dependency>
             <groupId>com.yomahub</groupId>
+            <artifactId>tlog-kafka</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
+            <artifactId>tlog-rabbitmq</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.yomahub</groupId>
             <artifactId>tlog-hutool-http</artifactId>
             <version>${project.version}</version>
         </dependency>

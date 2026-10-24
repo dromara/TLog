@@ -17,37 +17,44 @@ import java.util.concurrent.Callable;
  */
 public final class TLogWebAsyncSupport {
 
-    private static final String INTERCEPTOR_KEY = TLogWebAsyncSupport.class.getName();
-    private static final Method GET_ASYNC_MANAGER = findAsyncManagerMethod();
+    // 原生 Servlet 应用可以没有 spring-web：此时不得加载任何引用 Spring MVC 类型的类，
+    // 否则 Filter 首次调用就会因类校验失败抛出 NoClassDefFoundError。
+    private static final boolean MVC_PRESENT = ClassUtils.isPresent(
+            "org.springframework.web.context.request.async.WebAsyncUtils", TLogWebAsyncSupport.class.getClassLoader());
 
     private TLogWebAsyncSupport() {
     }
 
     public static void register(Object servletRequest) {
-        if (GET_ASYNC_MANAGER == null) {
-            return;
-        }
-        WebAsyncManager manager = (WebAsyncManager) ReflectionUtils.invokeMethod(GET_ASYNC_MANAGER, null, servletRequest);
-        if (manager.getCallableInterceptor(INTERCEPTOR_KEY) == null) {
-            manager.registerCallableInterceptor(INTERCEPTOR_KEY, new ContextInterceptor());
+        if (MVC_PRESENT) {
+            MvcSupport.register(servletRequest);
         }
     }
 
-    private static Method findAsyncManagerMethod() {
-        if (!ClassUtils.isPresent("org.springframework.web.context.request.async.WebAsyncUtils",
-                TLogWebAsyncSupport.class.getClassLoader())) {
-            return null;
-        }
-        // The ServletRequest parameter changes from javax to jakarta in Spring 6.
-        for (Method method : WebAsyncUtils.class.getMethods()) {
-            if (method.getName().equals("getAsyncManager") && method.getParameterTypes().length == 1) {
-                String parameter = method.getParameterTypes()[0].getName();
-                if (parameter.equals("javax.servlet.ServletRequest") || parameter.equals("jakarta.servlet.ServletRequest")) {
-                    return method;
-                }
+    /** 只有 Spring MVC 存在时才会被加载。 */
+    private static final class MvcSupport {
+        private static final String INTERCEPTOR_KEY = TLogWebAsyncSupport.class.getName();
+        private static final Method GET_ASYNC_MANAGER = findAsyncManagerMethod();
+
+        private static void register(Object servletRequest) {
+            WebAsyncManager manager = (WebAsyncManager) ReflectionUtils.invokeMethod(GET_ASYNC_MANAGER, null, servletRequest);
+            if (manager.getCallableInterceptor(INTERCEPTOR_KEY) == null) {
+                manager.registerCallableInterceptor(INTERCEPTOR_KEY, new ContextInterceptor());
             }
         }
-        throw new IllegalStateException("Unsupported WebAsyncUtils ServletRequest API");
+
+        private static Method findAsyncManagerMethod() {
+            // The ServletRequest parameter changes from javax to jakarta in Spring 6.
+            for (Method method : WebAsyncUtils.class.getMethods()) {
+                if (method.getName().equals("getAsyncManager") && method.getParameterTypes().length == 1) {
+                    String parameter = method.getParameterTypes()[0].getName();
+                    if (parameter.equals("javax.servlet.ServletRequest") || parameter.equals("jakarta.servlet.ServletRequest")) {
+                        return method;
+                    }
+                }
+            }
+            throw new IllegalStateException("Unsupported WebAsyncUtils ServletRequest API");
+        }
     }
 
     private static final class ContextInterceptor implements CallableProcessingInterceptor {

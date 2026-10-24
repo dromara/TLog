@@ -29,7 +29,8 @@ TLog是一个轻量级的分布式日志标记追踪神器，10分钟即可接�
 * 自动配置容器内的 RestTemplate、WebClient.Builder、RestClient.Builder（Spring 6.1+）。
 * 支持 Dubbo、Dubbox、Feign、HttpClient 4/5、OkHttp、Hutool HTTP、Forest。
 * WebFlux、Spring Cloud Gateway、Soul、Shenyu 使用 Reactor Context 隔离请求，在 Reactor 回调中恢复日志上下文。
-* 支持 JDK TimerTask、Quartz、Spring Scheduled、XXL-JOB 以及 MQ 消息包装。
+* 支持 JDK TimerTask、Quartz、Spring Scheduled、XXL-JOB。
+* Kafka、RabbitMQ 通过消息 header 透传：Spring Kafka / Spring AMQP 自动装配（`tlog.kafka.enabled`、`tlog.rabbitmq.enabled`），原生客户端各一行接入；其它 MQ 可继续使用 `TLogMqWrapBean` 包装消息体。
 * 支持 W3C `traceparent` 入站 traceId 复用、总开关和各功能开关；提供 IDE 配置提示。
 
 ## 快速接入
