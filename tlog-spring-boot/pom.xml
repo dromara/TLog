@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
 
     <artifactId>tlog-spring-boot</artifactId>
+    <name>${project.artifactId}</name>
 
     <modules>
         <module>tlog-spring-boot-configuration</module>

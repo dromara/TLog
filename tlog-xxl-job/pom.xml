@@ -9,6 +9,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>tlog-xxl-job</artifactId>
+    <name>${project.artifactId}</name>
     <dependencies>
         <dependency>
             <groupId>com.yomahub</groupId>

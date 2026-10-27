@@ -442,7 +442,7 @@
     </build>
 
     <profiles>
-        <!-- 发布产物：mvn verify -P release；部署目标由 distributionManagement / Maven settings 决定 -->
+        <!-- 发布到中央仓库：用 JDK 17 执行 mvn clean deploy -P release -->
         <profile>
             <id>release</id>
             <build>
@@ -478,6 +478,17 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <!-- 发布到 Maven 中央仓库（Sonatype Central Portal），凭证取 settings.xml 中 id 为 oss 的 server -->
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>oss</publishingServerId>
+                            <autoPublish>true</autoPublish>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -506,16 +517,4 @@
         <module>tlog-logstash</module>
     </modules>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>nexus-releases</name>
-            <url>http://118.178.236.200:8087/nexus/content/repositories/thirdparty</url>
-        </repository>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>nexus-snapshots</name>
-            <url>http://118.178.236.200:8087/nexus/content/repositories/snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
 </project>
